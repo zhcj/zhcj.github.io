@@ -28,8 +28,8 @@ firewall-cmd --permanent --remove-service=ssh</pre>
 <pre>firewall-cmd --permanent --add-port=22/tcp
 firewall-cmd --permanent --remove-port=22/tcp</pre>
 <p><b>6、添加/删除特定IP访问特定端口</b></p>
-<pre>firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=222.222.50.162 port port=81 protocol=tcp accept"
-firewall-cmd --permanent --remove-rich-rule="rule family=ipv4 source address=222.222.50.162 port port=81 protocol=tcp accept"</pre>
+<pre>firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.168.1.1 port port=81 protocol=tcp accept"
+firewall-cmd --permanent --remove-rich-rule="rule family=ipv4 source address=192.168.1.1 port port=81 protocol=tcp accept"</pre>
 <p><a href="index.html">返回首页</a></p>
 </body>
 </html>
