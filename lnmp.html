@@ -1,0 +1,357 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>网站LNMP环境安装配置笔记</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>网站LNMP环境安装配置笔记</h2>
+<h3>注：网站系统为CentOS 7，使用systemd。</h3>
+<p><b>准备工作：</b></p>
+<p>1、升级系统</p>
+<pre>yum update -y</pre>
+<p>2、清理原有安装</p>
+<pre>yum remove php* mariadb* nginx* http* -y</pre>
+<p><b>一、测试服务器LNMP编译安装</b></p>
+<p><b>1、安装编译工具</b></p>
+<pre>yum install gcc cmake gcc-c++ autoconf m4 perl-Data-Dumper automake -y</pre>
+<p>添加系统链接库</p>
+<pre>echo "/data/lnmp/lib/lib" > /etc/ld.so.conf.d/lnmp.conf</pre>
+<p><b>2、安装Nginx</b></p>
+<li>安装依赖</li>
+<p>方式一：yum安装（简单）</p>
+<pre>yum install pcre-devel zlib-devel openssl-devel -y</pre>
+<p>方式二：编译安装（复杂）</p>
+<pre>#安装pcre
+cd /data/source
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.bz2
+tar xvf pcre-8.38.tar.bz2
+cd pcre-8.38
+./configure --prefix=/data/lnmp/lib
+make -j5
+make install
+#安装zlib
+cd /data/source
+wget http://zlib.net/zlib-1.2.8.tar.xz
+tar xvf zlib-1.2.8.tar.xz
+cd zlib-1.2.8
+./configure --prefix=/data/lnmp/lib
+make -j5
+make install
+#安装openssl
+cd /data/source
+wget https://www.openssl.org/source/openssl-1.0.2j.tar.gz
+tar xvf openssl-1.0.2j.tar.gz
+cd openssl-1.0.2j
+./config --prefix=/data/lnmp/lib
+# --openssldir=/data/lnmp/lib/ssl
+make -j5
+make install
+</pre>
+<li>建立组和用户并设置不能ssh登录</li>
+<pre>groupadd -r www
+useradd -r -M -s /sbin/nologin -g www www
+sed -i "s/\/home\/www://" /etc/passwd</pre>
+<li>下载</li>
+<pre>mkdir -p /data/source
+cd /data/source
+wget http://nginx.org/download/nginx-1.11.6.tar.gz</pre>
+<li>解压</li>
+<pre>tar xvf nginx-1.11.6.tar.gz</pre>
+<li>编译</li>
+<pre>cd nginx-1.11.6
+./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module
+#编译安装依赖方式
+#./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-pcre=/data/source/pcre-8.38 --with-openssl=/data/source/openssl-1.0.2j --with-zlib=/data/source/zlib-1.2.8
+make -j5
+make install</pre>
+<li>配置启动</li>
+<pre>mkdir /usr/lib/systemd/system
+cat > /usr/lib/systemd/system/nginx.service << "EOF"
+[Unit]
+Description=The nginx HTTP and reverse proxy server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+ExecStartPre=/data/lnmp/nginx/sbin/nginx -t -c /data/lnmp/nginx/conf/nginx.conf
+ExecStart=/data/lnmp/nginx/sbin/nginx -c /data/lnmp/nginx/conf/nginx.conf
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -QUIT $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sed -i "s/\/\$nginx_version//" /data/lnmp/nginx/conf/fastcgi*
+mv /data/lnmp/nginx/conf/nginx.conf /data/lnmp/nginx/conf/nginx.conf.bak
+mkdir /data/lnmp/nginx/conf/conf.d
+
+cat > /data/lnmp/nginx/conf/nginx.conf << "EOF"
+user  www;
+worker_processes  4;
+events {
+    worker_connections  1024;
+}
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    charset  utf-8;
+    sendfile        on;
+    client_max_body_size 40m;
+    server_tokens off;
+    keepalive_timeout  65;
+    gzip  on;
+    include  conf.d/*.conf;
+}
+EOF
+cat > /data/lnmp/nginx/conf/conf.d/www.conf << "EOF"
+server {
+    listen       80;
+    server_name  localhost;
+    root   /data/www;
+    index  index.html index.htm index.php;
+
+    error_page  404              /404.html;
+    error_page   500 502 503 504  /50x.html;
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri = 404;
+        fastcgi_pass   127.0.0.1:9000;
+        include        fastcgi.conf;
+    }
+}
+EOF
+mkdir /data/www
+ln -s /data/lnmp/nginx/sbin/nginx /usr/bin/
+</pre>
+<li>打开防火墙</li>
+<pre>firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --reload</pre>
+<p><b>3、安装PHP</b></p>
+<li>安装依赖</li>
+<p>方式一：yum安装（简单）</p>
+<pre>#yum install libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
+<p>方式二：编译安装（复杂）</p>
+<pre>#安装libcurl
+cd /data/source
+wget https://curl.haxx.se/download/curl-7.50.3.tar.gz
+tar xvf curl-7.50.3.tar.gz
+cd curl-7.50.3
+./configure --prefix=/data/lnmp/lib
+make -j5
+make install
+#安装libxml2
+cd /data/source
+wget ftp://xmlsoft.org/libxml2/libxml2-2.9.4.tar.gz
+tar xvf libxml2-2.9.4.tar.gz
+cd libxml2-2.9.4
+./configure --prefix=/data/lnmp/lib
+make -j5
+make install
+#安装libpng
+cd /data/source
+wget http://prdownloads.sourceforge.net/libpng/libpng-1.6.26.tar.xz
+tar xvf libpng-1.6.26.tar.xz
+cd libpng-1.6.26
+export LDFLAGS="-L/data/lnmp/lib/lib"
+export CPPFLAGS="-I/data/lnmp/lib/include"
+./configure --prefix=/data/lnmp/lib --with-zlib-prefix
+#cp script/makefile.linux makefile
+#sed -i "s/prefix=\/usr\/local/prefix=\/data\/lnmp\/lib/" makefile
+#sed -i "s/ZLIBLIB=..\/zlib/ZLIBLIB=\/data\/lnmp\/lib\/lib/" makefile
+#sed -i "s/ZLIBINC=..\/zlib/ZLIBINC=\/data\/lnmp\/lib\/include/" makefile
+make -j5
+make install
+#安装libjpeg
+cd /data/source
+wget https://sourceforge.net/projects/libjpeg-turbo/files/1.5.1/libjpeg-turbo-1.5.1.tar.gz
+tar xvf libjpeg-turbo-1.5.1.tar.gz
+cd libjpeg-turbo-1.5.1
+./configure --prefix=/data/lnmp/lib
+make -j5
+make install
+#安装freetype
+cd /data/source
+wget http://download.savannah.gnu.org/releases/freetype/freetype-2.7.tar.bz2
+tar xvf freetype-2.7.tar.bz2
+cd freetype-2.7
+./configure --prefix=/data/lnmp/lib
+make -j5
+make install
+cd /data/source
+wget https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.1.tar.bz2
+tar xvf fontconfig-2.12.1.tar.bz2
+cd fontconfig-2.12.1
+export FREETYPE_LIBS="/data/lnmp/lib"
+export FREETYPE_CFLAGS="/data/lnmp/lib"
+export LIBXML2_LIBS="/data/lnmp/lib"
+export LIBXML2_CFLAGS="/data/lnmp/lib"
+./configure --prefix=/data/lnmp/lib --enable-xml2
+make -j5
+make install
+cd /data/source
+wget https://github.com/libgd/libgd/releases/download/gd-2.2.3/libgd-2.2.3.tar.xz
+tar xvf libgd-2.2.3.tar.xz
+cd libgd-2.2.3
+</pre>
+<li>下载</li>
+<pre>cd /data/source
+wget http://cn2.php.net/distributions/php-5.6.28.tar.xz</pre>
+<li>解压</li>
+<pre>tar xvf php-5.6.28.tar.xz</pre>
+<li>编译</li>
+<pre>cd php-5.6.28
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip
+make -j5
+make install
+ln -s /data/lnmp/php/bin/* /usr/bin
+ln -s /data/lnmp/php/sbin/* /usr/sbin
+cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
+sed -i "s/\${prefix}/\/data\/lnmp\/php/" /usr/lib/systemd/system/php-fpm.service
+sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /usr/lib/systemd/system/php-fpm.service
+sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
+#cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
+cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
+echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+cp php.ini-production /data/lnmp/php/php.ini
+sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
+sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/lnmp/php/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/lnmp/php/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/lnmp/php/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /data/lnmp/php/php.ini
+sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnmp/php/php.ini
+sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnmp/php/php.ini
+sed -i "s/expose_php = On/expose_php = Off/" /data/lnmp/php/php.ini
+sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-fpm.log/" /data/lnmp/php/etc/php-fpm.conf
+mkdir /data/lnmp/log/php
+
+#安装memcached，并设置开机运行
+yum install memcached -y
+systemctl start memcached
+systemctl enable memcached
+#安装libmemcached
+cd /data/source
+wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
+tar xvf libmemcached-1.0.18.tar.gz
+cd libmemcached-1.0.18
+./configure --prefix=/data/lnmp/lib --with-memcached
+make -j5
+make install
+#安装php的memcached模块
+cd /data/source
+wget https://pecl.php.net/get/memcached-2.2.0.tgz
+tar xvf memcached-2.2.0.tgz
+cd memcached-2.2.0
+/data/lnmp/php/bin/phpize
+./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib
+make -j5
+make install
+echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
+#安装php的apcu模块
+cd /data/source
+wget https://pecl.php.net/get/apcu-4.0.11.tgz
+tar xvf apcu-4.0.11.tgz
+cd apcu-4.0.11
+/data/lnmp/php/bin/phpize
+./configure --enable-apcu --with-php-config=/data/lnmp/php/bin/php-config
+make -j5
+make install
+echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
+</pre>
+<p>检查是否成功</p>
+<pre>php -m|grep memcache
+php -m|grep apc
+php -i|grep memcache
+php -i|grep apc</pre>
+<p><b>4、安装MariaDB数据库</b></p>
+<li>创建mysql用户</li>
+<pre>groupadd -r mysql
+useradd -r -M -s /sbin/nologin -g mysql mysql
+sed -i "s/\/home\/mysql://" /etc/passwd</pre>
+<li>安装依赖</li>
+<pre>yum install ncurses-devel bison -y</pre>
+<li>下载</li>
+<pre>wget https://downloads.mariadb.org/f/mariadb-10.1.18/source/mariadb-10.1.18.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O /from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O /from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.18.tar.gz</pre>
+<li>解压</li>
+<pre>tar xvf mariadb-10.1.18.tar.gz</pre>
+<li>编译</li>
+<pre>cd mariadb-10.1.18
+cmake . \
+-DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
+-DMYSQL_DATADIR=/data/lnmp/mariadb/data \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DWITH_SYSTEMD=auto \
+-DINSTALL_SYSTEMD_UNITDIR=/usr/lib/systemd/system \
+-DDISABLE_SHARED=OFF \
+-DPLUGIN_MROONGA=NO \
+-DPLUGIN_FEDERATED=NO \
+-DPLUGIN_FEDERATEDX=NO \
+-DPLUGIN_OQGRAPH=NO \
+-DPLUGIN_TOKUDB=NO \
+-DPLUGIN_AUTH_PAM=NO \
+-DPLUGIN_SEQUENCE=NO \
+-DPLUGIN_SPIDER=NO \
+-DWITH_WSREP=NO \
+-DPLUGIN_FTEXAMPLE=NO \
+-DPLUGIN_DAEMON_EXAMPLE=NO \
+-DPLUGIN_EXAMPLE=NO \
+-DPLUGIN_EXAMPLE_KEY_MANAGEMENT=NO \
+-DPLUGIN_CONNECT=NO \
+-DCONNECT_WITH_ODBC=OFF \
+-DCONNECT_WITH_MYSQL=1 \
+-DCONNECT_WITH_LIBXML2=NO \
+-DWITH_DEBUG=NO \
+-DWITH_EMBEDDED_SERVER=OFF \
+-DWITH_PROFILING=OFF \
+-DWITH_UNIT_TESTS=OFF
+
+make -j5
+make install
+ln -s /data/lnmp/mariadb/bin/* /usr/bin
+chown mysql:mysql /data/lnmp/mariadb/data -R
+cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
+sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
+cd /data/lnmp/mariadb
+sed -i "s/log-bin/#log-bin/" /data/lnmp/mariadb/my.cnf
+./scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
+systemctl start mariadb
+./bin/mysqladmin -u root password 'password'
+rm -rf mysql-test
+rm -rf data/test
+rm -rf sql-bench
+</pre>
+<p><b>5、压缩成二进制包（供生产服务器使用）</b></p>
+<pre>tar cvfpJ lnmp.tar.xz /data/lnmp /usr/lib/systemd/system/nginx.service /usr/lib/systemd/system/php-fpm.service /usr/lib/systemd/system/mariadb.serive</pre>
+<p><b>二、生产服务器LNMP安装</b></p>
+<p><b>1、安装依赖</b></p>
+<pre>yum install pcre-devel zlib-devel libxml2-devel systemd-devel gd-devel libcurl-devel ncurses-devel bison -y</pre>
+<p><b>2、解压二进制包</b></p>
+<pre>tar xvfp lnmp.tar.xz /</pre>
+<p><b>3、软链接可执行文件</b></p>
+<pre>ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
+ln -s /data/lnmp/php/bin/* /usr/bin
+ln -s /data/lnmp/php/sbin/* /usr/sbin
+ln -s /data/lnmp/mariadb/bin/* /usr/bin</pre>
+<p><b>4、打开防火墙</b></p>
+<pre>firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --reload</pre>
+<p><b>5、复制网站程序</b></p>
+<pre>mkdir /data/www</pre>
+<p></p>
+<p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script> <script type="text/javascript">var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc08dc8733c6909b8fce219a7ee9c8f37' type='text/javascript'%3E%3C/script%3E"));</script></p>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>

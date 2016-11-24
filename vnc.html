@@ -1,0 +1,32 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>VNC server安装使用手册</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>VNC server安装使用手册</h2>
+<p><b>一、服务器端安装</b></p>
+<p><b>1、安装tigervnc-server（前提：必须安装X界面，建议加epel源，安装xfce环境：yum groupinstall xfce）</b></p>
+<pre>yum install tigervnc-server -y</pre>
+<p><b>2、创建vnc登录密码</b></p>
+<pre>vncpasswd</pre>
+<p><b>3、修改systemd启动项中的用户名为root（建议非root用户）</b></p>
+<pre>sed -i "s/<USER>/root/g" /usr/lib/systemd/system/vncserver@.service</pre>
+<p><b>4、打开Firewalld防火墙</b></p>
+<pre>firewall-cmd --permanent --add-port=5901/tcp
+firewall-cmd --reload</pre>
+<p><b>5、修改配置</b></p>
+<pre>sed -i "s/\$geometry = \"1024x768\";/\$geometry = \"800x600\";/g" /usr/bin/vncserver</pre>
+<p><b>6、启动vncserver</b></p>
+<pre>systemctl start vncserver@:1</pre>
+<p><b>二、客户端用5901端口连接，输入密码即可</b></p>
+<p align="center">2016年11月</p>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>

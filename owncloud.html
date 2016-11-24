@@ -1,0 +1,161 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>ownCloud网盘安装使用简明手册</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>ownCloud网盘安装使用简明手册</h2>
+<p>ownCloud 是一个基于PHP的自建网盘，主要功能包括文件管理（内建文件分享）、音乐、日历、联系人等等，可在PC和服务器上运行。</p>
+<p><b>一、安装配置</b></p>
+<p><b>1、下载、解压</b></p>
+<pre>wget https://download.owncloud.org/community/owncloud-9.1.1.zip
+unzip owncloud-9.1.1.zip</pre>
+<p><b>2、配置服务器（LNMP环境）</b></p>
+<p>owncloud.conf文件，server_name、listen、root、access_log、error_log这几项根据实际情况填写即可：</p>
+<pre>upstream php-handler {
+    server 127.0.0.1:9000;
+    #server unix:/var/run/php5-fpm.sock;
+}
+server {
+    listen       80;
+    server_name  192.168.1.1;
+
+    access_log  /data/lnmp/log/nginx/owncloud_access.log;
+    error_log  /data/lnmp/log/nginx/owncloud_error.log;
+
+    # Add headers to serve security related headers
+    # Before enabling Strict-Transport-Security headers please read into this topic first.
+    # add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;";
+    add_header X-Content-Type-Options nosniff;
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Robots-Tag none;
+    add_header X-Download-Options noopen;
+    add_header X-Permitted-Cross-Domain-Policies none;
+
+    # Path to the root of your installation
+    root /data/owncloud/;
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    # The following 2 rules are only needed for the user_webfinger app.
+    # Uncomment it if you're planning to use this app.
+    #rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+    #rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json last;
+
+    location = /.well-known/carddav {
+        return 301 $scheme://$host/remote.php/dav;
+    }
+    location = /.well-known/caldav {
+        return 301 $scheme://$host/remote.php/dav;
+    }
+
+    location /.well-known/acme-challenge { }
+
+    # set max upload size
+    client_max_body_size 512M;
+    fastcgi_buffers 64 4K;
+
+    # Disable gzip to avoid the removal of the ETag header
+    gzip off;
+
+    # Uncomment if your server is build with the ngx_pagespeed module
+    # This module is currently not supported.
+    # pagespeed off;
+
+    error_page 403 /core/templates/403.php;
+    error_page 404 /core/templates/404.php;
+
+    location / {
+        rewrite ^ /index.php$uri;
+    }
+
+    location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+        return 404;
+    }
+    location ~ ^/(?:\.|autotest|occ|issue|indie|db_|console) {
+        return 404;
+    }
+
+    location ~ ^/(?:index|remote|public|cron|core/ajax/update|status|ocs/v[12]|updater/.+|ocs-provider/.+|core/templates/40[34])\.php(?:$|/) {
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param modHeadersAvailable true; #Avoid sending the security headers twice
+        fastcgi_param front_controller_active true;
+        fastcgi_pass php-handler;
+        fastcgi_intercept_errors on;
+        fastcgi_request_buffering off;
+    }
+
+    location ~ ^/(?:updater|ocs-provider)(?:$|/) {
+        try_files $uri/ =404;
+        index index.php;
+    }
+
+    # Adding the cache control header for js and css files
+    # Make sure it is BELOW the PHP block
+    location ~* \.(?:css|js)$ {
+        try_files $uri /index.php$uri$is_args$args;
+        add_header Cache-Control "public, max-age=7200";
+        # Add headers to serve security related headers (It is intended to have those duplicated to the ones above)
+        # Before enabling Strict-Transport-Security headers please read into this topic first.
+        # add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;";
+        add_header X-Content-Type-Options nosniff;
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-XSS-Protection "1; mode=block";
+        add_header X-Robots-Tag none;
+        add_header X-Download-Options noopen;
+        add_header X-Permitted-Cross-Domain-Policies none;
+        # Optional: Don't log access to assets
+        access_log off;
+    }
+
+    location ~* \.(?:svg|gif|png|html|ttf|woff|ico|jpg|jpeg)$ {
+        try_files $uri /index.php$uri$is_args$args;
+        # Optional: Don't log access to other assets
+        access_log off;
+    }
+}</pre>
+<p>出现：“PHP 似乎没有设置好查询的系统环境变量。 用 getenv(\"PATH\") 测试只返回一个空值。“提示，解决办法：</p>
+</pre>vi /data/lnmp/php/etc/php-fpm.conf</pre>
+<p>找到：</p>
+<pre>;env[HOSTNAME] = $HOSTNAME
+;env[PATH] = /usr/local/bin:/usr/bin:/bin
+;env[TMP] = /tmp
+;env[TMPDIR] = /tmp
+;env[TEMP] = /tmp</pre>
+<p>去掉前面的分号即可。</p>
+<p><b>3、安装</b></p>
+<p>打开浏览器，填写管理员账号、密码，数据库账号、密码，数据库名，数据存储位置等几项内容。</p>
+<p><b>4、修改配置（配置文件：owncloud/config/config.php）</b></p>
+<p>设置默认中文环境，配置文件中添加：</p>
+<pre>'logtimezone' => 'CST',
+'default_language' => 'zh_CN',</pre>
+<p>启用apcu和memcached，配置文件中添加：</p>
+<pre>'memcache.local' => '\OC\Memcache\APCu',
+'memcache.distributed' => '\OC\Memcache\Memcached',
+'memcached_servers' => array(
+     array('localhost', 11211),
+     array('192.168.1.1', 11211),
+     ),</pre>
+<p><b>二、使用</b></p>
+<p><b>1、客户端下载</b></p>
+<p>Windows 7、8和10：<a href="https://download.owncloud.com/desktop/stable/ownCloud-2.2.4.6408-setup.exe">官方下载</a>、<a href="/software/owncloud/ownCloud-2.2.4.6408-setup.exe">本地</a></p>
+<p>安卓手机：<a href="https://f-droid.org/repo/com.owncloud.android_20100200.apk">F-Droid</a>、<a href="/software/owncloud/com.owncloud.android_20100200.apk">本地</a></p>
+<p>苹果手机：<a href="https://itunes.apple.com/us/app/owncloud/id543672169?ls=1&mt=8">应用商店</a></p>
+<p><b>2、管理员创建账号，登录即可。</b></p>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>

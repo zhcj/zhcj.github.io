@@ -1,0 +1,23 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>创建密钥获取Git权限</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>创建密钥获取Git权限</h2>
+<p>安装上面的TortoiseGit后，里面有个PuttyGen（或者<a href="/software/puttygen.exe">puttygen.exe</a> ），用它来生成密钥（一对两个），私钥自己保存好。公钥放到服务器上后，用脚本自动生成一个私有仓库，并添加到第一个项目中，其他项目添加需要说明一下。</p>
+<p>（1）生成密钥，点击“Generate”，并且不断在空白区域晃动鼠标：<br><a href="image/keygen1.png"><img src="image/keygen1.png" width="250" border="1"></a><a href="image/keygen2.png"><img src="image/keygen2.png" width="250" border="1"></a></p>
+<p>（2）保存公钥，选择上面框里内容，复制，打开记事本等文本编辑软件，粘贴进去后，保存为pub文件，如：zhang.pub<br><a href="image/keygen3.png"><img src="image/keygen3.png" width="250" border="1"></a></p>
+<p>（3）保存私钥，点击“Save Private Key”，出现提示点是（不再为私钥添加密码），再保存文件，如：zhang.ppk<br><a href="image/keygen4.png"><img src="image/keygen4.png" width="250" border="1"></a><a href="image/keygen5.png"><img src="image/keygen5.png" width="250" border="1"></a></p>
+<p><font color="red">注：公钥生成后，放到“\\192.168.0.2\完全共享”中，让服务器管理员生成账号即可。</font></p>
+<p>使用过程中有问题，可以在QQ群里面交流！</p>
+<p align="center">2016年9月</p>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>

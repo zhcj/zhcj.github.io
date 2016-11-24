@@ -1,0 +1,35 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>Linux防火墙firewalld安装使用简明手册</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Linux防火墙firewalld安装使用简明手册</h2>
+<p>firewalld是CentOS7默认防火墙软件，取代了原来的iptables，官方网站：<a href="https://fedoraproject.org/wiki/FirewallD/zh-cn" target="_blank">https://fedoraproject.org/wiki/FirewallD/zh-cn</a></p>
+<p><b>一、安装</b></p>
+<pre>yum install firewalld -y</pre>
+<p><b>二、常用操作</b></p>
+<p><b>1、启动/停止/重启防火墙</b></p>
+<pre>systemctl start/stop/restart firewalld</pre>
+<p><b>2、修改规则后重新载入</b></p>
+<pre>firewall-cmd --reload</pre>
+<p><b>3、显示所有规则</b></p>
+<pre>firewall-cmd --list-all</pre>
+<p><b>4、添加/删除服务</b></p>
+<pre>firewall-cmd --permanent --add-service=ssh
+firewall-cmd --permanent --remove-service=ssh</pre>
+<p><b>5、添加/删除端口</b></p>
+<pre>firewall-cmd --permanent --add-port=22/tcp
+firewall-cmd --permanent --remove-port=22/tcp</pre>
+<p><b>6、添加/删除特定IP访问特定端口</b></p>
+<pre>firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=222.222.50.162 port port=81 protocol=tcp accept"
+firewall-cmd --permanent --remove-rich-rule="rule family=ipv4 source address=222.222.50.162 port port=81 protocol=tcp accept"</pre>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>

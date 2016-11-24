@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>Linux中Samba共享安装使用简明手册</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Linux中Samba共享安装使用简明手册</h2>
+<p>Samba是Linux中提供文件/文件夹共享服务的软件，类似windows中的共享。</p>
+<p><b>一、安装配置</b></p>
+<p><b>1、安装</b></p>
+<pre>yum install samba -y</pre>
+<p><b>2、打开端口</b></p>
+<pre>firewall-cmd --permanent --add-port=137/udp
+firewall-cmd --permanent --add-port=138/udp
+firewall-cmd --permanent --add-port=139/tcp
+firewall-cmd --permanent --add-port=445/tcp
+firewall-cmd --reload</pre>
+<p><b>3、修改配置文件</b></p>
+<pre>vi /etc/samba/smb.conf</pre>
+<li>不用登录，直接访问目录，在</li>
+<pre>        security = user
+        passdb backend = tdbsam</pre>
+后面添加：
+<pre>        map to guest = bad user</pre>
+<li>不显示打印机，将</li>
+<pre>        load printers = yes</pre>
+改为：
+<pre>        load printers = no</pre>
+<li>添加共享目录，在文件最后面加上：</li>
+<pre>[软件]
+path = /data/software
+public = yes
+writable = no
+printable = yes
+[完全共享] 
+path = /data/share
+public = yes
+writable = yes
+printable = yes</pre>
+<p><b>4、修改权限</b></p>
+<pre>chmod 777 /data/share -R</pre>
+<p><b>二、常用操作</b></p>
+<p><b>1、设置开机启动</b></p>
+<pre>systemctl enable smb</pre>
+<p><b>2、启动/停止/重启防火墙</b></p>
+<pre>systemctl start/stop/restart smb</pre>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>

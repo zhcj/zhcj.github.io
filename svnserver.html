@@ -1,0 +1,38 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>SVN版本控制系统安装使用手册（网站开发用）</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>SVN版本控制系统安装使用手册（网站开发用）</h2>
+<p><b>一、Linux服务器端</b></p>
+<p><b>1、安装subversion</b></p>
+<pre>yum install subversion -y</pre>
+<p><b>2、创建SVN空版本库</b></p>
+<pre>mkdir /myweb
+svnadmin create /myweb/myrepo</pre>
+<p><b>3、配置SVN</b></p>
+<p>未完成，待续。。。</p>
+<p><b>4、创建或迁移网站目录</b></p>
+<pre>svn co file:///myweb/myrepo /myweb/www
+cp /原代码目录/* /myweb/www/
+cd /myweb/www
+svn add *
+svn ci -m "创建项目"</pre>
+<p><b>5、设置网站钩子（提交代码到SVN版本库后，自动拉取到网站目录）</b></p>
+<pre>cd /myweb/myrepo/hooks
+echo "#!/bin/sh" > post-commit
+echo "cd /myweb/www" >> post-commit
+echo "/usr/bin/svn up" >> post-commit
+echo "chown www:www /myweb/www -R >> post-commit
+chmod +x post-commit</pre>
+<p align="center">2016年11月</p>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>

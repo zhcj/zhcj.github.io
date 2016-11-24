@@ -1,0 +1,61 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<title>Linux服务器安全配置手册</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Linux服务器安全配置手册</h2>
+<p>注：以CentOS7为例。</p>
+<p><b>一、系统安全</b></p>
+<p><b>1、系统和软件都升级到最新</b></p>
+<pre>yum update -y</pre>
+<p><b>2、删除无用的系统账号</b></p>
+<pre>userdel games
+userdel avahi-autoipd
+userdel operator
+userdel ftp
+userdel saslauth
+userdel postfix</pre>
+<p><b>3、安装firewalld防火墙</b></p>
+<pre>yum install firewalld -y
+systemctl start firewalld
+systemctl enable firewalld</pre>
+<p><b>4、禁用bash历史记录</b></p>
+<pre>vi /etc/profile</pre>
+<p>将</p>
+<pre>HISTSIZE=1000</pre>
+<p>改为：</p>
+<pre>HISTSIZE=0</pre>
+<p>然后：</p>
+<pre>rm ~/.bash_history
+history -c</pre>
+<p><b>5、安装fail2ban</b></p>
+<pre>yum install fail2ban</pre>
+<p><b>二、ssh安全配置</b></p>
+<p><b>1、修改ssh端口号</b></p>
+<pre>vi /etc/ssh/sshd_config</pre>
+<p>将</p>
+<pre>#Port 22</pre>
+<p>前面的#去掉，将默认的22改为你想要的端口号，尽量大于10000，可以大幅度减少被扫描的可能。</p>
+<p><b>2、ssh限制登录IP</b></p>
+<pre>vi /etc/ssh/sshd_config</pre>
+<p>将以下规则添加到文件末尾：</p>
+<pre>allowusers root@myip1
+allowusers root@myip2</pre>
+<p><b>3、使用key登录，禁止账号密码登录</b></p>
+<pre>vi ~/.ssh/authorized_keys</pre>
+<p>将用puttykegen生成的pubkey复制到此文件中，一行一个账号。</p>
+<pre>vi /etc/ssh/sshd_config</pre>
+<p>将</p>
+<pre>#PasswordAuthentication yes</pre>
+<p>中的#去掉，并改为：</p>
+<pre>PasswordAuthentication no</pre>
+<p><a href="index.html">返回首页</a></p>
+</body>
+</html>
