@@ -209,12 +209,16 @@ cd libgd-2.2.3
 </pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-5.6.28.tar.xz</pre>
+wget http://cn2.php.net/distributions/php-5.6.28.tar.xz
+#wget http://cn2.php.net/distributions/php-7.1.0.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-5.6.28.tar.xz</pre>
+<pre>tar xvf php-5.6.28.tar.xz
+#tar xvf php-7.1.0.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.28
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip
+#cd php-7.1.0
+#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl
 make -j5
 make install
 ln -s /data/lnmp/php/bin/* /usr/bin
@@ -226,6 +230,7 @@ sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
 echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php/php.ini
@@ -285,11 +290,11 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget https://downloads.mariadb.org/f/mariadb-10.1.18/source/mariadb-10.1.18.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O /from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O /from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.18.tar.gz</pre>
+<pre>wget https://downloads.mariadb.org/f/mariadb-10.1.19/source/mariadb-10.1.19.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.19.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.18.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.19.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.18
+<pre>cd mariadb-10.1.19
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
