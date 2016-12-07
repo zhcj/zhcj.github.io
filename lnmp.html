@@ -242,6 +242,8 @@ sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnmp/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnmp/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/lnmp/php/php.ini
 sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-fpm.log/" /data/lnmp/php/etc/php-fpm.conf
+sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php/etc/php-fpm.d/www.conf
+sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php/etc/php-fpm.d/www.conf
 mkdir /data/lnmp/log/php
 
 #安装memcached，并设置开机运行
