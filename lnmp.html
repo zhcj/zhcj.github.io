@@ -150,8 +150,34 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-
 sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php/etc/php-fpm.d/www.conf
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php/etc/php-fpm.d/www.conf
 mkdir /data/lnmp/log/php
+</pre>
+#与php7共存时，php5的编译及配置过程
+<pre>
+./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php/lib/php5/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip
+
+cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm5.service
+sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /usr/lib/systemd/system/php-fpm5.service
+sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /usr/lib/systemd/system/php-fpm5.service
+sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm5.service
+cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
+echo "zend_extension=/data/lnmp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
+cp php.ini-production /data/lnmp/php5/php.ini
+sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php5/php.ini
+sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php5/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/lnmp/php5/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/lnmp/php5/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/lnmp/php5/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /data/lnmp/php5/php.ini
+sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnmp/php5/php.ini
+sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnmp/php5/php.ini
+sed -i "s/expose_php = On/expose_php = Off/" /data/lnmp/php5/php.ini
+sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-fpm.log/" /data/lnmp/php5/etc/php-fpm.conf
+sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php5/etc/php-fpm.conf
+sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php5/etc/php-fpm.conf
+mkdir /data/lnmp/log/php</pre>
 
 #安装memcached，并设置开机运行
+<pre>
 yum install memcached -y
 systemctl start memcached
 systemctl enable memcached
