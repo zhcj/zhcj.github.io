@@ -15,14 +15,14 @@
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNMP环境安装配置笔记</h2>
 <h3>注：网站系统为CentOS 7，使用systemd。</h3>
-<p><b>准备工作：</b></p>
+<p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
 <p>2、清理原有安装</p>
 <pre>yum remove php* mariadb* nginx* http* -y</pre>
-<p><b>一、测试服务器LNMP编译安装</b></p>
+<p><b>二、测试服务器LNMP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
-<pre>yum install gcc cmake gcc-c++ autoconf m4 perl-Data-Dumper automake -y</pre>
+<pre>yum install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
 <li>安装依赖</li>
 <pre>yum install pcre-devel zlib-devel openssl-devel -y</pre>
@@ -111,7 +111,7 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/bin/
 firewall-cmd --reload</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>#yum install libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
+<pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.29.tar.xz
@@ -147,8 +147,8 @@ sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnmp/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnmp/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/lnmp/php/php.ini
 sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-fpm.log/" /data/lnmp/php/etc/php-fpm.conf
-sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php/etc/php-fpm.d/www.conf
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php/etc/php-fpm.d/www.conf
+sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php/etc/php-fpm.conf
+sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php/etc/php-fpm.conf
 mkdir /data/lnmp/log/php
 </pre>
 #与php7共存时，php5的编译及配置过程
@@ -273,23 +273,6 @@ rm -rf mysql-test
 rm -rf data/test
 rm -rf sql-bench
 </pre>
-<p><b>5、压缩成二进制包（供生产服务器使用）</b></p>
-<pre>tar cvfpJ lnmp.tar.xz /data/lnmp /usr/lib/systemd/system/nginx.service /usr/lib/systemd/system/php-fpm.service /usr/lib/systemd/system/mariadb.serive</pre>
-<p><b>二、生产服务器LNMP安装</b></p>
-<p><b>1、安装依赖</b></p>
-<pre>yum install pcre-devel zlib-devel libxml2-devel systemd-devel gd-devel libcurl-devel ncurses-devel bison -y</pre>
-<p><b>2、解压二进制包</b></p>
-<pre>tar xvfp lnmp.tar.xz /</pre>
-<p><b>3、软链接可执行文件</b></p>
-<pre>ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
-ln -s /data/lnmp/php/bin/* /usr/bin
-ln -s /data/lnmp/php/sbin/* /usr/sbin
-ln -s /data/lnmp/mariadb/bin/* /usr/bin</pre>
-<p><b>4、打开防火墙</b></p>
-<pre>firewall-cmd --permanent --zone=public --add-service=http
-firewall-cmd --reload</pre>
-<p><b>5、复制网站程序</b></p>
-<pre>mkdir /data/www</pre>
 <p></p>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
