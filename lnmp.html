@@ -34,8 +34,7 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <pre>mkdir -p /data/source
 cd /data/source
 wget https://www.openssl.org/source/openssl-1.0.2k.tar.gz
-tar xvf openssl-1.0.2k.tar.gz
-mv openssl-1.0.2k /data/lnmp/
+tar xvf openssl-1.0.2k.tar.gz -C /data/lnmp/
 wget http://nginx.org/download/nginx-1.11.9.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf nginx-1.11.9.tar.gz</pre>
