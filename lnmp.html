@@ -25,7 +25,15 @@
 <pre>yum install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
 <li>安装依赖</li>
-<pre>yum install pcre-devel zlib-devel openssl-devel -y</pre>
+<pre>yum install pcre-devel zlib-devel -y
+cd /data/source
+wget https://www.openssl.org/source/openssl-1.0.2k.tar.gz
+tar xvf openssl-1.0.2k.tar.gz -C /data/lnmp/
+cd /data/lnmp/openssl-1.0.2k
+./config  --prefix=/data/lnmp/lib --openssldir=/data/lnmp/lib/openssl
+make -j5
+make install
+</pre>
 <li>建立组和用户并设置不能ssh登录</li>
 <pre>groupadd -r www
 useradd -r -M -s /sbin/nologin -g www www
@@ -33,8 +41,6 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget https://www.openssl.org/source/openssl-1.0.2k.tar.gz
-tar xvf openssl-1.0.2k.tar.gz -C /data/lnmp/
 wget http://nginx.org/download/nginx-1.11.9.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf nginx-1.11.9.tar.gz</pre>
@@ -135,9 +141,9 @@ wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
 #tar xvf php-7.1.1.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.30
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl --enable-soap
-#cd php-7.1.0
-#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl --enable-soap
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
+#cd php-7.1.1
+#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
 make -j5
 make install
 ln -s /data/lnmp/php/bin/* /usr/bin
@@ -170,7 +176,7 @@ mkdir /data/lnmp/log/php
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
-./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php/lib/php5/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl --enable-soap
+./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php/lib/php5/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
 
 cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm5.service
 sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /usr/lib/systemd/system/php-fpm5.service
