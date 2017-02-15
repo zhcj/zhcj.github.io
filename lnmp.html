@@ -41,22 +41,19 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.11.9.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.11.10.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.11.9.tar.gz</pre>
+<pre>tar xvf nginx-1.11.10.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.11.9
-
-
+<pre>cd nginx-1.11.10
+#修改日志格式
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/http/modules/ngx_http_log_module.c
-
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/core/ngx_times.c
 sed -i "s/%02d\/%s\/%d:%02d:%02d:%02d %c%02i%02i/%4d-%02d-%02d %02d:%02d:%02d/g" src/core/ngx_times.c
 
                        tm.ngx_tm_year, tm.ngx_tm_mon,
                        tm.ngx_tm_mday, tm.ngx_tm_hour,
                        tm.ngx_tm_min, tm.ngx_tm_sec,
-
 
 ./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-openssl=/data/lnmp/openssl-1.0.2k
 make -j5
@@ -141,7 +138,12 @@ wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
 #tar xvf php-7.1.1.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.30
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap --enable-bcmath --enable-sockets
+#zabbix
+Minimum required limit on execution time of PHP scripts is 300 (configuration option "max_execution_time").
+Minimum required limit on input parse time for PHP scripts is 300 (configuration option "max_input_time").
+PHP bcmath extension missing (PHP configuration parameter --enable-bcmath).
+PHP option "always_populate_raw_post_data" must be set to "-1"
 #cd php-7.1.1
 #./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
 make -j5
@@ -249,8 +251,7 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <pre>wget https://downloads.mariadb.org/f/mariadb-10.1.21/source/mariadb-10.1.21.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.21.tar.gz
 #wget http://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-boost-5.7.17.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.21.tar.gz
-#tar xvf mysql-boost-5.7.17.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.21.tar.gz</pre>
 <li>编译</li>
 <pre>cd mariadb-10.1.21
 cmake . \
@@ -285,18 +286,6 @@ cmake . \
 
 -DMAX_INDEXES=128
 
-#cd mysql-5.7.17
-cmake . \
--DCMAKE_INSTALL_PREFIX=/data/lnmp/mysql \
--DMYSQL_DATADIR=/data/lnmp/mysql/data \
--DDEFAULT_CHARSET=utf8 \
--DDEFAULT_COLLATION=utf8_general_ci \
--DWITH_SYSTEMD=auto \
--DWITH_INNOBASE_STORAGE_ENGINE=1 \
--DWITH_ARCHIVE_STORAGE_ENGINE=1 \
--DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
--DWITH_BOOST=boost
-
 make -j5
 make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
@@ -305,6 +294,14 @@ cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
 sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
 cd /data/lnmp/mariadb
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
+#慢日志
+[mysqld]
+slow_query_log = on
+slow_query_log_file = /data/lnmp/log/mysql/mysql-slow
+long_query_time = 2
+#bin日志
+log-bin=mysql-bin
+
 ./scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 systemctl start mariadb
 ./bin/mysqladmin -u root password 'password'
@@ -312,13 +309,6 @@ rm -rf bin/mysql_client_test*
 rm -rf mysql-test
 rm -rf data/test
 rm -rf sql-bench
-
-#mysql
-cd /data/lnmp/mysql
-rm -rf mysql-test
-rm -rf data/test
-rm -rf bin/mysql_client_test*
-rm -rf bin/mysqltest*
 
 </pre>
 <p></p>
