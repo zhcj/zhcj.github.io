@@ -301,6 +301,8 @@ slow_query_log_file = /data/lnmp/log/mysql/mysql-slow
 long_query_time = 2
 #bin日志
 log-bin=mysql-bin
+#最大连接数
+max_connections = 1000
 
 ./scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 systemctl start mariadb
