@@ -78,6 +78,7 @@ WantedBy=multi-user.target
 EOF
 
 sed -i "s/\/\$nginx_version//" /data/lnmp/nginx/conf/fastcgi*
+sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/lnmp/nginx/conf/mime.types
 mv /data/lnmp/nginx/conf/nginx.conf /data/lnmp/nginx/conf/nginx.conf.bak
 mkdir /data/lnmp/nginx/conf/conf.d
 
