@@ -248,11 +248,11 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget https://downloads.mariadb.org/f/mariadb-10.1.21/source/mariadb-10.1.21.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.21.tar.gz
+<pre>wget https://downloads.mariadb.org/f/mariadb-10.1.22/source/mariadb-10.1.22.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.22.tar.gz
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.21.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.22.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.21
+<pre>cd mariadb-10.1.22
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -291,8 +291,8 @@ ln -s /data/lnmp/mariadb/bin/* /usr/bin
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
 sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
-cd /data/lnmp/mariadb
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
+cd /data/lnmp/mariadb
 #慢日志
 [mysqld]
 slow_query_log = on
