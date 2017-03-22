@@ -26,6 +26,7 @@
 <p><b>2、安装Nginx</b></p>
 <li>安装依赖</li>
 <pre>yum install pcre-devel zlib-devel -y
+mkdir -p /data/source
 cd /data/source
 wget https://www.openssl.org/source/openssl-1.0.2k.tar.gz
 tar xvf openssl-1.0.2k.tar.gz -C /data/lnmp/
@@ -39,13 +40,12 @@ make install
 useradd -r -M -s /sbin/nologin -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
-<pre>mkdir -p /data/source
-cd /data/source
-wget http://nginx.org/download/nginx-1.11.10.tar.gz</pre>
+<pre>cd /data/source
+wget http://nginx.org/download/nginx-1.11.11.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.11.10.tar.gz</pre>
+<pre>tar xvf nginx-1.11.11.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.11.10
+<pre>cd nginx-1.11.11
 #修改日志格式
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/http/modules/ngx_http_log_module.c
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/core/ngx_times.c
@@ -216,12 +216,13 @@ cd libmemcached-1.0.18
 make -j5
 make install
 #安装php的memcached模块
+yum install autoconf -y
 cd /data/source
 wget https://pecl.php.net/get/memcached-2.2.0.tgz
 tar xvf memcached-2.2.0.tgz
 cd memcached-2.2.0
 /data/lnmp/php/bin/phpize
-./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib
+./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
 make -j5
 make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
