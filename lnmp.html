@@ -41,11 +41,11 @@ useradd -r -M -s /sbin/nologin -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://nginx.org/download/nginx-1.11.11.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.11.12.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.11.11.tar.gz</pre>
+<pre>tar xvf nginx-1.11.12.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.11.11
+<pre>cd nginx-1.11.12
 #修改日志格式
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/http/modules/ngx_http_log_module.c
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/core/ngx_times.c
@@ -133,10 +133,10 @@ firewall-cmd --reload</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.2.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.1.3.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.30.tar.xz
-#tar xvf php-7.1.2.tar.xz</pre>
+#tar xvf php-7.1.3.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.30
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap --enable-bcmath --enable-sockets
@@ -145,7 +145,7 @@ Minimum required limit on execution time of PHP scripts is 300 (configuration op
 Minimum required limit on input parse time for PHP scripts is 300 (configuration option "max_input_time").
 PHP bcmath extension missing (PHP configuration parameter --enable-bcmath).
 PHP option "always_populate_raw_post_data" must be set to "-1"
-#cd php-7.1.2
+#cd php-7.1.3
 #./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
 make -j5
 make install
