@@ -22,7 +22,7 @@
 <pre>apt purge php* mariadb* nginx* http* mysql* -y</pre>
 <p><b>二、测试服务器LNMP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
-<pre>apt install gcc cmake gcc-c++ -y</pre>
+<pre>apt install gcc cmake -y</pre>
 <p><b>2、安装Nginx</b></p>
 <li>安装依赖</li>
 <pre>apt install zlib1g-dev libpcre3-dev -y
@@ -129,7 +129,7 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 firewall-cmd --reload</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>apt install libsystemd-dev libgd-dev libxml2-dev -y</pre>
+<pre>apt install libsystemd-dev libgd-dev libxml2-dev libcurl4-gnutls-dev -y</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
@@ -139,6 +139,7 @@ wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
 #tar xvf php-7.1.4.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.30
+sed -i "s/\$i\/include\/curl\/easy.h/\$i\/include\/x86_64-linux-gnu\/curl\/easy.h/g" configure
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap --enable-bcmath --enable-sockets
 #zabbix
 Minimum required limit on execution time of PHP scripts is 300 (configuration option "max_execution_time").
@@ -146,6 +147,7 @@ Minimum required limit on input parse time for PHP scripts is 300 (configuration
 PHP bcmath extension missing (PHP configuration parameter --enable-bcmath).
 PHP option "always_populate_raw_post_data" must be set to "-1"
 #cd php-7.1.4
+sed -i "s/\$i\/include\/curl\/easy.h/\$i\/include\/x86_64-linux-gnu\/curl\/easy.h/g" configure
 #./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
 make -j5
 make install
