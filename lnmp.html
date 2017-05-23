@@ -308,6 +308,8 @@ rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
+systemctl daemon-reload
+systemctl restart mariadb
 #慢日志
 [mysqld]
 slow_query_log = on
