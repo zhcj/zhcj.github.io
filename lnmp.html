@@ -250,11 +250,11 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget https://downloads.mariadb.org/f/mariadb-10.1.23/source/mariadb-10.1.23.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.23.tar.gz
+<pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.6/source/mariadb-10.2.6.tar.gz
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.23.tar.gz</pre>
+<pre>tar xvf mariadb-10.2.6.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.23
+<pre>cd mariadb-10.2.6
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -267,7 +267,6 @@ cmake . \
 -DPLUGIN_FEDERATED=NO \
 -DPLUGIN_FEDERATEDX=NO \
 -DPLUGIN_OQGRAPH=NO \
--DPLUGIN_TOKUDB=NO \
 -DPLUGIN_AUTH_PAM=NO \
 -DPLUGIN_SEQUENCE=NO \
 -DPLUGIN_SPIDER=NO \
@@ -283,7 +282,8 @@ cmake . \
 -DWITH_DEBUG=NO \
 -DWITH_EMBEDDED_SERVER=OFF \
 -DWITH_PROFILING=OFF \
--DWITH_UNIT_TESTS=OFF
+-DWITH_UNIT_TESTS=OFF \
+-DPLUGIN_TOKUDB=NO
 
 -DMAX_INDEXES=128
 
