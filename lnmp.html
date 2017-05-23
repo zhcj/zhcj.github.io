@@ -248,13 +248,13 @@ php -i|grep apc</pre>
 useradd -r -M -s /sbin/nologin -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
-<pre>yum install ncurses-devel bison -y</pre>
+<pre>yum install ncurses-devel bison gnutls-devel -y</pre>
 <li>下载</li>
-<pre>wget https://downloads.mariadb.org/f/mariadb-10.1.23/source/mariadb-10.1.23.tar.gz/from/http%3A//mirrors.tuna.tsinghua.edu.cn/mariadb/?serve -O mariadb-10.1.23.tar.gz
+<pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.6/source/mariadb-10.2.6.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.23.tar.gz</pre>
+<pre>tar xvf mariadb-10.2.6.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.23
+<pre>cd mariadb-10.2.6
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -267,7 +267,6 @@ cmake . \
 -DPLUGIN_FEDERATED=NO \
 -DPLUGIN_FEDERATEDX=NO \
 -DPLUGIN_OQGRAPH=NO \
--DPLUGIN_TOKUDB=NO \
 -DPLUGIN_AUTH_PAM=NO \
 -DPLUGIN_SEQUENCE=NO \
 -DPLUGIN_SPIDER=NO \
@@ -283,7 +282,8 @@ cmake . \
 -DWITH_DEBUG=NO \
 -DWITH_EMBEDDED_SERVER=OFF \
 -DWITH_PROFILING=OFF \
--DWITH_UNIT_TESTS=OFF
+-DWITH_UNIT_TESTS=OFF \
+-DPLUGIN_TOKUDB=NO
 
 -DMAX_INDEXES=128
 
@@ -294,7 +294,22 @@ chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
 sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
-cd /data/lnmp/mariadb
+/data/lnmp/mariadb/scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
+systemctl start mariadb
+/data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
+rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
+rm -rf /data/lnmp/mariadb/mysql-test
+rm -rf /data/lnmp/mariadb/data/test
+rm -rf /data/lnmp/mariadb/sql-bench
+#更新或重新编译后：
+sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
+sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
+rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
+rm -rf /data/lnmp/mariadb/mysql-test
+rm -rf /data/lnmp/mariadb/data/test
+rm -rf /data/lnmp/mariadb/sql-bench
+systemctl daemon-reload
+systemctl restart mariadb
 #慢日志
 [mysqld]
 slow_query_log = on
@@ -304,17 +319,7 @@ long_query_time = 2
 log-bin=mysql-bin
 #最大连接数
 max_connections = 1000
-
-./scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
-systemctl start mariadb
-./bin/mysqladmin -u root password 'password'
-rm -rf bin/mysql_client_test*
-rm -rf mysql-test
-rm -rf data/test
-rm -rf sql-bench
-
 </pre>
-<p></p>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
 </body>
