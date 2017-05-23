@@ -122,7 +122,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/lnmp/nginx/sbin/nginx /usr/bin/
+ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 </pre>
 <li>打开防火墙</li>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
