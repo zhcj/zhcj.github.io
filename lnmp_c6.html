@@ -13,26 +13,34 @@
 </head>
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
-<h2 align=center>网站LNMP环境安装配置笔记（开发机环境配置）</h2>
-<h3>注：系统为Fedora 25 (Workstation Edition)</h3>
+<h2 align=center>网站LNMP环境安装配置笔记</h2>
+<h3>注：网站系统为CentOS 6.9。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
-<pre>dnf update -y</pre>
+<pre>yum update -y</pre>
 <p>2、清理原有安装</p>
-<pre>dnf remove php* mariadb* nginx* http* mysql* -y</pre>
+<pre>yum remove mysql-libs selinux* postfix http* -y</pre>
 <p><b>二、测试服务器LNMP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
-<pre>apt install gcc cmake -y</pre>
+<pre>yum install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
-<pre>dnf install pcre-devel openssl-devel -y
+<li>安装依赖</li>
+<pre>yum install pcre-devel zlib-devel -y
+mkdir -p /data/source
+cd /data/source
+wget https://www.openssl.org/source/openssl-1.0.2l.tar.gz
+tar xvf openssl-1.0.2l.tar.gz -C /data/lnmp/
+cd /data/lnmp/openssl-1.0.2l
+./config  --prefix=/data/lnmp/lib --openssldir=/data/lnmp/lib/openssl
+make -j5
+make install
 </pre>
 <li>建立组和用户并设置不能ssh登录</li>
 <pre>groupadd -r www
 useradd -r -M -s /sbin/nologin -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
-<pre>mkdir -p /data/source
-cd /data/source
+<pre>cd /data/source
 wget http://nginx.org/download/nginx-1.13.1.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf nginx-1.13.1.tar.gz</pre>
@@ -52,22 +60,7 @@ make -j5
 make install</pre>
 <li>配置启动</li>
 <pre>
-cat > /lib/systemd/system/nginx.service << "EOF"
-[Unit]
-Description=The nginx HTTP and reverse proxy server
-After=network.target remote-fs.target nss-lookup.target
-
-[Service]
-Type=forking
-PIDFile=/run/nginx.pid
-ExecStartPre=/data/lnmp/nginx/sbin/nginx -t -c /data/lnmp/nginx/conf/nginx.conf
-ExecStart=/data/lnmp/nginx/sbin/nginx -c /data/lnmp/nginx/conf/nginx.conf
-ExecReload=/bin/kill -HUP $MAINPID
-ExecStop=/bin/kill -QUIT $MAINPID
-
-[Install]
-WantedBy=multi-user.target
-EOF
+https://www.nginx.com/resources/wiki/start/topics/examples/redhatnginxinit/
 
 sed -i "s/\/\$nginx_version//" /data/lnmp/nginx/conf/fastcgi*
 sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/lnmp/nginx/conf/mime.types
@@ -115,14 +108,16 @@ server {
 EOF
 mkdir /data/www
 ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
+sed -i "s/nginx=\"\/usr\/sbin\/nginx\"/nginx=\"\/data\/lnmp\/nginx\/sbin\/nginx\"/g" /etc/init.d/nginx
+sed -i "s/NGINX_CONF_FILE=\"\/etc\/nginx\/nginx.conf\"/NGINX_CONF_FILE=\"\/data\/lnmp\/nginx\/conf\/nginx.conf\"/g" /etc/init.d/nginx
 </pre>
 <li>打开防火墙</li>
-<pre>firewall-cmd --permanent --zone=public --add-service=http
-firewall-cmd --reload</pre>
+<pre>iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+service iptables save
+service iptables restart</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>apt install libsystemd-dev libgd-dev libxml2-dev libcurl4-gnutls-dev -y
-ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/</pre>
+<pre>yum install libxml2-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
@@ -132,22 +127,19 @@ wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
 #tar xvf php-7.1.5.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.30
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap --enable-bcmath --enable-sockets
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap --enable-bcmath --enable-sockets
 #zabbix
 Minimum required limit on execution time of PHP scripts is 300 (configuration option "max_execution_time").
 Minimum required limit on input parse time for PHP scripts is 300 (configuration option "max_input_time").
 PHP bcmath extension missing (PHP configuration parameter --enable-bcmath).
 PHP option "always_populate_raw_post_data" must be set to "-1"
 #cd php-7.1.5
-#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
+#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
 make -j5
 make install
 ln -s /data/lnmp/php/bin/* /usr/bin
 ln -s /data/lnmp/php/sbin/* /usr/sbin
-cp sapi/fpm/php-fpm.service /lib/systemd/system/
-sed -i "s/\${prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
+cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
 echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
@@ -172,12 +164,8 @@ mkdir /data/lnmp/log/php
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
-./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php/lib/php5/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
+./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php/lib/php5/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
 
-cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
 cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
 echo "zend_extension=/data/lnmp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php5/php.ini
@@ -241,7 +229,28 @@ php -i|grep apc</pre>
 useradd -r -M -s /sbin/nologin -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
-<pre>apt install libncurses5-dev libreadline-dev libgnutls28-dev -y</pre>
+<pre>
+#unbound guile-devel libunistring-devel nettle-devel -y
+#wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.12.tar.gz
+#tar xvf libtasn1-4.12.tar.gz
+#cd libtasn1-4.12
+#./configure --prefix=/data/lnmp/lib
+#make -j5
+#make install
+#yum install libffi-devel
+#wget https://p11-glue.freedesktop.org/releases/p11-kit-0.23.2.tar.gz
+#tar xvf p11-kit-0.23.2.tar.gz
+#cd p11-kit-0.23.2
+#./configure --prefix=/data/lnmp/lib
+#make -j5
+#make install
+
+
+yum install ncurses-devel bison -y
+#unbound-anchor -a "no"
+
+#wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.5/gnutls-3.5.9.tar.xz
+</pre>
 <li>下载</li>
 <pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.6/source/mariadb-10.2.6.tar.gz</pre>
 <li>解压</li>
@@ -253,8 +262,6 @@ cmake . \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
 -DDEFAULT_CHARSET=utf8 \
 -DDEFAULT_COLLATION=utf8_general_ci \
--DWITH_SYSTEMD=auto \
--DINSTALL_SYSTEMD_UNITDIR=/lib/systemd/system \
 -DDISABLE_SHARED=OFF \
 -DPLUGIN_MROONGA=NO \
 -DPLUGIN_FEDERATED=NO \
@@ -285,9 +292,6 @@ make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
-sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
-cd /data/lnmp/mariadb
 /data/lnmp/mariadb/scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
@@ -296,8 +300,6 @@ rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
 #更新或重新编译后：
-sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
 rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
