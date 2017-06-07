@@ -304,8 +304,8 @@ rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
 #更新或重新编译后：
-sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
+sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /lib/systemd/system/mariadb.service
+sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
