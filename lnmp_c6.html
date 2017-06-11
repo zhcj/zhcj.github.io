@@ -127,16 +127,14 @@ wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
 #tar xvf php-7.1.6.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.30
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap --enable-bcmath --enable-sockets
-#zabbix
-Minimum required limit on execution time of PHP scripts is 300 (configuration option "max_execution_time").
-Minimum required limit on input parse time for PHP scripts is 300 (configuration option "max_input_time").
-PHP bcmath extension missing (PHP configuration parameter --enable-bcmath).
-PHP option "always_populate_raw_post_data" must be set to "-1"
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl=/data/lnmp/lib
 #cd php-7.1.6
-#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
+#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --enable-soap --with-openssl=/data/lnmp/lib
 make -j5
 make install
+#make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
+#make install之后，运行以下命令，再次make && make install就可以了
+/data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
 ln -s /data/lnmp/php/bin/* /usr/bin
 ln -s /data/lnmp/php/sbin/* /usr/sbin
 cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
