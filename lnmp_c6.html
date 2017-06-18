@@ -46,15 +46,6 @@ wget http://nginx.org/download/nginx-1.13.1.tar.gz</pre>
 <pre>tar xvf nginx-1.13.1.tar.gz</pre>
 <li>编译</li>
 <pre>cd nginx-1.13.1
-#修改日志格式
-sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/http/modules/ngx_http_log_module.c
-sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/core/ngx_times.c
-sed -i "s/%02d\/%s\/%d:%02d:%02d:%02d %c%02i%02i/%4d-%02d-%02d %02d:%02d:%02d/g" src/core/ngx_times.c
-
-                       tm.ngx_tm_year, tm.ngx_tm_mon,
-                       tm.ngx_tm_mday, tm.ngx_tm_hour,
-                       tm.ngx_tm_min, tm.ngx_tm_sec,
-
 ./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-openssl=/data/lnmp/openssl-1.0.2l
 make -j5
 make install</pre>
@@ -180,47 +171,6 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-
 sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php5/etc/php-fpm.conf
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php5/etc/php-fpm.conf
 mkdir /data/lnmp/log/php</pre>
-
-#安装memcached，并设置开机运行
-<pre>
-yum install memcached -y
-systemctl start memcached
-systemctl enable memcached
-#安装libmemcached
-cd /data/source
-wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
-tar xvf libmemcached-1.0.18.tar.gz
-cd libmemcached-1.0.18
-./configure --prefix=/data/lnmp/lib --with-memcached
-make -j5
-make install
-#安装php的memcached模块
-yum install autoconf -y
-cd /data/source
-wget https://pecl.php.net/get/memcached-2.2.0.tgz
-tar xvf memcached-2.2.0.tgz
-cd memcached-2.2.0
-/data/lnmp/php/bin/phpize
-./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
-make -j5
-make install
-echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
-#安装php的apcu模块
-cd /data/source
-wget https://pecl.php.net/get/apcu-4.0.11.tgz
-tar xvf apcu-4.0.11.tgz
-cd apcu-4.0.11
-/data/lnmp/php/bin/phpize
-./configure --enable-apcu --with-php-config=/data/lnmp/php/bin/php-config
-make -j5
-make install
-echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
-</pre>
-<p>检查是否成功</p>
-<pre>php -m|grep memcache
-php -m|grep apc
-php -i|grep memcache
-php -i|grep apc</pre>
 <p><b>4、安装MariaDB/Mysql数据库</b></p>
 <li>创建mysql用户</li>
 <pre>groupadd -r mysql
@@ -228,33 +178,14 @@ useradd -r -M -s /sbin/nologin -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>
-#unbound guile-devel libunistring-devel nettle-devel -y
-#wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.12.tar.gz
-#tar xvf libtasn1-4.12.tar.gz
-#cd libtasn1-4.12
-#./configure --prefix=/data/lnmp/lib
-#make -j5
-#make install
-#yum install libffi-devel
-#wget https://p11-glue.freedesktop.org/releases/p11-kit-0.23.2.tar.gz
-#tar xvf p11-kit-0.23.2.tar.gz
-#cd p11-kit-0.23.2
-#./configure --prefix=/data/lnmp/lib
-#make -j5
-#make install
-
-
 yum install ncurses-devel bison -y
-#unbound-anchor -a "no"
-
-#wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.5/gnutls-3.5.9.tar.xz
 </pre>
 <li>下载</li>
-<pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.6/source/mariadb-10.2.6.tar.gz</pre>
+<pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.1.24/source/mariadb-10.1.24.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.2.6.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.24.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.2.6
+<pre>cd mariadb-10.1.24
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
