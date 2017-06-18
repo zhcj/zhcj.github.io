@@ -221,8 +221,8 @@ make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
+cp support-files/mysql.server /etc/init.d/mariadb
 /data/lnmp/mariadb/scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
-systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
