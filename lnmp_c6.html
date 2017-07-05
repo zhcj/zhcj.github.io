@@ -214,8 +214,6 @@ cmake . \
 -DWITH_UNIT_TESTS=OFF \
 -DPLUGIN_TOKUDB=NO
 
--DMAX_INDEXES=128
-
 make -j5
 make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
@@ -234,8 +232,7 @@ rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
-systemctl daemon-reload
-systemctl restart mariadb
+service restart mariadb
 #慢日志
 [mysqld]
 slow_query_log = on
