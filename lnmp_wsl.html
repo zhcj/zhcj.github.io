@@ -14,7 +14,7 @@
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNMP环境安装配置笔记（开发机环境配置）</h2>
-<h3>注：系统为Ubuntu 17.04</h3>
+<h3>注：系统为Ubuntu on Windows 10(16.04)</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>sudo apt update;sudo apt dist-upgrade -y</pre>
@@ -120,20 +120,16 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 firewall-cmd --reload</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>apt install libsystemd-dev libgd-dev libxml2-dev libcurl4-gnutls-dev -y
-ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/</pre>
+<pre>apt install libgd-dev libxml2-dev libcurl4-gnutls-dev libzip-dev -y</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.30.tar.xz
 #wget http://cn2.php.net/distributions/php-7.1.7.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-5.6.30.tar.xz
-#tar xvf php-7.1.7.tar.xz</pre>
+<pre>tar xvf php-7.1.7.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-5.6.30
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets
-#cd php-7.1.7
-#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --enable-soap
+<pre>cd php-7.1.7
+./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --enable-soap
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
@@ -141,17 +137,11 @@ make install
 /data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
 ln -s /data/lnmp/php/bin/* /usr/bin
 ln -s /data/lnmp/php/sbin/* /usr/sbin
-cp sapi/fpm/php-fpm.service /lib/systemd/system/
-sed -i "s/\${prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
-#cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
+cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+chmod +x /etc/init.d/php-fpm
+cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
-echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php7.1
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20151012/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php7.0
+echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php/php.ini
@@ -167,30 +157,6 @@ sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php/etc/php-fpm.conf
 mkdir /data/lnmp/log/php
 </pre>
-#与php7共存时，php5的编译及配置过程
-<pre>
-./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
-
-cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
-cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
-echo "zend_extension=/data/lnmp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
-cp php.ini-production /data/lnmp/php5/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php5/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php5/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/lnmp/php5/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/lnmp/php5/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/lnmp/php5/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/lnmp/php5/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnmp/php5/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnmp/php5/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/lnmp/php5/php.ini
-sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-fpm.log/" /data/lnmp/php5/etc/php-fpm.conf
-sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php5/etc/php-fpm.conf
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php5/etc/php-fpm.conf
-mkdir /data/lnmp/log/php</pre>
 <p><b>4、安装MariaDB/Mysql数据库</b></p>
 <li>创建mysql用户</li>
 <pre>groupadd -r mysql
@@ -209,8 +175,6 @@ cmake . \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
 -DDEFAULT_CHARSET=utf8 \
 -DDEFAULT_COLLATION=utf8_general_ci \
--DWITH_SYSTEMD=auto \
--DINSTALL_SYSTEMD_UNITDIR=/lib/systemd/system \
 -DDISABLE_SHARED=OFF \
 -DPLUGIN_MROONGA=NO \
 -DPLUGIN_FEDERATED=NO \
@@ -239,25 +203,20 @@ make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
-sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
+cp support-files/mysql.server /etc/init.d/mariadb
 cd /data/lnmp/mariadb
 /data/lnmp/mariadb/scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
-systemctl start mariadb
+/etc/init.d/mariadb start
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
 #更新或重新编译后：
-sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
-systemctl daemon-reload
-systemctl restart mariadb
 #慢日志
 [mysqld]
 slow_query_log = on
