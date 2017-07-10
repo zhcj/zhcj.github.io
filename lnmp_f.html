@@ -22,7 +22,7 @@
 <pre>dnf remove php* mariadb* nginx* http* mysql* -y</pre>
 <p><b>二、测试服务器LNMP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
-<pre>apt install gcc cmake -y</pre>
+<pre>dnf install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
 <pre>dnf install pcre-devel openssl-devel -y
 </pre>
@@ -112,7 +112,7 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 firewall-cmd --reload</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>apt install libsystemd-dev libgd-dev libxml2-dev libcurl4-gnutls-dev -y
+<pre>dnf install systemd-devel gd-devel libxml2-devel libcurl-devel -y
 ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/</pre>
 <li>下载</li>
 <pre>cd /data/source
@@ -123,16 +123,14 @@ wget http://cn2.php.net/distributions/php-5.6.31.tar.xz
 #tar xvf php-7.1.7.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.31
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl=/data/lnmp/lib --enable-soap --enable-bcmath --enable-sockets
-#zabbix
-Minimum required limit on execution time of PHP scripts is 300 (configuration option "max_execution_time").
-Minimum required limit on input parse time for PHP scripts is 300 (configuration option "max_input_time").
-PHP bcmath extension missing (PHP configuration parameter --enable-bcmath).
-PHP option "always_populate_raw_post_data" must be set to "-1"
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets
 #cd php-7.1.7
-#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --with-openssl=/data/lnmp/lib --enable-soap
+#./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --enable-soap
 make -j5
 make install
+#make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
+#make install之后，运行以下命令，再次make && make install就可以了
+/data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
 ln -s /data/lnmp/php/bin/* /usr/bin
 ln -s /data/lnmp/php/sbin/* /usr/sbin
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
@@ -186,53 +184,13 @@ sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php5/etc/php-fpm.conf
 mkdir /data/lnmp/log/php</pre>
 
-#安装memcached，并设置开机运行
-<pre>
-yum install memcached -y
-systemctl start memcached
-systemctl enable memcached
-#安装libmemcached
-cd /data/source
-wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
-tar xvf libmemcached-1.0.18.tar.gz
-cd libmemcached-1.0.18
-./configure --prefix=/data/lnmp/lib --with-memcached
-make -j5
-make install
-#安装php的memcached模块
-yum install autoconf -y
-cd /data/source
-wget https://pecl.php.net/get/memcached-2.2.0.tgz
-tar xvf memcached-2.2.0.tgz
-cd memcached-2.2.0
-/data/lnmp/php/bin/phpize
-./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
-make -j5
-make install
-echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
-#安装php的apcu模块
-cd /data/source
-wget https://pecl.php.net/get/apcu-4.0.11.tgz
-tar xvf apcu-4.0.11.tgz
-cd apcu-4.0.11
-/data/lnmp/php/bin/phpize
-./configure --enable-apcu --with-php-config=/data/lnmp/php/bin/php-config
-make -j5
-make install
-echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
-</pre>
-<p>检查是否成功</p>
-<pre>php -m|grep memcache
-php -m|grep apc
-php -i|grep memcache
-php -i|grep apc</pre>
-<p><b>4、安装MariaDB/Mysql数据库</b></p>
+<p><b>4、安装MariaDB数据库</b></p>
 <li>创建mysql用户</li>
 <pre>groupadd -r mysql
 useradd -r -M -s /sbin/nologin -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
-<pre>apt install libncurses5-dev libreadline-dev libgnutls28-dev -y</pre>
+<pre>dnf install ncurses-devel bison gnutls-devel -y</pre>
 <li>下载</li>
 <pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.6/source/mariadb-10.2.6.tar.gz</pre>
 <li>解压</li>
@@ -269,8 +227,6 @@ cmake . \
 -DWITH_UNIT_TESTS=OFF \
 -DPLUGIN_TOKUDB=NO
 
--DMAX_INDEXES=128
-
 make -j5
 make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
@@ -295,15 +251,6 @@ rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
 systemctl daemon-reload
 systemctl restart mariadb
-#慢日志
-[mysqld]
-slow_query_log = on
-slow_query_log_file = /data/lnmp/log/mysql/mysql-slow
-long_query_time = 2
-#bin日志
-log-bin=mysql-bin
-#最大连接数
-max_connections = 1000
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
