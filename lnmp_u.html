@@ -193,11 +193,11 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>apt install libncurses5-dev libreadline-dev libgnutls28-dev -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.6/source/mariadb-10.2.6.tar.gz</pre>
+<pre>wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.7/source/mariadb-10.2.7.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.2.6.tar.gz</pre>
+<pre>tar xvf mariadb-10.2.7.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.2.6
+<pre>cd mariadb-10.2.7
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
