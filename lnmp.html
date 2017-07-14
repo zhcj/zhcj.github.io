@@ -205,7 +205,9 @@ mkdir /data/lnmp/log/php</pre>
 yum install memcached -y
 systemctl start memcached
 systemctl enable memcached
+</pre>
 #安装libmemcached
+<pre>
 cd /data/source
 wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
 tar xvf libmemcached-1.0.18.tar.gz
@@ -213,7 +215,9 @@ cd libmemcached-1.0.18
 ./configure --prefix=/data/lnmp/lib --with-memcached
 make -j5
 make install
+</pre>
 #安装php的memcached模块
+<pre>
 yum install autoconf -y
 cd /data/source
 wget https://pecl.php.net/get/memcached-2.2.0.tgz
@@ -231,11 +235,15 @@ make -j5
 make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
 #echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" > /data/lnmp/php7/lib/php/extensions/memcached.ini 
+</pre>
 #安装redis服务，并设置开机运行
+<pre>
 yum install redis
 systemctl start redis
 systemctl enable redis
+</pre>
 #安装php的redis模块
+<pre>
 wget https://github.com/phpredis/phpredis/archive/3.1.2.tar.gz -O phpredis-3.1.2.tar.gz
 tar xvf phpredis-3.1.2.tar.gz
 cd phpredis-3.1.2
@@ -247,7 +255,9 @@ make -j5
 make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 #echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20151012/redis.so" > /data/lnmp/php7/lib/php/extensions/redis.ini 
+</pre>
 #安装php的apcu模块
+<pre>
 cd /data/source
 wget https://pecl.php.net/get/apcu-4.0.11.tgz
 tar xvf apcu-4.0.11.tgz
