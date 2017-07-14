@@ -252,15 +252,6 @@ rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
 systemctl daemon-reload
 systemctl restart mariadb
-#慢日志
-[mysqld]
-slow_query_log = on
-slow_query_log_file = /data/lnmp/log/mysql/mysql-slow
-long_query_time = 2
-#bin日志
-log-bin=mysql-bin
-#最大连接数
-max_connections = 1000
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
