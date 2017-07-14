@@ -217,13 +217,19 @@ make install
 yum install autoconf -y
 cd /data/source
 wget https://pecl.php.net/get/memcached-2.2.0.tgz
+#wget https://pecl.php.net/get/memcached-3.0.3.tgz
+#php7.0
 tar xvf memcached-2.2.0.tgz
+#tar xvf memcached-3.0.3.tgz
 cd memcached-2.2.0
+#cd memcached-3.0.3
 /data/lnmp/php/bin/phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
+#./configure --with-php-config=/data/lnmp/php7/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
 make -j5
 make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
+#echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" > /data/lnmp/php7/lib/php/extensions/memcached.ini 
 #安装php的apcu模块
 cd /data/source
 wget https://pecl.php.net/get/apcu-4.0.11.tgz
