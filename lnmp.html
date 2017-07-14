@@ -231,6 +231,10 @@ make -j5
 make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
 #echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" > /data/lnmp/php7/lib/php/extensions/memcached.ini 
+#安装redis服务，并设置开机运行
+yum install redis
+systemctl start redis
+systemctl enable redis
 #安装php的redis模块
 wget https://github.com/phpredis/phpredis/archive/3.1.2.tar.gz -O phpredis-3.1.2.tar.gz
 tar xvf phpredis-3.1.2.tar.gz
