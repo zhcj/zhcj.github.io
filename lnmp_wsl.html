@@ -25,52 +25,28 @@
 <pre>apt install gcc cmake -y</pre>
 <p><b>2、安装Nginx</b></p>
 <li>安装依赖</li>
-<pre>apt install zlib1g-dev libpcre3-dev -y
-mkdir -p /data/source
-cd /data/source
-wget https://www.openssl.org/source/openssl-1.0.2l.tar.gz
-tar xvf openssl-1.0.2l.tar.gz -C /data/lnmp/
-cd /data/lnmp/openssl-1.0.2l
-./config  --prefix=/data/lnmp/lib --openssldir=/data/lnmp/lib/openssl
-make -j5
-make install
+<pre>apt install zlib1g-dev libpcre3-dev libssl-dev -y
 </pre>
 <li>建立组和用户并设置不能ssh登录</li>
 <pre>groupadd -r www
 useradd -r -M -s /sbin/nologin -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
-<pre>cd /data/source
+<pre>mkdir -p /data/source
+cd /data/source
 wget http://nginx.org/download/nginx-1.13.3.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf nginx-1.13.3.tar.gz</pre>
 <li>编译</li>
 <pre>cd nginx-1.13.3
-./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-openssl=/data/lnmp/openssl-1.0.2l
+./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module
 make -j5
 make install</pre>
 <li>配置启动</li>
 <pre>
-cat > /lib/systemd/system/nginx.service << "EOF"
-[Unit]
-Description=The nginx HTTP and reverse proxy server
-After=network.target remote-fs.target nss-lookup.target
-
-[Service]
-Type=forking
-PIDFile=/run/nginx.pid
-ExecStartPre=/data/lnmp/nginx/sbin/nginx -t -c /data/lnmp/nginx/conf/nginx.conf
-ExecStart=/data/lnmp/nginx/sbin/nginx -c /data/lnmp/nginx/conf/nginx.conf
-ExecReload=/bin/kill -HUP $MAINPID
-ExecStop=/bin/kill -QUIT $MAINPID
-
-[Install]
-WantedBy=multi-user.target
-EOF
 
 sed -i "s/\/\$nginx_version//" /data/lnmp/nginx/conf/fastcgi*
 sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/lnmp/nginx/conf/mime.types
-mv /data/lnmp/nginx/conf/nginx.conf /data/lnmp/nginx/conf/nginx.conf.bak
 mkdir /data/lnmp/nginx/conf/conf.d
 
 cat > /data/lnmp/nginx/conf/nginx.conf << "EOF"
@@ -115,16 +91,12 @@ EOF
 mkdir /data/www
 ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 </pre>
-<li>打开防火墙</li>
-<pre>firewall-cmd --permanent --zone=public --add-service=http
-firewall-cmd --reload</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
 <pre>apt install libgd-dev libxml2-dev libcurl4-gnutls-dev libzip-dev -y</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-5.6.31.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.7.tar.xz</pre>
+wget http://cn2.php.net/distributions/php-7.1.7.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-7.1.7.tar.xz</pre>
 <li>编译</li>
