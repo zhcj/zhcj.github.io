@@ -117,14 +117,14 @@ ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.31.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.7.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.1.8.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.31.tar.xz
-#tar xvf php-7.1.7.tar.xz</pre>
+#tar xvf php-7.1.8.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.31
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets
-#cd php-7.1.7
+#cd php-7.1.8
 #./configure  --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --enable-gd-native-ttf --with-zlib --enable-exif --enable-zip --enable-soap
 make -j5
 make install
