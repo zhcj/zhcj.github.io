@@ -41,11 +41,11 @@ useradd -r -M -s /sbin/nologin -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://nginx.org/download/nginx-1.13.4.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.13.5.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.13.4.tar.gz</pre>
+<pre>tar xvf nginx-1.13.5.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.13.4
+<pre>cd nginx-1.13.5
 ./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-openssl=/data/lnmp/openssl-1.0.2l --with-http_stub_status_module
 make -j5
 make install</pre>
