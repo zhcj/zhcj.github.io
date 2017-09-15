@@ -319,7 +319,8 @@ chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
 sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
-/data/lnmp/mariadb/scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
+cd /data/lnmp/mariadb
+scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
