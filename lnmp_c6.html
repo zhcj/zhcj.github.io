@@ -179,11 +179,11 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 yum install ncurses-devel bison openssl-devel -y
 </pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.28/source/mariadb-10.1.28.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.9/source/mariadb-10.2.9.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.28.tar.gz</pre>
+<pre>tar xvf mariadb-10.2.9.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.28
+<pre>cd mariadb-10.2.9
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -231,7 +231,7 @@ rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
-service restart mariadb
+service mariadb restart
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
