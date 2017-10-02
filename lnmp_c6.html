@@ -176,7 +176,7 @@ useradd -r -M -s /sbin/nologin -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>
-yum install ncurses-devel bison -y
+yum install ncurses-devel bison openssl-devel -y
 </pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.28/source/mariadb-10.1.28.tar.gz</pre>
@@ -210,8 +210,7 @@ cmake . \
 -DWITH_EMBEDDED_SERVER=OFF \
 -DWITH_PROFILING=OFF \
 -DWITH_UNIT_TESTS=OFF \
--DPLUGIN_TOKUDB=NO \
--DOPENSSL_INCLUDE_DIR=/data/lnmp/lib/include
+-DPLUGIN_TOKUDB=NO
 
 make -j5
 make install
