@@ -189,6 +189,8 @@ cmake . \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
 -DDEFAULT_CHARSET=utf8 \
 -DDEFAULT_COLLATION=utf8_general_ci \
+-DWITH_SYSTEMD=auto \
+-DINSTALL_SYSTEMD_UNITDIR=/usr/lib/systemd/system \
 -DDISABLE_SHARED=OFF \
 -DPLUGIN_MROONGA=NO \
 -DPLUGIN_FEDERATED=NO \
@@ -197,20 +199,22 @@ cmake . \
 -DPLUGIN_AUTH_PAM=NO \
 -DPLUGIN_SEQUENCE=NO \
 -DPLUGIN_SPIDER=NO \
--DWITH_WSREP=NO \
 -DPLUGIN_FTEXAMPLE=NO \
 -DPLUGIN_DAEMON_EXAMPLE=NO \
 -DPLUGIN_EXAMPLE=NO \
 -DPLUGIN_EXAMPLE_KEY_MANAGEMENT=NO \
 -DPLUGIN_CONNECT=NO \
+-DPLUGIN_TOKUDB=NO \
+-DPLUGIN_WSREP_INFO=NO \
+-DWITH_WSREP=OFF \
 -DCONNECT_WITH_ODBC=OFF \
 -DCONNECT_WITH_MYSQL=1 \
--DCONNECT_WITH_LIBXML2=NO \
--DWITH_DEBUG=NO \
+-DCONNECT_WITH_LIBXML2=OFF \
+-DWITH_DEBUG=OFF \
 -DWITH_EMBEDDED_SERVER=OFF \
 -DWITH_PROFILING=OFF \
--DWITH_UNIT_TESTS=OFF \
--DPLUGIN_TOKUDB=NO
+-DWITH_MARIABACKUP=OFF \
+-DWITH_UNIT_TESTS=OFF
 
 make -j5
 make install
@@ -222,12 +226,10 @@ cd /data/lnmp/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 service mariadb start
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
-rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
 #更新或重新编译后：
-rm -rf /data/lnmp/mariadb/bin/mysql_client_test*
 rm -rf /data/lnmp/mariadb/mysql-test
 rm -rf /data/lnmp/mariadb/data/test
 rm -rf /data/lnmp/mariadb/sql-bench
