@@ -227,7 +227,8 @@ cmake . \
 -DWITH_PROFILING=OFF \
 -DWITH_MARIABACKUP=OFF \
 -DWITH_UNIT_TESTS=OFF \
--DWITH_UNITTEST=OFF
+-DWITH_UNITTEST=OFF \
+-DINSTALL_MYSQLTESTDIR=''
 
 make -j5
 make install
@@ -239,14 +240,8 @@ cd /data/lnmp/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
-rm -rf /data/lnmp/mariadb/mysql-test
-rm -rf /data/lnmp/mariadb/data/test
-rm -rf /data/lnmp/mariadb/sql-bench
 #更新或重新编译后：
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
-rm -rf /data/lnmp/mariadb/mysql-test
-rm -rf /data/lnmp/mariadb/data/test
-rm -rf /data/lnmp/mariadb/sql-bench
 systemctl daemon-reload
 systemctl restart mariadb
 </pre>
