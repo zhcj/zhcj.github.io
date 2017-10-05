@@ -189,7 +189,7 @@ mkdir /data/lnmp/log/php</pre>
 useradd -r -M -s /sbin/nologin -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
-<pre>apt install libncurses5-dev libreadline-dev bison -y</pre>
+<pre>apt install libncurses5-dev libreadline-dev bison g++ -y</pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.9/source/mariadb-10.2.9.tar.gz</pre>
 <li>解压</li>
