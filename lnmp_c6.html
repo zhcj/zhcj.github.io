@@ -228,6 +228,7 @@ scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf 
 service mariadb start
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 #更新或重新编译后：
+rm -rf /data/lnmp/mariadb/data/test
 service mariadb restart
 </pre>
 <p><a href="index.html">返回首页</a></p>

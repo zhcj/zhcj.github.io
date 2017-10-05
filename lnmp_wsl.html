@@ -205,6 +205,8 @@ cd /data/lnmp/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 /etc/init.d/mariadb start
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
+#更新或重新编译后：
+rm -rf /data/lnmp/mariadb/data/test
 #慢日志
 [mysqld]
 slow_query_log = on

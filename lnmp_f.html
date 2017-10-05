@@ -241,6 +241,7 @@ systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 #更新或重新编译后：
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
+rm -rf /data/lnmp/mariadb/data/test
 systemctl daemon-reload
 systemctl restart mariadb
 </pre>
