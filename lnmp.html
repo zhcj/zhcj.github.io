@@ -35,11 +35,19 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.13.5.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.13.6.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.13.5.tar.gz</pre>
+<pre>tar xvf nginx-1.13.6.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.13.5
+<pre>cd nginx-1.13.6
+#把nginx提示改成IIS
+sed -i "s/<hr><center>nginx<\/center>/<hr><center>IIS 7.0<\/center>/g" src/http/ngx_http_special_response.c
+sed -i "s/Server: nginx/Server: IIS 7.0/g" src/http/ngx_http_header_filter_module.c
+sed -i "s/nginx version:/IIS version:/g" src/core/nginx.c
+sed -i "s/nginx\//IIS\//g" src/core/nginx.h
+sed -i "s/1.13.6/7.0/g" src/core/nginx.h
+sed -i "s/1013006/2017/g" src/core/nginx.h
+sed -i "s/nginx\//IIS\//g" conf/fastcgi*
 #修改日志格式
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/http/modules/ngx_http_log_module.c
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/core/ngx_times.c
