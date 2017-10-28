@@ -110,8 +110,7 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 </pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>zypper in systemd-devel gd-devel libxml2-devel libcurl-devel -y
-ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/</pre>
+<pre>zypper in systemd-devel gd-devel libxml2-devel libcurl-devel libXpm-devel freetype2-devel</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.32.tar.xz
