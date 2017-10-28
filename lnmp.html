@@ -15,7 +15,7 @@
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNMP环境安装配置笔记</h2>
-<h3>注：网站系统为CentOS 7，使用systemd。</h3>
+<h3>注：网站系统为CentOS 7.4，使用systemd。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
@@ -35,18 +35,23 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.13.6.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.12.2.tar.gz
+#wget http://nginx.org/download/nginx-1.13.6.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.13.6.tar.gz</pre>
+<pre>tar xvf nginx-1.12.2.tar.gz
+#tar xvf nginx-1.13.6.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.13.6
+<pre>cd nginx-1.12.2
+#cd nginx-1.13.6
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
 sed -i "s/Server: nginx/Server: IIS 7.0/g" src/http/ngx_http_header_filter_module.c
 sed -i "s/nginx version:/IIS version:/g" src/core/nginx.c
 sed -i "s/nginx\//IIS\//g" src/core/nginx.h
-sed -i "s/1.13.6/7.0/g" src/core/nginx.h
-sed -i "s/1013006/2017/g" src/core/nginx.h
+sed -i "s/1.12.2/7.0/g" src/core/nginx.h
+#sed -i "s/1.13.6/7.0/g" src/core/nginx.h
+sed -i "s/1012002/2017/g" src/core/nginx.h
+#sed -i "s/1013006/2017/g" src/core/nginx.h
 sed -i "s/nginx\//IIS\//g" conf/fastcgi*
 #修改日志格式
 sed -i "s/28\/Sep\/1970:12:00:00 +0600/1970-09-28 12:00:00/g" src/http/modules/ngx_http_log_module.c
@@ -291,11 +296,14 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.9/source/mariadb-10.2.9.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.28/source/mariadb-10.1.28.tar.gz
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.9/source/mariadb-10.2.9.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.2.9.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.28.tar.gz
+#tar xvf mariadb-10.2.9.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.2.9
+<pre>cd mariadb-10.1.28
+#cd mariadb-10.2.9
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
