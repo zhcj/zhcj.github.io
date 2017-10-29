@@ -18,14 +18,14 @@
 <h3>注：系统为openSUSE Tumbleweed</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
-<pre>zypper dup -y</pre>
+<pre>zypper dup</pre>
 <p>2、清理原有安装</p>
-<pre>zypper rm remove php* mariadb* nginx* http* mysql* -y</pre>
+<pre>zypper rm remove php* mariadb* nginx* http* mysql*</pre>
 <p><b>二、测试服务器LNMP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
-<pre>zypper in gcc make cmake gcc-c++ -y</pre>
+<pre>zypper in gcc make cmake gcc-c++</pre>
 <p><b>2、安装Nginx</b></p>
-<pre>zypper in pcre-devel openssl-devel -y
+<pre>zypper in pcre-devel openssl-devel
 </pre>
 <li>建立组和用户并设置不能ssh登录</li>
 <pre>groupadd -r www
@@ -185,7 +185,7 @@ mkdir /data/lnmp/log/php</pre>
 useradd -r -M -s /sbin/nologin -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
-<pre>zypper in ncurses-devel bison -y</pre>
+<pre>zypper in ncurses-devel bison</pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.9/source/mariadb-10.2.9.tar.gz</pre>
 <li>解压</li>
