@@ -296,13 +296,13 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.28/source/mariadb-10.1.28.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.29/source/mariadb-10.1.29.tar.gz
 #wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.10/source/mariadb-10.2.10.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.28.tar.gz
+<pre>tar xvf mariadb-10.1.29.tar.gz
 #tar xvf mariadb-10.2.10.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.28
+<pre>cd mariadb-10.1.29
 #cd mariadb-10.2.10
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
@@ -362,12 +362,16 @@ make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
+#mariadb-10.1.21
+#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
 cd /data/lnmp/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 #更新或重新编译后：
+#mariadb-10.1.21
+#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
 rm -rf /data/lnmp/mariadb/data/test
 systemctl daemon-reload
