@@ -376,6 +376,9 @@ sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-
 rm -rf /data/lnmp/mariadb/data/test
 systemctl daemon-reload
 systemctl restart mariadb
+#默认使用Myisam引擎
+[mysqld]
+default-storage-engine=myisam
 #慢日志
 [mysqld]
 slow_query_log = on
