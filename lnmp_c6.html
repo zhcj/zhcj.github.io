@@ -32,7 +32,7 @@ cd /data/source
 wget https://www.openssl.org/source/openssl-1.0.2m.tar.gz
 tar xvf openssl-1.0.2m.tar.gz -C /data/lnmp/
 cd /data/lnmp/openssl-1.0.2m
-./config  --prefix=/data/lnmp/lib --openssldir=/data/lnmp/lib/openssl
+./config  --prefix=/data/lnmp/lib shared --openssldir=/data/lnmp/lib/openssl
 make -j5
 make install
 </pre>
@@ -120,7 +120,7 @@ wget http://cn2.php.net/distributions/php-5.6.32.tar.xz
 <li>编译</li>
 <pre>cd php-5.6.32
 #cd php-7.1.12
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl=/data/lnmp/lib --with-mysql
 #php-7.1去掉--with-mysql
 make -j5
 make install
@@ -152,7 +152,7 @@ mkdir /data/lnmp/log/php
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
-./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
+./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 
 cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
 echo "zend_extension=/data/lnmp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
@@ -209,7 +209,7 @@ cmake . \
 -DPLUGIN_CRACKLIB_PASSWORD_CHECK=NO \
 -DPLUGIN_CASSANDRA=NO \
 -DSUFFIX_INSTALL_DIR= \
--DWITH_SSL=system \
+-DWITH_SSL=/data/lnmp/lib \
 -DENABLE_DTRACE=no \
 -DWITH_JEMALLOC=no \
 -DPLUGIN_EXAMPLE=NO \
