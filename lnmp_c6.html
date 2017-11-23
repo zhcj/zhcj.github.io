@@ -243,6 +243,7 @@ make install
 ln -s /data/lnmp/mariadb/bin/* /usr/bin
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
+ln -s /data/lnmp/mariadb/my.cnf /etc
 cp support-files/mysql.server /etc/init.d/mariadb
 cd /data/lnmp/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
