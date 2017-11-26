@@ -30,7 +30,7 @@
 </pre>
 <li>建立组和用户并设置不能ssh登录</li>
 <pre>groupadd -r www
-useradd -r -M -s /sbin/nologin -g www www
+useradd -r -M -s /bin/false -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
@@ -133,7 +133,7 @@ mkdir /data/lnmp/log/php
 <p><b>4、安装MariaDB/Mysql数据库</b></p>
 <li>创建mysql用户</li>
 <pre>groupadd -r mysql
-useradd -r -M -s /sbin/nologin -g mysql mysql
+useradd -r -M -s /bin/false -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>apt install libncurses5-dev libreadline-dev -y</pre>
