@@ -147,7 +147,9 @@ echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226
 #echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20170718/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
+sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php/php.ini
+sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/lnmp/php/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/lnmp/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/lnmp/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/lnmp/php/php.ini
