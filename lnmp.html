@@ -254,24 +254,52 @@ echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memc
 #echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" > /data/lnmp/php7/lib/php/extensions/memcached.ini 
 </pre>
 #安装redis服务，并设置开机运行
+方式一：yum安装（版本旧）
 <pre>
 yum install redis
 systemctl start redis
 systemctl enable redis
 </pre>
+方式二：编译安装
+<pre>
+wget http://download.redis.io/releases/redis-4.0.6.tar.gz
+tar xvf redis-4.0.6.tar.gz
+cd redis-4.0.6
+make
+make PREFIX=/data/lnmp/redis install
+cp redis.conf /data/lnmp/redis/
+groupadd -r redis
+useradd -r -M -s /bin/false -g redis redis
+sed -i "s/\/home\/redis://" /etc/passwd
+cat > /usr/lib/systemd/system/redis.service << "EOF"
+[Unit]
+Description=Redis persistent key-value database
+After=network.target
+
+[Service]
+ExecStart=/data/lnmp/redis/bin/redis-server /data/lnmp/redis/redis.conf --daemonize no
+ExecStop=/data/lnmp/redis/redis-cli -h 127.0.0.1 -p 6379 shutdown
+User=redis
+Group=redis
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl start redis
+systemctl enable redis
+</pre>
 #安装php的redis模块
 <pre>
-wget https://github.com/phpredis/phpredis/archive/3.1.2.tar.gz -O phpredis-3.1.2.tar.gz
-tar xvf phpredis-3.1.2.tar.gz
-cd phpredis-3.1.2
+wget http://pecl.php.net/get/redis-3.1.4.tgz
+tar xvf redis-3.1.4.tar.tz
+cd redis-3.1.4
+yum install autoconfig -y
 /data/lnmp/php/bin/phpize
-#/data/lnmp/php7/bin/phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config
-#./configure --with-php-config=/data/lnmp/php7/bin/php-config
 make -j5
 make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
-#echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20151012/redis.so" > /data/lnmp/php7/lib/php/extensions/redis.ini 
+#echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20160303/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 </pre>
 #安装php的apcu模块
 <pre>
