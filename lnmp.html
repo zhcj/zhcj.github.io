@@ -285,13 +285,14 @@ Group=redis
 [Install]
 WantedBy=multi-user.target
 EOF
+ln -s /data/lnmp/redis/bin/* /usr/bin
 systemctl start redis
 systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
 wget http://pecl.php.net/get/redis-3.1.4.tgz
-tar xvf redis-3.1.4.tar.tz
+tar xvf redis-3.1.4.tar.tgz
 cd redis-3.1.4
 yum install autoconfig -y
 /data/lnmp/php/bin/phpize
