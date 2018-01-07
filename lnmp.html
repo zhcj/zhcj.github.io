@@ -159,7 +159,8 @@ make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
-/data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
+#/data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
+/data/lnmp/php/bin/pear channel-update pear.php.net
 ln -s /data/lnmp/php/bin/* /usr/bin
 ln -s /data/lnmp/php/sbin/* /usr/sbin
 cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
