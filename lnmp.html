@@ -263,9 +263,9 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget http://download.redis.io/releases/redis-4.0.6.tar.gz
-tar xvf redis-4.0.6.tar.gz
-cd redis-4.0.6
+wget http://download.redis.io/releases/redis-4.0.8.tar.gz
+tar xvf redis-4.0.8.tar.gz
+cd redis-4.0.8
 make
 make PREFIX=/data/lnmp/redis install
 cp redis.conf /data/lnmp/redis/
@@ -292,9 +292,9 @@ systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-3.1.4.tgz
-tar xvf redis-3.1.4.tar.tgz
-cd redis-3.1.4
+wget http://pecl.php.net/get/redis-4.0.4.tgz
+tar xvf redis-4.0.0.tar.tgz
+cd redis-4.0.0
 yum install autoconfig -y
 /data/lnmp/php/bin/phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config
