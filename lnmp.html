@@ -36,20 +36,20 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <pre>mkdir -p /data/source
 cd /data/source
 wget http://nginx.org/download/nginx-1.12.2.tar.gz
-#wget http://nginx.org/download/nginx-1.13.9.tar.gz</pre>
+#wget http://nginx.org/download/nginx-1.13.10.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf nginx-1.12.2.tar.gz
-#tar xvf nginx-1.13.9.tar.gz</pre>
+#tar xvf nginx-1.13.10.tar.gz</pre>
 <li>编译</li>
 <pre>cd nginx-1.12.2
-#cd nginx-1.13.9
+#cd nginx-1.13.10
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
 sed -i "s/Server: nginx/Server: IIS 7.0/g" src/http/ngx_http_header_filter_module.c
 sed -i "s/nginx version:/IIS version:/g" src/core/nginx.c
 sed -i "s/nginx\//IIS\//g" src/core/nginx.h
 sed -i "s/1.12.2/7.0/g" src/core/nginx.h
-#sed -i "s/1.13.9/7.0/g" src/core/nginx.h
+#sed -i "s/1.13.10/7.0/g" src/core/nginx.h
 sed -i "s/1012002/2017/g" src/core/nginx.h
 #sed -i "s/1013006/2017/g" src/core/nginx.h
 sed -i "s/nginx\//IIS\//g" conf/fastcgi*
