@@ -195,7 +195,7 @@ mkdir /data/lnmp/log/php
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
-./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
+./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
 
 cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm5.service
 sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /usr/lib/systemd/system/php-fpm5.service
@@ -263,9 +263,9 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget http://download.redis.io/releases/redis-4.0.8.tar.gz
-tar xvf redis-4.0.8.tar.gz
-cd redis-4.0.8
+wget http://download.redis.io/releases/redis-4.0.9.tar.gz
+tar xvf redis-4.0.9.tar.gz
+cd redis-4.0.9
 make
 make PREFIX=/data/lnmp/redis install
 cp redis.conf /data/lnmp/redis/
@@ -292,7 +292,7 @@ systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-4.0.4.tgz
+wget http://pecl.php.net/get/redis-4.0.0.tgz
 tar xvf redis-4.0.0.tar.tgz
 cd redis-4.0.0
 yum install autoconfig -y
