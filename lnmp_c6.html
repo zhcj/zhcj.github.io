@@ -42,11 +42,11 @@ useradd -r -M -s /bin/false -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://nginx.org/download/nginx-1.13.12.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.14.0.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.13.12.tar.gz</pre>
+<pre>tar xvf nginx-1.14.0.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.13.12
+<pre>cd nginx-1.14.0
 ./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-openssl=/data/lnmp/openssl-1.0.2o --with-http_stub_status_module
 make -j5
 make install</pre>
@@ -111,15 +111,14 @@ service iptables restart</pre>
 <li>安装依赖</li>
 <pre>yum install libxml2-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>
-<pre>cd /data/source
-wget http://cn2.php.net/distributions/php-5.6.35.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.4.tar.xz</pre>
+<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.2.5.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-5.6.36.tar.xz
 <li>解压</li>
-<pre>tar xvf php-5.6.35.tar.xz
-#tar xvf php-7.2.4.tar.xz</pre>
+<pre>tar xvf php-7.2.5.tar.xz</pre>
+#tar xvf php-5.6.36.tar.xz
 <li>编译</li>
-<pre>cd php-5.6.35
-#cd php-7.2.4
+<pre>cd php-7.2.5
+#cd php-5.6.36
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl=/data/lnmp/lib --with-mysql
 #php-7.2去掉--with-mysql
 make -j5
@@ -132,9 +131,9 @@ ln -s /data/lnmp/php/sbin/* /usr/sbin
 cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
-echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php7.2
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20170718/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20170718/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+#php5.6
+#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/lnmp/php/php.ini
@@ -182,7 +181,7 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 yum install ncurses-devel bison -y
 </pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.14/source/mariadb-10.1.32.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.32/source/mariadb-10.1.32.tar.gz
 #wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.14/source/mariadb-10.2.14.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf mariadb-10.1.32.tar.gz
