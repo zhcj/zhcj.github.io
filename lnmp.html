@@ -303,6 +303,10 @@ make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 #echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20160303/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 </pre>
+#MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist on disk问题#
+<pre>echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
+sysctl -p
+echo 1 > /proc/sys/vm/overcommit_memory</pre>
 #安装php的apcu模块
 <pre>
 cd /data/source
