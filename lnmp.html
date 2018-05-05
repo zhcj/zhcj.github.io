@@ -287,14 +287,25 @@ Group=redis
 WantedBy=multi-user.target
 EOF
 ln -s /data/lnmp/redis/bin/* /usr/bin
+#Failed opening the RDB file dump.rdb问题
+mkdir /data/lnmp/redis/db
+chown redis:redis /data/lnmp/redis/db -R
+sed -i "s/dir .\//dir \/data\/lnmp\/redis\/db\//g"
+#The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.问题
+echo 511 > /proc/sys/net/core/somaxconn
+echo "echo 511 > /proc/sys/net/core/somaxconn" >> /etc/rc.local
+#MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist on disk问题
+echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
+sysctl -p
+echo 1 > /proc/sys/vm/overcommit_memory
 systemctl start redis
 systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-4.0.0.tgz
-tar xvf redis-4.0.0.tar.tgz
-cd redis-4.0.0
+wget http://pecl.php.net/get/redis-4.0.2.tgz
+tar xvf redis-4.0.2.tar.tgz
+cd redis-4.0.2
 yum install autoconfig -y
 /data/lnmp/php/bin/phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config
@@ -303,10 +314,6 @@ make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 #echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20160303/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 </pre>
-#MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist on disk问题#
-<pre>echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
-sysctl -p
-echo 1 > /proc/sys/vm/overcommit_memory</pre>
 #安装php的apcu模块
 <pre>
 cd /data/source
