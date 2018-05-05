@@ -290,7 +290,7 @@ ln -s /data/lnmp/redis/bin/* /usr/bin
 #Failed opening the RDB file dump.rdb问题
 mkdir /data/lnmp/redis/db
 chown redis:redis /data/lnmp/redis/db -R
-sed -i "s/dir .\//dir \/data\/lnmp\/redis\/db\//g"
+sed -i "s/dir .\//dir \/data\/lnmp\/redis\/db\//g" /data/lnmp/redis/redis.conf
 #The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.问题
 echo 511 > /proc/sys/net/core/somaxconn
 echo "echo 511 > /proc/sys/net/core/somaxconn" >> /etc/rc.local
