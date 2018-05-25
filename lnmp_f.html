@@ -116,13 +116,13 @@ firewall-cmd --reload</pre>
 <pre>dnf install systemd-devel gd-devel libxml2-devel libcurl-devel -y
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-7.2.5.tar.xz</pre>
+wget http://cn2.php.net/distributions/php-7.2.6.tar.xz</pre>
 #wget http://cn2.php.net/distributions/php-5.6.36.tar.xz
 <li>解压</li>
-<pre>tar xvf php-7.2.5.tar.xz</pre>
+<pre>tar xvf php-7.2.6.tar.xz</pre>
 #tar xvf php-5.6.36.tar.xz
 <li>编译</li>
-<pre>cd php-7.2.5
+<pre>cd php-7.2.6
 #cd php-5.6.36
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.2去掉--with-mysql
@@ -192,11 +192,11 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>dnf install ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.14/source/mariadb-10.2.14.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.15/source/mariadb-10.2.15.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.2.14.tar.gz</pre>
+<pre>tar xvf mariadb-10.2.15.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.2.14
+<pre>cd mariadb-10.2.15
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \

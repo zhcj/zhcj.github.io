@@ -15,7 +15,7 @@
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNMP环境安装配置笔记</h2>
-<h3>注：网站系统为CentOS 7.4，使用systemd。</h3>
+<h3>注：网站系统为CentOS 7.5，使用systemd。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
@@ -141,18 +141,18 @@ firewall-cmd --reload</pre>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.36.tar.xz
 #wget http://cn2.php.net/distributions/php-7.0.30.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.17.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.5.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.1.18.tar.xz
+#wget http://cn2.php.net/distributions/php-7.2.6.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.36.tar.xz
 #tar xvf php-7.0.30.tar.xz
-#tar xvf php-7.1.17.tar.xz
-#tar xvf php-7.2.5.tar.xz</pre>
+#tar xvf php-7.1.18.tar.xz
+#tar xvf php-7.2.6.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.36
 #cd php-7.0.30
-#cd php-7.1.17
-#cd php-7.2.5
+#cd php-7.1.18
+#cd php-7.2.6
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.0/7.1/7.2去掉--with-mysql
 make -j5
@@ -343,13 +343,13 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.33/source/mariadb-10.1.33.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.14/source/mariadb-10.2.14.tar.gz</pre>
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.15/source/mariadb-10.2.15.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf mariadb-10.1.33.tar.gz
-#tar xvf mariadb-10.2.14.tar.gz</pre>
+#tar xvf mariadb-10.2.15.tar.gz</pre>
 <li>编译</li>
 <pre>cd mariadb-10.1.33
-#cd mariadb-10.2.14
+#cd mariadb-10.2.15
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
