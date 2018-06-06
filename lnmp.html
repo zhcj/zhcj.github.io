@@ -35,13 +35,13 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.14.0.tar.gz
+wget http://nginx.org/download/nginx-1.15.0.tar.gz
 #wget http://nginx.org/download/nginx-1.13.12.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.14.0.tar.gz
+<pre>tar xvf nginx-1.15.0.tar.gz
 #tar xvf nginx-1.13.12.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.14.0
+<pre>cd nginx-1.15.0
 #cd nginx-1.13.12
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
@@ -343,13 +343,13 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.33/source/mariadb-10.1.33.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.2.15/source/mariadb-10.2.15.tar.gz</pre>
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.7/source/mariadb-10.3.7.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf mariadb-10.1.33.tar.gz
-#tar xvf mariadb-10.2.15.tar.gz</pre>
+#tar xvf mariadb-10.3.7.tar.gz</pre>
 <li>编译</li>
 <pre>cd mariadb-10.1.33
-#cd mariadb-10.2.15
+#cd mariadb-10.3.7
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
