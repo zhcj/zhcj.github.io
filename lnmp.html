@@ -35,14 +35,14 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.15.1.tar.gz
-#wget http://nginx.org/download/nginx-1.13.12.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.15.2.tar.gz
+#wget http://nginx.org/download/nginx-1.14.0.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.15.1.tar.gz
-#tar xvf nginx-1.13.12.tar.gz</pre>
+<pre>tar xvf nginx-1.15.2.tar.gz
+#tar xvf nginx-1.14.0.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.15.1
-#cd nginx-1.13.12
+<pre>cd nginx-1.15.2
+#cd nginx-1.14.0
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
 sed -i "s/Server: nginx/Server: IIS 7.0/g" src/http/ngx_http_header_filter_module.c
@@ -141,18 +141,18 @@ firewall-cmd --reload</pre>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.37.tar.xz
 #wget http://cn2.php.net/distributions/php-7.0.31.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.20.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.8.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.1.21.tar.xz
+#wget http://cn2.php.net/distributions/php-7.2.9.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.37.tar.xz
 #tar xvf php-7.0.31.tar.xz
-#tar xvf php-7.1.20.tar.xz
-#tar xvf php-7.2.8.tar.xz</pre>
+#tar xvf php-7.1.21.tar.xz
+#tar xvf php-7.2.9.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.37
 #cd php-7.0.31
-#cd php-7.1.20
-#cd php-7.2.8
+#cd php-7.1.21
+#cd php-7.2.9
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.0/7.1/7.2去掉--with-mysql
 make -j5
@@ -342,14 +342,14 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.34/source/mariadb-10.1.34.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.8/source/mariadb-10.3.8.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.35/source/mariadb-10.1.35.tar.gz
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.9/source/mariadb-10.3.9.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.34.tar.gz
-#tar xvf mariadb-10.3.8.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.35.tar.gz
+#tar xvf mariadb-10.3.9.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.34
-#cd mariadb-10.3.8
+<pre>cd mariadb-10.1.35
+#cd mariadb-10.3.9
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
