@@ -51,7 +51,7 @@ history -c</pre>
 <p>将以下规则添加到文件末尾：</p>
 <pre>allowusers root@myip1
 allowusers root@myip2</pre>
-<p><b>3、使用key登录，禁止账号密码登录</b></p>
+<p><b>3、使用key登录，禁止账号密码登录、禁用root用户登录</b></p>
 <pre>vi ~/.ssh/authorized_keys</pre>
 <p>将用puttykegen生成的pubkey复制到此文件中，一行一个账号。</p>
 <pre>vi /etc/ssh/sshd_config</pre>
@@ -59,6 +59,10 @@ allowusers root@myip2</pre>
 <pre>#PasswordAuthentication yes</pre>
 <p>中的#去掉，并改为：</p>
 <pre>PasswordAuthentication no</pre>
+<p>将</p>
+<pre>#PermitRootLogin yes</pre>
+<p>中的#去掉，并改为：</p>
+<pre>PermitRootLogin no</pre>
 <p></p>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
