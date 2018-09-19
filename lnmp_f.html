@@ -116,15 +116,15 @@ firewall-cmd --reload</pre>
 <pre>dnf install systemd-devel gd-devel libxml2-devel libcurl-devel -y</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-7.2.9.tar.xz</pre>
-#wget http://cn2.php.net/distributions/php-5.6.37.tar.xz
+wget http://cn2.php.net/distributions/php-7.2.10.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-5.6.38.tar.xz
 <li>解压</li>
-<pre>tar xvf php-7.2.9.tar.xz</pre>
-#tar xvf php-5.6.37.tar.xz
+<pre>tar xvf php-7.2.10.tar.xz</pre>
+#tar xvf php-5.6.38.tar.xz
 <li>编译</li>
-<pre>cd php-7.2.9
-#cd php-5.6.37
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
+<pre>cd php-7.2.10
+#cd php-5.6.38
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.2去掉--with-mysql
 make -j5
 make install
@@ -161,7 +161,7 @@ mkdir /data/lnmp/log/php
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
-./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --without-sqlite3 --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --without-pdo-sqlite --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
+./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 
 cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm5.service
 sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /usr/lib/systemd/system/php-fpm5.service
