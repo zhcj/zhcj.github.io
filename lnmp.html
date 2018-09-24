@@ -334,13 +334,13 @@ echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu
 php -m|grep apc
 php -i|grep memcache
 php -i|grep apc</pre>
-<p><b>4、安装MariaDB/Mysql数据库</b></p>
+<p><b>4、安装MariaDB数据库</b></p>
 <li>创建mysql用户</li>
 <pre>groupadd -r mysql
 useradd -r -M -s /bin/false -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
-<pre>yum install ncurses-devel bison -y</pre>
+<pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.36/source/mariadb-10.1.36.tar.gz
 #wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.9/source/mariadb-10.3.9.tar.gz</pre>
@@ -386,10 +386,6 @@ cmake . \
 -DCONNECT_WITH_LIBXML2=no \
 -DCONNECT_WITH_ODBC=no \
 -DCONNECT_WITH_JDBC=no \
--DWITH_INNOBASE_STORAGE_ENGINE=1 \
--DWITH_INNODB_LZ4=OFF \
--DWITH_INNODB_LZO=OFF \
--DWITH_INNODB_SNAPPY=OFF \
 -DWITH_DEBUG=no \
 -DWITH_EMBEDDED_SERVER=no \
 -DWITH_PROFILING=no \
@@ -397,7 +393,6 @@ cmake . \
 -DWITH_LIBARCHIVE=OFF \
 -DWITH_UNIT_TESTS=OFF \
 -DWITH_UNITTEST=OFF \
--DCONC_WITH_UNITTEST=OFF \
 -DINSTALL_MYSQLTESTDIR='' \
 -DMAX_INDEXES=128
 
@@ -433,6 +428,59 @@ log-bin=mysql-bin
 expire_logs_days = 3
 #最大连接数
 max_connections = 1000
+</pre>
+<p><b>5、安装Mysql数据库</b></p>
+<li>下载</li>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.12.tar.gz</pre>
+<li>解压</li>
+<pre>tar xvf mysql-boost-8.0.12.tar.gz</pre>
+<li>编译</li>
+<pre>cd mysql-boost-8.0.12
+cmake . \
+-DCMAKE_INSTALL_PREFIX=/data/lnmp/mysql \
+-DMYSQL_DATADIR=/data/lnmp/mysql/data \
+-DINSTALL_MYSQLDATADIR=/data/lnmp/mysql/data \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DWITH_SYSTEMD=1 \
+-DSYSTEMD_PID_DIR=/tmp \
+-DWITH_UNIT_TESTS=OFF \
+-DWITH_BOOST=boost \
+-DINSTALL_MYSQLTESTDIR= \
+-DWITH_SSL=system \
+
+make -j5
+make install
+cd /data/lnmp/mysql
+cp usr/lib/systemd/system/mysqld.service /usr/lib/systemd/system/
+sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/data\/lnmp\/mysql\/my.cnf /g" /usr/lib/systemd/system/mysqld.service
+
+cat > my.cnf << "EOF"
+[client]
+port=3306
+socket=/tmp/mysql.sock
+
+[mysqld]
+port=3306
+socket=/tmp/mysql.sock
+key_buffer_size=16M
+max_allowed_packet=8M
+default_authentication_plugin = mysql_native_password
+
+[mysqldump]
+quick
+EOF
+
+mkdir mysql-files
+chown mysql:mysql mysql-files
+chmod 750 mysql-files
+#初始化（命令结果中有随机生成的root密码）
+bin/mysqld --defaults-file=/data/lnmp/mysql/my.cnf --initialize --user=mysql
+#生成ssl证书
+bin/mysql_ssl_rsa_setup              
+systemctl start mysqld
+bin/mysqladmin -uroot -p password "新密码"
+
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
