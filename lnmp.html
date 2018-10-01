@@ -35,13 +35,13 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.15.3.tar.gz
+wget http://nginx.org/download/nginx-1.15.4.tar.gz
 #wget http://nginx.org/download/nginx-1.14.0.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.15.3.tar.gz
+<pre>tar xvf nginx-1.15.4.tar.gz
 #tar xvf nginx-1.14.0.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.15.3
+<pre>cd nginx-1.15.4
 #cd nginx-1.14.0
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
