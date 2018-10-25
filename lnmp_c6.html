@@ -111,13 +111,13 @@ service iptables restart</pre>
 <li>安装依赖</li>
 <pre>yum install libxml2-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>
-<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.2.10.tar.xz</pre>
+<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.2.11.tar.xz</pre>
 #wget http://cn2.php.net/distributions/php-5.6.38.tar.xz
 <li>解压</li>
-<pre>tar xvf php-7.2.10.tar.xz</pre>
+<pre>tar xvf php-7.2.11.tar.xz</pre>
 #tar xvf php-5.6.38.tar.xz
 <li>编译</li>
-<pre>cd php-7.2.10
+<pre>cd php-7.2.11
 #cd php-5.6.38
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl=/data/lnmp/lib --with-mysql
 #php-7.2去掉--with-mysql
@@ -182,13 +182,13 @@ yum install ncurses-devel bison -y
 </pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.36/source/mariadb-10.1.36.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.9/source/mariadb-10.3.9.tar.gz</pre>
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.10/source/mariadb-10.3.10.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf mariadb-10.1.36.tar.gz
-#tar xvf mariadb-10.3.9.tar.gz</pre>
+#tar xvf mariadb-10.3.10.tar.gz</pre>
 <li>编译</li>
 <pre>cd mariadb-10.1.36
-#cd mariadb-10.3.9
+#cd mariadb-10.3.10
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \

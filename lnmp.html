@@ -48,9 +48,9 @@ sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
 sed -i "s/Server: nginx/Server: IIS 7.0/g" src/http/ngx_http_header_filter_module.c
 sed -i "s/nginx version:/IIS version:/g" src/core/nginx.c
 sed -i "s/nginx\//IIS\//g" src/core/nginx.h
-sed -i "s/1.15.3/7.0/g" src/core/nginx.h
+sed -i "s/1.15.5/7.0/g" src/core/nginx.h
 #sed -i "s/1.14.0/7.0/g" src/core/nginx.h
-sed -i "s/1012002/2017/g" src/core/nginx.h
+sed -i "s/1015005/2017/g" src/core/nginx.h
 #sed -i "s/1013006/2017/g" src/core/nginx.h
 sed -i "s/nginx\//IIS\//g" conf/fastcgi*
 #修改日志格式
@@ -141,18 +141,18 @@ firewall-cmd --reload</pre>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.38.tar.xz
 #wget http://cn2.php.net/distributions/php-7.0.32.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.22.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.10.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.1.23.tar.xz
+#wget http://cn2.php.net/distributions/php-7.2.11.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.38.tar.xz
 #tar xvf php-7.0.32.tar.xz
-#tar xvf php-7.1.22.tar.xz
-#tar xvf php-7.2.10.tar.xz</pre>
+#tar xvf php-7.1.23.tar.xz
+#tar xvf php-7.2.11.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.38
 #cd php-7.0.32
-#cd php-7.1.22
-#cd php-7.2.10
+#cd php-7.1.23
+#cd php-7.2.11
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.0/7.1/7.2去掉--with-mysql
 make -j5
@@ -343,13 +343,13 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.36/source/mariadb-10.1.36.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.9/source/mariadb-10.3.9.tar.gz</pre>
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.10/source/mariadb-10.3.10.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf mariadb-10.1.36.tar.gz
-#tar xvf mariadb-10.3.9.tar.gz</pre>
+#tar xvf mariadb-10.3.10.tar.gz</pre>
 <li>编译</li>
 <pre>cd mariadb-10.1.36
-#cd mariadb-10.3.9
+#cd mariadb-10.3.10
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -431,11 +431,11 @@ max_connections = 1000
 </pre>
 <p><b>5、安装Mysql数据库</b></p>
 <li>下载</li>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.12.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.13.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mysql-boost-8.0.12.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.0.13.tar.gz</pre>
 <li>编译</li>
-<pre>cd mysql-boost-8.0.12
+<pre>cd mysql-boost-8.0.13
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mysql \
 -DMYSQL_DATADIR=/data/lnmp/mysql/data \
@@ -451,8 +451,8 @@ cmake . \
 
 make -j5
 make install
+cp scripts/mysqld.service /usr/lib/systemd/system/
 cd /data/lnmp/mysql
-cp usr/lib/systemd/system/mysqld.service /usr/lib/systemd/system/
 sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/data\/lnmp\/mysql\/my.cnf /g" /usr/lib/systemd/system/mysqld.service
 
 cat > my.cnf << "EOF"
