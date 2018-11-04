@@ -342,13 +342,13 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.36/source/mariadb-10.1.36.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.37/source/mariadb-10.1.37.tar.gz
 #wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.10/source/mariadb-10.3.10.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.36.tar.gz
+<pre>tar xvf mariadb-10.1.37.tar.gz
 #tar xvf mariadb-10.3.10.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.36
+<pre>cd mariadb-10.1.37
 #cd mariadb-10.3.10
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
