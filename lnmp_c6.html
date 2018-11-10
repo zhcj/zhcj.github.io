@@ -109,17 +109,17 @@ service iptables save
 service iptables restart</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>yum install libxml2-devel gd-devel libcurl-devel -y</pre>
+<pre>yum install libxml2-devel gd-devel libcurl-devel openssl-devel -y</pre>
 <li>下载</li>
-<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.2.11.tar.xz</pre>
+<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.2.12.tar.xz</pre>
 #wget http://cn2.php.net/distributions/php-5.6.38.tar.xz
 <li>解压</li>
-<pre>tar xvf php-7.2.11.tar.xz</pre>
+<pre>tar xvf php-7.2.12.tar.xz</pre>
 #tar xvf php-5.6.38.tar.xz
 <li>编译</li>
-<pre>cd php-7.2.11
+<pre>cd php-7.2.12
 #cd php-5.6.38
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl=/data/lnmp/lib --with-mysql
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.2去掉--with-mysql
 make -j5
 make install
@@ -182,57 +182,22 @@ yum install ncurses-devel bison -y
 </pre>
 <li>下载</li>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.37/source/mariadb-10.1.37.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.10/source/mariadb-10.3.10.tar.gz</pre>
 <li>解压</li>
 <pre>tar xvf mariadb-10.1.37.tar.gz
-#tar xvf mariadb-10.3.10.tar.gz</pre>
 <li>编译</li>
 <pre>cd mariadb-10.1.37
-#cd mariadb-10.3.10
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
 -DDEFAULT_CHARSET=utf8 \
 -DDEFAULT_COLLATION=utf8_general_ci \
--DDISABLE_SHARED=NO \
--DPLUGIN_MROONGA=NO \
--DPLUGIN_FEDERATED=NO \
--DPLUGIN_FEDERATEDX=NO \
--DPLUGIN_OQGRAPH=NO \
--DPLUGIN_AUTH_PAM=NO \
--DPLUGIN_AUTH_GSSAPI=NO \
--DAUTH_GSSAPI_PLUGIN_TYPE=OFF \
--DPLUGIN_SEQUENCE=NO \
--DPLUGIN_SPIDER=NO \
--DPLUGIN_FTEXAMPLE=NO \
--DPLUGIN_SPHINX=NO \
--DPLUGIN_DAEMON_EXAMPLE=NO \
--DPLUGIN_CRACKLIB_PASSWORD_CHECK=NO \
--DPLUGIN_CASSANDRA=NO \
--DSUFFIX_INSTALL_DIR= \
--DWITH_SSL=/data/lnmp/lib \
--DENABLE_DTRACE=no \
--DWITH_JEMALLOC=no \
--DPLUGIN_EXAMPLE=NO \
--DPLUGIN_EXAMPLE_KEY_MANAGEMENT=NO \
--DPLUGIN_CONNECT=NO \
--DPLUGIN_TOKUDB=NO \
--DPLUGIN_ROCKSDB=NO \
--DWITH_NUMA=OFF \
+-DWITH_SSL=system \
 -DCONNECT_WITH_MYSQL=1 \
--DCONNECT_WITH_LIBXML2=no \
--DCONNECT_WITH_ODBC=no \
--DCONNECT_WITH_JDBC=no \
--DWITH_INNOBASE_STORAGE_ENGINE=1 \
--DWITH_INNODB_LZ4=OFF \
--DWITH_INNODB_LZO=OFF \
--DWITH_INNODB_SNAPPY=OFF \
 -DWITH_DEBUG=no \
--DWITH_EMBEDDED_SERVER=no \
--DWITH_PROFILING=no \
+-DPLUGIN_TOKUDB=NO \
 -DWITH_MARIABACKUP=OFF \
--DWITH_LIBARCHIVE=OFF \
 -DWITH_UNIT_TESTS=OFF \
+-DWITH_UNITTEST=OFF \
 -DINSTALL_MYSQLTESTDIR=''
 
 make -j5
