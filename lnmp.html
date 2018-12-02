@@ -454,7 +454,7 @@ bin/mysql_ssl_rsa_setup
 systemctl start mysqld
 bin/mysqladmin -uroot -p password "新密码"
 </pre>
-<p><b>6、安装PostgreSQL数据库</b></p>
+<p><b>6、yum安装PostgreSQL数据库</b></p>
 <li>加源</li>
 <pre>rpm -ivh https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm</pre>
 <li>yum安装</li>
@@ -463,7 +463,48 @@ bin/mysqladmin -uroot -p password "新密码"
 <pre>/usr/pgsql-11/bin/postgresql-11-setup initdb</pre>
 <li>设置密码</li>
 <pre>passwd postgres</pre>
-<li>数据库管理工具Adminer：<a href="https://www.adminer.org/">https://www.adminer.org/</a></li>
+<li>数据库管理工具Adminer：<a href="https://www.adminer.org/" target="_blank">https://www.adminer.org/</a></li>
+<p><b>7、编译安装PostgreSQL数据库</b></p>
+<li>下载</li>
+<pre>wget https://ftp.postgresql.org/pub/source/v11.1/postgresql-11.1.tar.bz2</pre>
+<li>解压</li>
+<pre>tar xvf postgresql-11.1.tar.bz2</pre>
+<li>编译</li>
+<pre>cd postgresql-11.1
+./configure --prefix=/data/lnmp/pgsql --datadir=/data/lnmp/pgsql/data --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+make -j5
+make install</pre>
+<li>初始化数据库</li>
+<pre>chown postgres:postgres /data/lnmp/pgsql/data -R
+/data/lnmp/pgsql/bin/initdb -D /data/lnmp/pgsql/data/11</pre>
+<li>配置文件</li>
+<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
+[Unit]
+Description=PostgreSQL database server
+After=network.target
+
+[Service]
+Type=notify
+
+User=postgres
+Group=postgres
+
+Environment=DATA_DIR=/data/lnmp/pgsql/data/11
+
+ExecStart=/data/lnmp/pgsql/bin/postgres -D ${DATA_DIR}
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGINT
+
+TimeoutSec=300
+
+OOMScoreAdjust=-1000
+
+[Install]
+WantedBy=multi-user.target
+EOF</pre>
+<li>启动数据库</li>
+<pre>systemctl start postgresql</pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
 </body>
