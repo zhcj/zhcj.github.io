@@ -136,32 +136,34 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 firewall-cmd --reload</pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
+<pre>yum install libzip-devel libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-5.6.38.tar.xz
-#wget http://cn2.php.net/distributions/php-7.0.32.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.24.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.12.tar.xz</pre>
+wget http://cn2.php.net/distributions/php-5.6.39.tar.xz
+#wget http://cn2.php.net/distributions/php-7.0.33.tar.xz
+#wget http://cn2.php.net/distributions/php-7.1.25.tar.xz
+#wget http://cn2.php.net/distributions/php-7.2.13.tar.xz
+#wget http://cn2.php.net/distributions/php-7.3.0.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-5.6.38.tar.xz
-#tar xvf php-7.0.32.tar.xz
-#tar xvf php-7.1.24.tar.xz
-#tar xvf php-7.2.12.tar.xz</pre>
+<pre>tar xvf php-5.6.39.tar.xz
+#tar xvf php-7.0.33.tar.xz
+#tar xvf php-7.1.25.tar.xz
+#tar xvf php-7.2.13.tar.xz</pre>
+#tar xvf php-7.3.0.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-5.6.38
-#cd php-7.0.32
-#cd php-7.1.24
-#cd php-7.2.12
+<pre>cd php-5.6.39
+#cd php-7.0.33
+#cd php-7.1.25
+#cd php-7.2.13
+#cd php-7.3.0
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
-#php-7.0/7.1/7.2去掉--with-mysql
+#php-7.0/7.1/7.2/7.3去掉--with-mysql
 #添加postgresql11支持
 --with-pgsql=/data/lnmp/pgsql/bin --with-pdo-pgsql=/data/lnmp/pgsql/bin
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
-#/data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
 /data/lnmp/php/bin/pear channel-update pear.php.net
 ln -s /data/lnmp/php/bin/* /usr/bin
 ln -s /data/lnmp/php/sbin/* /usr/sbin
@@ -178,6 +180,8 @@ echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226
 #echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 #php-7.2
 #echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20170718/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+#php-7.3
+#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20180731/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/lnmp/php/php.ini
