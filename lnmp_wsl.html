@@ -94,7 +94,7 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 </pre>
 <p><b>3、安装PHP</b></p>
 <li>安装依赖</li>
-<pre>apt install libgd-dev libzip-dev libxml2-dev libcurl4-gnutls-dev libzip-dev -y</pre>
+<pre>apt install libgd-dev libxml2-dev libcurl4-gnutls-dev -y</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-7.2.13.tar.xz</pre>
@@ -102,7 +102,7 @@ wget http://cn2.php.net/distributions/php-7.2.13.tar.xz</pre>
 <pre>tar xvf php-7.2.13.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-7.2.13
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
