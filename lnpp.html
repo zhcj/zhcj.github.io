@@ -368,7 +368,7 @@ make -j5
 make install</pre>
 <li>初始化数据库</li>
 <pre>chown postgres:postgres /data/lnpp/pgsql/data -R
-sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11</pre>
+sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11 -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
 <li>配置文件</li>
 <pre>cat > /lib/systemd/system/postgresql.service << "EOF"
 [Unit]
