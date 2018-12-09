@@ -112,13 +112,13 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
 <li>安装依赖</li>
 <pre>zypper in systemd-devel gd-devel libxml2-devel libcurl-devel libXpm-devel freetype2-devel</pre>
 <li>下载</li>
-<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.2.13.tar.xz</pre>
+<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.3.0.tar.xz</pre>
 #wget http://cn2.php.net/distributions/php-5.6.39.tar.xz
 <li>解压</li>
-<pre>tar xvf php-7.2.13.tar.xz</pre>
+<pre>tar xvf php-7.3.0.tar.xz</pre>
 #tar xvf php-5.6.39.tar.xz
 <li>编译</li>
-<pre>cd php-7.2.13
+<pre>cd php-7.3.0
 #cd php-5.6.39
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.2去掉--with-mysql
@@ -135,7 +135,7 @@ sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /usr/lib/systemd/system/php-fpm.se
 sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
-echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20170718/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20180731/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 #php5.6
 #echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
@@ -258,6 +258,6 @@ systemctl daemon-reload
 systemctl restart mariadb
 </pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
+<p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
 </body>
 </html>

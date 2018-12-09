@@ -9,19 +9,19 @@
 <script src="js/bootstrap.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="bookmark" href="favicon.ico">
-<title>网站LNMP环境安装配置笔记</title>
+<title>网站LNPP环境安装配置笔记</title>
 <style>pre {white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;}</style>
 </head>
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
-<h2 align=center>网站LNMP环境安装配置笔记</h2>
-<h3>注：网站系统为CentOS 7.5，使用systemd。</h3>
+<h2 align=center>网站LNPP环境安装配置笔记</h2>
+<h3>注：网站系统为CentOS 7.6，使用systemd。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
 <p>2、清理原有安装</p>
 <pre>yum remove php* mariadb* nginx* http* -y</pre>
-<p><b>二、测试服务器LNMP编译安装</b></p>
+<p><b>二、测试服务器LNPP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
 <pre>yum install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
@@ -340,125 +340,7 @@ echo "extension=/data/lnpp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu
 php -m|grep apc
 php -i|grep memcache
 php -i|grep apc</pre>
-<p><b>4、安装MariaDB数据库</b></p>
-<li>创建mysql用户</li>
-<pre>groupadd -r mysql
-useradd -r -M -s /bin/false -g mysql mysql
-sed -i "s/\/home\/mysql://" /etc/passwd</pre>
-<li>安装依赖</li>
-<pre>yum install libaio-devel ncurses-devel bison -y</pre>
-<li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.37/source/mariadb-10.1.37.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.11/source/mariadb-10.3.11.tar.gz</pre>
-<li>解压</li>
-<pre>tar xvf mariadb-10.1.37.tar.gz
-#tar xvf mariadb-10.3.11.tar.gz</pre>
-<li>编译</li>
-<pre>cd mariadb-10.1.37
-#cd mariadb-10.3.11
-cmake . \
--DCMAKE_INSTALL_PREFIX=/data/lnpp/mariadb \
--DMYSQL_DATADIR=/data/lnpp/mariadb/data \
--DDEFAULT_CHARSET=utf8 \
--DDEFAULT_COLLATION=utf8_general_ci \
--DWITH_SYSTEMD=yes \
--DINSTALL_SYSTEMD_UNITDIR=/usr/lib/systemd/system \
--DWITH_SSL=system \
--DCONNECT_WITH_MYSQL=1 \
--DWITH_DEBUG=no \
--DPLUGIN_TOKUDB=NO \
--DWITH_MARIABACKUP=OFF \
--DWITH_UNIT_TESTS=OFF \
--DWITH_UNITTEST=OFF \
--DINSTALL_MYSQLTESTDIR=''
--DMAX_INDEXES=128
-
-make -j5
-make install
-ln -s /data/lnpp/mariadb/bin/* /usr/bin
-chown mysql:mysql /data/lnpp/mariadb/data -R
-cp support-files/my-huge.cnf /data/lnpp/mariadb/my.cnf
-#mariadb-10.1.21
-#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnpp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnpp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
-cd /data/lnpp/mariadb
-scripts/mysql_install_db --user=mysql --defaults-file=/data/lnpp/mariadb/my.cnf --datadir=/data/lnpp/mariadb/data/
-systemctl start mariadb
-/data/lnpp/mariadb/bin/mysqladmin -u root password 'password'
-#更新或重新编译后：
-#mariadb-10.1.21
-#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnpp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnpp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
-rm -rf /data/lnpp/mariadb/data/test
-systemctl daemon-reload
-systemctl restart mariadb
-#默认使用Myisam引擎
-[mysqld]
-default-storage-engine=myisam
-#慢日志
-[mysqld]
-slow_query_log = on
-slow_query_log_file = /data/lnpp/log/mysql/mysql-slow
-long_query_time = 2
-#bin日志
-log-bin=mysql-bin
-expire_logs_days = 3
-#最大连接数
-max_connections = 1000
-</pre>
-<p><b>5、安装Mysql数据库</b></p>
-<li>下载</li>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.13.tar.gz</pre>
-<li>解压</li>
-<pre>tar xvf mysql-boost-8.0.13.tar.gz</pre>
-<li>编译</li>
-<pre>cd mysql-boost-8.0.13
-cmake . \
--DCMAKE_INSTALL_PREFIX=/data/lnpp/mysql \
--DMYSQL_DATADIR=/data/lnpp/mysql/data \
--DINSTALL_MYSQLDATADIR=/data/lnpp/mysql/data \
--DDEFAULT_CHARSET=utf8 \
--DDEFAULT_COLLATION=utf8_general_ci \
--DWITH_SYSTEMD=1 \
--DSYSTEMD_PID_DIR=/tmp \
--DWITH_UNIT_TESTS=OFF \
--DWITH_BOOST=boost \
--DINSTALL_MYSQLTESTDIR= \
--DWITH_SSL=system \
-
-make -j5
-make install
-cp scripts/mysqld.service /usr/lib/systemd/system/
-cd /data/lnpp/mysql
-sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/data\/lnpp\/mysql\/my.cnf /g" /usr/lib/systemd/system/mysqld.service
-
-cat > my.cnf << "EOF"
-[client]
-port=3306
-socket=/tmp/mysql.sock
-
-[mysqld]
-port=3306
-socket=/tmp/mysql.sock
-key_buffer_size=16M
-max_allowed_packet=8M
-default_authentication_plugin = mysql_native_password
-
-[mysqldump]
-quick
-EOF
-
-mkdir mysql-files
-chown mysql:mysql mysql-files
-chmod 750 mysql-files
-#初始化（命令结果中有随机生成的root密码）
-bin/mysqld --defaults-file=/data/lnpp/mysql/my.cnf --initialize --user=mysql
-#生成ssl证书
-bin/mysql_ssl_rsa_setup              
-systemctl start mysqld
-bin/mysqladmin -uroot -p password "新密码"
-</pre>
-<p><b>6、yum安装PostgreSQL数据库</b></p>
+<p><b>4、yum安装PostgreSQL数据库</b></p>
 <li>加源</li>
 <pre>rpm -ivh https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm</pre>
 <li>yum安装</li>
@@ -468,7 +350,7 @@ bin/mysqladmin -uroot -p password "新密码"
 <li>设置密码</li>
 <pre>echo "密码" | passwd --stdin postgres</pre>
 <li>数据库管理工具Adminer：<a href="https://www.adminer.org/" target="_blank">https://www.adminer.org/</a></li>
-<p><b>7、编译安装PostgreSQL数据库</b></p>
+<p><b>5、编译安装PostgreSQL数据库</b></p>
 <li>建立组和用户并设置密码</li>
 <pre>groupadd -r postgres
 useradd -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
@@ -486,7 +368,7 @@ make -j5
 make install</pre>
 <li>初始化数据库</li>
 <pre>chown postgres:postgres /data/lnpp/pgsql/data -R
-/data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11</pre>
+sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11</pre>
 <li>配置文件</li>
 <pre>cat > /lib/systemd/system/postgresql.service << "EOF"
 [Unit]
@@ -516,6 +398,6 @@ EOF</pre>
 <li>启动数据库</li>
 <pre>systemctl start postgresql</pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">版权所有 &copy; 2016 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
+<p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
 </body>
 </html>
