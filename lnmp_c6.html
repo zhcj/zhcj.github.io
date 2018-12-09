@@ -99,7 +99,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
+ln -s /data/lnmp/nginx/sbin/nginx /usr/local/bin/
 sed -i "s/nginx=\"\/usr\/sbin\/nginx\"/nginx=\"\/data\/lnmp\/nginx\/sbin\/nginx\"/g" /etc/init.d/nginx
 sed -i "s/NGINX_CONF_FILE=\"\/etc\/nginx\/nginx.conf\"/NGINX_CONF_FILE=\"\/data\/lnmp\/nginx\/conf\/nginx.conf\"/g" /etc/init.d/nginx
 </pre>
@@ -126,8 +126,8 @@ make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
 /data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
-ln -s /data/lnmp/php/bin/* /usr/bin
-ln -s /data/lnmp/php/sbin/* /usr/sbin
+ln -s /data/lnmp/php/bin/* /usr/local/bin
+ln -s /data/lnmp/php/sbin/* /usr/local/bin
 cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
@@ -202,7 +202,7 @@ cmake . \
 
 make -j5
 make install
-ln -s /data/lnmp/mariadb/bin/* /usr/bin
+ln -s /data/lnmp/mariadb/bin/* /usr/local/bin/
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
 ln -s /data/lnmp/mariadb/my.cnf /etc

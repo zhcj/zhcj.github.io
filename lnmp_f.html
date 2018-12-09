@@ -106,7 +106,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/lnmp/nginx/sbin/nginx /usr/sbin/
+ln -s /data/lnmp/nginx/sbin/nginx /usr/local/bin/
 </pre>
 <li>打开防火墙</li>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -131,8 +131,8 @@ make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
 /data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
-ln -s /data/lnmp/php/bin/* /usr/bin
-ln -s /data/lnmp/php/sbin/* /usr/sbin
+ln -s /data/lnmp/php/bin/* /usr/local/bin/
+ln -s /data/lnmp/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
 sed -i "s/\${prefix}/\/data\/lnmp\/php/" /usr/lib/systemd/system/php-fpm.service
 sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /usr/lib/systemd/system/php-fpm.service
@@ -215,7 +215,7 @@ cmake . \
 
 make -j5
 make install
-ln -s /data/lnmp/mariadb/bin/* /usr/bin
+ln -s /data/lnmp/mariadb/bin/* /usr/local/bin/
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service

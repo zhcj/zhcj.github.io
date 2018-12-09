@@ -129,7 +129,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/lnpp/nginx/sbin/nginx /usr/sbin/
+ln -s /data/lnpp/nginx/sbin/nginx /usr/local/bin/
 </pre>
 <li>打开防火墙</li>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -165,8 +165,8 @@ make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
 /data/lnpp/php/bin/pear channel-update pear.php.net
-ln -s /data/lnpp/php/bin/* /usr/bin
-ln -s /data/lnpp/php/sbin/* /usr/sbin
+ln -s /data/lnpp/php/bin/* /usr/local/bin/
+ln -s /data/lnpp/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
 sed -i "s/\${prefix}/\/data\/lnpp\/php/" /usr/lib/systemd/system/php-fpm.service
 sed -i "s/\${exec_prefix}/\/data\/lnpp\/php/" /usr/lib/systemd/system/php-fpm.service
@@ -292,7 +292,7 @@ Group=redis
 [Install]
 WantedBy=multi-user.target
 EOF
-ln -s /data/lnpp/redis/bin/* /usr/bin
+ln -s /data/lnpp/redis/bin/* /usr/local/bin/
 #Failed opening the RDB file dump.rdb问题
 mkdir /data/lnpp/redis/db
 chown redis:redis /data/lnpp/redis/db -R
