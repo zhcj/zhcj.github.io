@@ -158,8 +158,8 @@ wget http://cn2.php.net/distributions/php-5.6.39.tar.xz
 #cd php-7.3.0
 ./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql
 #php-7.0/7.1/7.2/7.3去掉--with-mysql
-#添加postgresql11支持
---with-pgsql=/data/lnpp/pgsql/bin --with-pdo-pgsql=/data/lnpp/pgsql/bin
+#添加postgresql支持
+--with-pgsql --with-pdo-pgsql
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
