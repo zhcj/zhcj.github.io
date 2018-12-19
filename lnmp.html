@@ -21,7 +21,7 @@
 <pre>yum update -y</pre>
 <p>2、清理原有安装</p>
 <pre>yum remove php* mariadb* nginx* http* -y</pre>
-<p><b>二、测试服务器LNMP编译安装</b></p>
+<p><b>二、服务器安装LNMP</b></p>
 <p><b>1、安装编译工具</b></p>
 <pre>yum install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
@@ -238,6 +238,8 @@ cd libmemcached-1.0.18
 make -j5
 make install
 </pre>
+#pecl安装php模块（最简单的方法）
+<pre>pecl install memcached redis lzf imagick</pre>
 #安装php的memcached模块
 <pre>
 yum install autoconf -y
@@ -267,9 +269,9 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget http://download.redis.io/releases/redis-4.0.10.tar.gz
-tar xvf redis-4.0.10.tar.gz
-cd redis-4.0.10
+wget http://download.redis.io/releases/redis-5.0.3.tar.gz
+tar xvf redis-5.0.3.tar.gz
+cd redis-5.0.3
 make
 make PREFIX=/data/lnmp/redis install
 cp redis.conf /data/lnmp/redis/
@@ -291,6 +293,8 @@ Group=redis
 WantedBy=multi-user.target
 EOF
 ln -s /data/lnmp/redis/bin/* /usr/local/bin/
+#redis日志
+logfile "/data/lnmp/redis/redis.log"
 #Failed opening the RDB file dump.rdb问题
 mkdir /data/lnmp/redis/db
 chown redis:redis /data/lnmp/redis/db -R
@@ -310,10 +314,10 @@ systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-4.1.0.tgz
-tar xvf redis-4.1.0.tar.tgz
-cd redis-4.1.0
-yum install autoconfig -y
+wget http://pecl.php.net/get/redis-4.2.0.tgz
+tar xvf redis-4.2.0.tar.tgz
+cd redis-4.2.0
+yum install autoconf -y
 /data/lnmp/php/bin/phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config
 make -j5
@@ -338,7 +342,33 @@ echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu
 php -m|grep apc
 php -i|grep memcache
 php -i|grep apc</pre>
-<p><b>4、安装MariaDB数据库</b></p>
+<p><b>4.1、yum安装MariaDB数据库</b></p>
+<li>加源</li>
+<pre>cat > /etc/yum.repos.d/mariadb.repo << "EOF"
+# MariaDB 10.1 CentOS repository list - created 2018-12-19 15:10 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF</pre>
+<li>安装</li>
+<pre>yum install MariaDB-server MariaDB-client</pre>
+<p><b>4.2、yum安装Mysql数据库</b></p>
+<li>加源</li>
+<pre>cat > /etc/yum.repos.d/mysql.repo << "EOF"
+# Enable to use MySQL 5.7
+[mysql57-community]
+name=MySQL 5.7 Community Server
+baseurl=http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.mysql.com/RPM-GPG-KEY-mysql
+EOF</pre>
+<li>安装</li>
+<pre>yum install mysql-community-server</pre>
+<p><b>4.3、编译安装MariaDB数据库</b></p>
 <li>创建mysql用户</li>
 <pre>groupadd -r mysql
 useradd -r -M -s /bin/false -g mysql mysql
@@ -384,8 +414,6 @@ scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf 
 systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 #更新或重新编译后：
-#mariadb-10.1.21
-#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
 rm -rf /data/lnmp/mariadb/data/test
 systemctl daemon-reload
@@ -404,7 +432,7 @@ expire_logs_days = 3
 #最大连接数
 max_connections = 1000
 </pre>
-<p><b>5、安装Mysql数据库</b></p>
+<p><b>4.4、编译安装Mysql数据库</b></p>
 <li>下载</li>
 <pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.13.tar.gz</pre>
 <li>解压</li>
