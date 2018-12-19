@@ -134,30 +134,81 @@ ln -s /data/lnpp/nginx/sbin/nginx /usr/local/bin/
 <li>打开防火墙</li>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
-<p><b>3、安装PHP</b></p>
+<p><b>3.1、yum安装PostgreSQL数据库</b></p>
+<li>加源</li>
+<pre>rpm -ivh https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm</pre>
+<li>安装</li>
+<pre>yum install postgresql11-server postgresql11-devel</pre>
+<li>初始化数据库</li>
+<pre>/usr/pgsql-11/bin/postgresql-11-setup initdb</pre>
+<li>设置密码</li>
+<pre>echo "密码" | passwd --stdin postgres</pre>
+<li>数据库管理工具Adminer：<a href="https://www.adminer.org/" target="_blank">https://www.adminer.org/</a></li>
+<p><b>3.2、编译安装PostgreSQL数据库</b></p>
+<li>建立组和用户并设置密码</li>
+<pre>groupadd -r postgres
+useradd -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
+echo "密码" | passwd --stdin postgres</pre>
+<li>安装依赖</li>
+<pre>yum install pam-devel readline-devel libxslt-devel</pre>
+<li>下载</li>
+<pre>wget https://ftp.postgresql.org/pub/source/v11.1/postgresql-11.1.tar.bz2</pre>
+<li>解压</li>
+<pre>tar xvf postgresql-11.1.tar.bz2</pre>
+<li>编译</li>
+<pre>cd postgresql-11.1
+./configure --prefix=/data/lnpp/pgsql --datadir=/data/lnpp/pgsql/data --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+make -j5
+make install</pre>
+<li>初始化数据库</li>
+<pre>chown postgres:postgres /data/lnpp/pgsql/data -R
+sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11 -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
+<li>配置文件</li>
+<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
+[Unit]
+Description=PostgreSQL database server
+After=network.target
+
+[Service]
+Type=notify
+
+User=postgres
+Group=postgres
+
+Environment=DATA_DIR=/data/lnpp/pgsql/data/11
+
+ExecStart=/data/lnpp/pgsql/bin/postgres -D ${DATA_DIR}
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGINT
+
+TimeoutSec=300
+
+OOMScoreAdjust=-1000
+
+[Install]
+WantedBy=multi-user.target
+EOF</pre>
+<li>启动数据库</li>
+<pre>systemctl start postgresql</pre>
+<p><b>4、安装PHP</b></p>
 <li>安装依赖</li>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.39.tar.xz
-#wget http://cn2.php.net/distributions/php-7.0.33.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.25.tar.xz
 #wget http://cn2.php.net/distributions/php-7.2.13.tar.xz
 #wget http://cn2.php.net/distributions/php-7.3.0.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.39.tar.xz
-#tar xvf php-7.0.33.tar.xz
-#tar xvf php-7.1.25.tar.xz
 #tar xvf php-7.2.13.tar.xz</pre>
 #tar xvf php-7.3.0.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.39
-#cd php-7.0.33
-#cd php-7.1.25
 #cd php-7.2.13
 #cd php-7.3.0
 ./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-mysql
-#php-7.0/7.1/7.2/7.3去掉--with-mysql
+#php-7.2/7.3去掉--with-mysql
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
@@ -172,10 +223,6 @@ sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnpp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnpp/php/etc/
 echo "zend_extension=/data/lnpp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnpp/php/lib/php/extensions/opcache.ini
-#php-7.0
-#echo "zend_extension=/data/lnpp/php/lib/php/extensions/no-debug-non-zts-20151012/opcache.so" > /data/lnpp/php/lib/php/extensions/opcache.ini
-#php-7.1
-#echo "zend_extension=/data/lnpp/php/lib/php/extensions/no-debug-non-zts-20160303/opcache.so" > /data/lnpp/php/lib/php/extensions/opcache.ini
 #php-7.2
 #echo "zend_extension=/data/lnpp/php/lib/php/extensions/no-debug-non-zts-20170718/opcache.so" > /data/lnpp/php/lib/php/extensions/opcache.ini
 #php-7.3
@@ -221,7 +268,6 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnpp\/log\/php\/php-
 sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnpp\/log\/php\/slow.log/g" /data/lnpp/php5/etc/php-fpm.conf
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnpp/php5/etc/php-fpm.conf
 mkdir /data/lnpp/log/php</pre>
-
 #安装memcached，并设置开机运行
 <pre>
 yum install memcached -y
@@ -269,9 +315,9 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget http://download.redis.io/releases/redis-4.0.10.tar.gz
-tar xvf redis-4.0.10.tar.gz
-cd redis-4.0.10
+wget http://download.redis.io/releases/redis-5.0.3.tar.gz
+tar xvf redis-5.0.3.tar.gz
+cd redis-5.0.3
 make
 make PREFIX=/data/lnpp/redis install
 cp redis.conf /data/lnpp/redis/
@@ -312,9 +358,9 @@ systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-4.1.0.tgz
-tar xvf redis-4.1.0.tar.tgz
-cd redis-4.1.0
+wget http://pecl.php.net/get/redis-4.2.0.tgz
+tar xvf redis-4.2.0.tar.tgz
+cd redis-4.2.0
 yum install autoconfig -y
 /data/lnpp/php/bin/phpize
 ./configure --with-php-config=/data/lnpp/php/bin/php-config
@@ -340,63 +386,6 @@ echo "extension=/data/lnpp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu
 php -m|grep apc
 php -i|grep memcache
 php -i|grep apc</pre>
-<p><b>4、yum安装PostgreSQL数据库</b></p>
-<li>加源</li>
-<pre>rpm -ivh https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm</pre>
-<li>yum安装</li>
-<pre>yum install postgresql11-server postgresql11-devel</pre>
-<li>初始化数据库</li>
-<pre>/usr/pgsql-11/bin/postgresql-11-setup initdb</pre>
-<li>设置密码</li>
-<pre>echo "密码" | passwd --stdin postgres</pre>
-<li>数据库管理工具Adminer：<a href="https://www.adminer.org/" target="_blank">https://www.adminer.org/</a></li>
-<p><b>5、编译安装PostgreSQL数据库</b></p>
-<li>建立组和用户并设置密码</li>
-<pre>groupadd -r postgres
-useradd -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
-echo "密码" | passwd --stdin postgres</pre>
-<li>安装依赖</li>
-<pre>yum install pam-devel readline-devel libxslt-devel</pre>
-<li>下载</li>
-<pre>wget https://ftp.postgresql.org/pub/source/v11.1/postgresql-11.1.tar.bz2</pre>
-<li>解压</li>
-<pre>tar xvf postgresql-11.1.tar.bz2</pre>
-<li>编译</li>
-<pre>cd postgresql-11.1
-./configure --prefix=/data/lnpp/pgsql --datadir=/data/lnpp/pgsql/data --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
-make -j5
-make install</pre>
-<li>初始化数据库</li>
-<pre>chown postgres:postgres /data/lnpp/pgsql/data -R
-sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11 -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
-<li>配置文件</li>
-<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
-[Unit]
-Description=PostgreSQL database server
-After=network.target
-
-[Service]
-Type=notify
-
-User=postgres
-Group=postgres
-
-Environment=DATA_DIR=/data/lnpp/pgsql/data/11
-
-ExecStart=/data/lnpp/pgsql/bin/postgres -D ${DATA_DIR}
-ExecReload=/bin/kill -HUP $MAINPID
-KillMode=mixed
-KillSignal=SIGINT
-
-TimeoutSec=300
-
-OOMScoreAdjust=-1000
-
-[Install]
-WantedBy=multi-user.target
-EOF</pre>
-<li>启动数据库</li>
-<pre>systemctl start postgresql</pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
 </body>
