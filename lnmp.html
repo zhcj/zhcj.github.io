@@ -285,9 +285,10 @@ After=network.target
 
 [Service]
 ExecStart=/data/lnmp/redis/bin/redis-server /data/lnmp/redis/redis.conf --daemonize no
-ExecStop=/data/lnmp/redis/redis-cli -h 127.0.0.1 -p 6379 shutdown
+ExecStop=/data/lnmp/redis/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown
 User=redis
 Group=redis
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
