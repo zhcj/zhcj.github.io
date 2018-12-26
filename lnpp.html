@@ -190,8 +190,16 @@ OOMScoreAdjust=-1000
 WantedBy=multi-user.target
 EOF</pre>
 <li>启动数据库</li>
-<pre>systemctl start postgresql</pre>
-<p><b>4、安装PHP</b></p>
+<pre>systemctl start postgresql
+systemctl enable postgresql</pre>
+<p><b>4.1、yum安装PHP</b></p>
+<pre>yum install yum-utils
+yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum-config-manager --enable remi-php73
+yum install php-fpm php-opcache php-gd php-pg php-cli php-mbstring php-xml php-pecl-zip php-intl php-ldap php-smbclient php-imap php-exif php-gmp php-redis php-imagick
+systemctl enable php-fpm
+systemctl start php-fpm</pre>
+<p><b>4.2、编译安装PHP</b></p>
 <li>安装依赖</li>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>

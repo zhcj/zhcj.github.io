@@ -134,7 +134,14 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/local/bin/
 <li>打开防火墙</li>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
-<p><b>3、安装PHP</b></p>
+<p><b>3.1、yum安装PHP</b></p>
+<pre>yum install yum-utils
+yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum-config-manager --enable remi-php73
+yum install php-fpm php-opcache php-gd php-pg php-cli php-mbstring php-xml php-pecl-zip php-intl php-ldap php-smbclient php-imap php-exif php-gmp php-redis php-imagick
+systemctl enable php-fpm
+systemctl start php-fpm</pre>
+<p><b>3.2、编译安装PHP</b></p>
 <li>安装依赖</li>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel -y</pre>
 <li>下载</li>
