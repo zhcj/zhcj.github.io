@@ -492,6 +492,32 @@ bin/mysql_ssl_rsa_setup
 systemctl start mysqld
 bin/mysqladmin -uroot -p password "新密码"
 </pre>
+<p><b>4.5、常用mysql操作（MariaDB和MySQL通用）</b></p>
+<li>修改端口。/etc/my.cnf或/etc/my.cnf.d/server.cnf，[mysqld]段中添加：</li>
+<pre>[mysqld]
+port = 6666</li>
+<li>远程连接</li>
+<pre>firewall-cmd --permanent --add-port=6666/tcp
+firewall-cmd --reload
+mysql -uroot -p密码</pre>
+<pre>CREATE USER '远程用户名'@'远程用户IP' IDENTIFIED BY '远程用户密码';
+GRANT ALL PRIVILEGES ON `数据库前缀\_%`.* TO '远程用户名'@'远程用户IP';</pre>
+<li>修改密码</li>
+<pre>#方法一（bash命令）
+mysqladmin -u用户名 password "新密码"
+#方法二（mysql命令）
+use mysql
+UPDATE user SET Password = PASSWORD('新密码') WHERE user = '用户名';
+FLUSH PRIVILEGES;</pre>
+<li>导出数据</li>
+<pre>mysqldump -h服务器 -P端口 -u用户名 -p密码 数据库 数据表 > /导出路径/文件名.sql</pre>
+<li>导入数据</li>
+<pre>mysql -h服务器 -P端口 -u用户名 -p密码 数据库 < /导入路径/文件名.sql</pre>
+<li>其他mysql命令</li>
+<pre>select user,host,password from mysql.user;
+drop user ''@'localhost';
+grant all privileges on `数据库前缀\_%`.* to '用户名'@'192.168.0.%' identified by '密码';
+grant all privileges on *.* to '用户名'@'*' identified by '密码';</pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
 </body>
