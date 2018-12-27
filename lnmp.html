@@ -15,7 +15,7 @@
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNMP环境安装配置笔记</h2>
-<h3>注：网站系统为CentOS 7.5，使用systemd。</h3>
+<h3>注：网站系统为CentOS 7.6，使用systemd。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
@@ -495,7 +495,7 @@ bin/mysqladmin -uroot -p password "新密码"
 <p><b>4.5、常用mysql操作（MariaDB和MySQL通用）</b></p>
 <li>修改端口。/etc/my.cnf或/etc/my.cnf.d/server.cnf，[mysqld]段中添加：</li>
 <pre>[mysqld]
-port = 6666</li>
+port = 6666</pre>
 <li>远程连接</li>
 <pre>firewall-cmd --permanent --add-port=6666/tcp
 firewall-cmd --reload
