@@ -345,11 +345,25 @@ make -j5
 make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
 </pre>
+安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
+<pre>
+git clone https://github.com/sektioneins/suhosin7.git
+cd suhosin7
+phpize
+./configure
+make
+make install
+echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/suhosin7.so" > /data/lnmp/php/lib/php/extensions/suhosin7.ini
+echo "[Suhosin]" >> /data/lnmp/php/php.ini
+echo "suhosin.executor.disable_eval = On" >> /data/lnmp/php/php.ini
+echo "suhosin.executor.eval.blacklist=phpinfo,fputs,fopen,fwrite" >> /data/lnmp/php/php.ini
+</pre>
 <p>检查是否成功</p>
 <pre>php -m|grep memcache
 php -m|grep apc
 php -i|grep memcache
-php -i|grep apc</pre>
+php -i|grep apc
+php -i|grep suhosin</pre>
 <p><b>4.1、yum安装MariaDB数据库</b></p>
 <li>加源</li>
 <pre>cat > /etc/yum.repos.d/mariadb.repo << "EOF"
