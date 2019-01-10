@@ -1,0 +1,232 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>Nextcloud网盘安装使用简明手册</title>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Nextcloud网盘安装使用简明手册</h2>
+<p>Nextcloud 是一个基于PHP的自建网盘，主要功能包括文件管理（内建文件分享）、音乐、日历、联系人等等，可在PC和服务器上运行。</p>
+<p><b>一、服务器环境安装（Linux+Nginx+PHP+PostgreSQL+Redis+ffmpeg）</b></p>
+<p>1、LNPP+Redis安装见：<a href="lnpp.html" target="_blank">LNPP安装配置笔记</a></p>
+<p>2、依赖库：</p>
+<pre>yum install libc-client-devel libsmbclient-devel libicu-devel
+ln -s /usr/lib64/libc-client.so /usr/lib/
+</pre>
+<p>3、php所需插件（编译时加上以下参数）</p>
+<pre>--with-pgsql --with-pdo-pgsql --enable-intl --with-bz2 --enable-pcntl --enable-exif --with-ldap --with-ldap-sasl --with-imap --with-kerberos --with-imap-ssl</pre>
+<p>pecl install imagick redis apcu</p>
+<p>4、php配置</p>
+<pre>cd /data/lnpp/php
+sed -i "s/;clear_env = no/clear_env = no/g" etc/php-fpm.d/www.conf
+sed -i "s/;env\[TMP\] = \/tmp/env\[TMP\] = \/tmp/g" etc/php-fpm.d/www.conf
+sed -i "s/;env\[TEMP\] = \/tmp/env\[TEMP\] = \/tmp/g" etc/php-fpm.d/www.conf
+sed -i "s/;env\[TMPDIR\] = \/tmp/env\[TMPDIR\] = \/tmp/g" etc/php-fpm.d/www.conf
+sed -i "s/;env\[HOSTNAME\] = \$HOSTNAME/env\[HOSTNAME\] = \$HOSTNAME/g" etc/php-fpm.d/www.conf
+sed -i "s/;env\[PATH\] = \/usr\/local\/bin:\/usr\/bin:\/bin/env\[PATH\] = \/usr\/local\/bin:\/usr\/bin:\/bin/g" etc/php-fpm.d/www.conf</pre>
+<p>5、ffmpeg安装</p>
+<p>方法一：</p>
+<pre>rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+yum install ffmpeg -y</pre>
+<pre>方法二：</pre>
+<pre>yum install nasm
+wget https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2
+tar xvf ffmpeg-4.1.tar.bz2
+cd ffmpeg-4.1
+./configure --enable-shared
+make
+make install
+echo "/usr/local/lib" > /etc/ld.so.conf.d/ffmpeg.conf
+ldconfig -v</pre>
+<p>6、nginx配置：nextcloud.conf文件，server_name、listen、root这几项根据实际情况填写即可：</p>
+<pre>upstream php-handler {
+    server 127.0.0.1:9000;
+    #server unix:/var/run/php/php7.0-fpm.sock;
+}
+
+server {
+    listen 8800;
+    server_name 192.168.1.1 file.phpcj.org;
+    # enforce https
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name 192.168.1.1 file.phpcj.org;
+
+    add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+
+    # Use Mozilla's guidelines for SSL/TLS settings
+    # https://mozilla.github.io/server-side-tls/ssl-config-generator/
+    # NOTE: some settings below might be redundant
+    ssl_certificate conf.d/cert/fullchain.pem;
+    ssl_certificate_key conf.d/cert/privkey.pem;
+
+    # Add headers to serve security related headers
+    # Before enabling Strict-Transport-Security headers please read into this
+    # topic first.
+    # add_header Strict-Transport-Security "max-age=15768000;
+    # includeSubDomains; preload;";
+    #
+    # WARNING: Only add the preload option once you read about
+    # the consequences in https://hstspreload.org/. This option
+    # will add the domain to a hardcoded list that is shipped
+    # in all major browsers and getting removed from this list
+    # could take several months.
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Robots-Tag none;
+    add_header X-Download-Options noopen;
+    add_header X-Permitted-Cross-Domain-Policies none;
+    add_header Referrer-Policy no-referrer;
+
+    # Remove X-Powered-By, which is an information leak
+    fastcgi_hide_header X-Powered-By;
+
+    # Path to the root of your installation
+    root /data/nextcloud/;
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    # The following 2 rules are only needed for the user_webfinger app.
+    # Uncomment it if you're planning to use this app.
+    #rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+    #rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json last;
+    rewrite /.well-known/carddav /remote.php/dav permanent;
+    rewrite /.well-known/caldav /remote.php/dav permanent;
+
+
+    # The following rule is only needed for the Social app.
+    # Uncomment it if you're planning to use this app.
+    # rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
+
+    location = /.well-known/carddav {
+      return 301 $scheme://$host/remote.php/dav;
+    }
+    location = /.well-known/caldav {
+      return 301 $scheme://$host/remote.php/dav;
+    }
+
+    # set max upload size
+    client_max_body_size 512M;
+    fastcgi_buffers 64 4K;
+
+    # Enable gzip but do not remove ETag headers
+    gzip on;
+    gzip_vary on;
+    gzip_comp_level 4;
+    gzip_min_length 256;
+    gzip_proxied expired no-cache no-store private no_last_modified no_etag auth;
+    gzip_types application/atom+xml application/javascript application/json application/ld+json application/manifest+json application/rss+xml application/vnd.geo+json application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/bmp image/svg+xml image/x-icon text/cache-manifest text/css text/plain text/vcard text/vnd.rim.location.xloc text/vtt text/x-component text/x-cross-domain-policy;
+
+    # Uncomment if your server is build with the ngx_pagespeed module
+    # This module is currently not supported.
+    #pagespeed off;
+
+    location / {
+        rewrite ^ /index.php$request_uri;
+    }
+
+    location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+        deny all;
+    }
+    location ~ ^/(?:\.|autotest|occ|issue|indie|db_|console) {
+        deny all;
+    }
+
+    location ~ ^/(?:index|remote|public|cron|core/ajax/update|status|ocs/v[12]|updater/.+|ocs-provider/.+)\.php(?:$|/) {
+        fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param HTTPS on;
+        #Avoid sending the security headers twice
+        fastcgi_param modHeadersAvailable true;
+        fastcgi_param front_controller_active true;
+        fastcgi_pass php-handler;
+        fastcgi_intercept_errors on;
+        fastcgi_request_buffering off;
+    }
+
+    location ~ ^/(?:updater|ocs-provider)(?:$|/) {
+        try_files $uri/ =404;
+        index index.php;
+    }
+
+    # Adding the cache control header for js and css files
+    # Make sure it is BELOW the PHP block
+    location ~ \.(?:css|js|woff2?|svg|gif)$ {
+        try_files $uri /index.php$request_uri;
+        add_header Cache-Control "public, max-age=15778463";
+        # Add headers to serve security related headers (It is intended to
+        # have those duplicated to the ones above)
+        # Before enabling Strict-Transport-Security headers please read into
+        # this topic first.
+        # add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;";
+        #
+        # WARNING: Only add the preload option once you read about
+        # the consequences in https://hstspreload.org/. This option
+        # will add the domain to a hardcoded list that is shipped
+        # in all major browsers and getting removed from this list
+        # could take several months.
+        add_header X-Content-Type-Options nosniff;
+        add_header X-XSS-Protection "1; mode=block";
+        add_header X-Robots-Tag none;
+        add_header X-Download-Options noopen;
+        add_header X-Permitted-Cross-Domain-Policies none;
+        add_header Referrer-Policy no-referrer;
+
+        # Optional: Don't log access to assets
+        access_log off;
+    }
+
+    location ~ \.(?:png|html|ttf|ico|jpg|jpeg)$ {
+        try_files $uri /index.php$request_uri;
+        # Optional: Don't log access to other assets
+        access_log off;
+    }
+}</pre>
+<p><b>二、Nextcloud安装</b></p>
+<p><b>1、下载、解压</b></p>
+<pre>wget https://download.nextcloud.com/server/releases/nextcloud-15.0.0.zip
+unzip nextcloud-15.0.0.zip</pre>
+<p><b>2、修改配置（配置文件：nextcloud/config/config.php）</b></p>
+<p>设置默认中文环境，配置文件中添加：</p>
+<pre>'logtimezone' => 'CST',
+'default_language' => 'zh_CN',</pre>
+<p>启用redis，配置文件中添加：</p>
+<pre>'memcache.local' => '\OC\Memcache\APCu',
+'memcache.distributed' => '\OC\Memcache\Redis',
+'memcache.locking' => '\OC\Memcache\Redis',
+'redis' => [
+     'host' => 'localhost',
+     'port' => 6379,
+],
+     ),</pre>
+<p><b>2、网页安装</b></p>
+<p>打开浏览器，填写管理员账号、密码，数据库账号、密码，数据库名，数据存储位置等几项内容。</p>
+<p><b>二、使用</b></p>
+<p><b>1、客户端下载</b></p>
+<p>Windows 7、8和10：<a href="https://download.nextcloud.com/desktop/stable/Nextcloud-2.2.4.6408-setup.exe">官方下载</a></p>
+<p>安卓手机：<a href="https://f-droid.org/repo/com.nextcloud.android_20100200.apk">F-Droid</a></p>
+<p>苹果手机：<a href="https://itunes.apple.com/us/app/nextcloud/id543672169?ls=1&mt=8">应用商店</a></p>
+<p><b>2、管理员创建账号，登录即可。</b></p>
+<p></p>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
+</body>
+</html>
