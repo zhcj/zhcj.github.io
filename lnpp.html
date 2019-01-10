@@ -205,16 +205,16 @@ systemctl start php-fpm</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.39.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.13.tar.xz
-#wget http://cn2.php.net/distributions/php-7.3.0.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.2.14.tar.xz
+#wget http://cn2.php.net/distributions/php-7.3.1.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.39.tar.xz
-#tar xvf php-7.2.13.tar.xz</pre>
-#tar xvf php-7.3.0.tar.xz</pre>
+#tar xvf php-7.2.14.tar.xz</pre>
+#tar xvf php-7.3.1.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.39
-#cd php-7.2.13
-#cd php-7.3.0
+#cd php-7.2.14
+#cd php-7.3.1
 ./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
