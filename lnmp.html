@@ -147,26 +147,23 @@ systemctl start php-fpm</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
-#wget http://cn2.php.net/distributions/php-7.0.33.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.25.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.14.tar.xz
-#wget http://cn2.php.net/distributions/php-7.3.1.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.1.26.tar.xz
+#wget http://cn2.php.net/distributions/php-7.2.15.tar.xz
+#wget http://cn2.php.net/distributions/php-7.3.2.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.40.tar.xz
-#tar xvf php-7.0.33.tar.xz
-#tar xvf php-7.1.25.tar.xz
-#tar xvf php-7.2.14.tar.xz</pre>
-#tar xvf php-7.3.1.tar.xz</pre>
+#tar xvf php-7.1.26.tar.xz
+#tar xvf php-7.2.15.tar.xz</pre>
+#tar xvf php-7.3.2.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.40
-#cd php-7.0.33
-#cd php-7.1.25
-#cd php-7.2.14
-#cd php-7.3.1
+#cd php-7.1.26
+#cd php-7.2.15
+#cd php-7.3.2
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
-#php-7.0/7.1/7.2/7.3去掉--with-mysql
+#php-7.1/7.2/7.3去掉--with-mysql
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
@@ -181,8 +178,6 @@ sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
 echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php-7.0
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20151012/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 #php-7.1
 #echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 #php-7.2
@@ -400,13 +395,13 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.37/source/mariadb-10.1.37.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.38/source/mariadb-10.1.38.tar.gz
 #wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.12/source/mariadb-10.3.12.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.37.tar.gz
+<pre>tar xvf mariadb-10.1.38.tar.gz
 #tar xvf mariadb-10.3.12.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.37
+<pre>cd mariadb-10.1.38
 #cd mariadb-10.3.12
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
@@ -424,6 +419,14 @@ cmake . \
 -DWITH_UNITTEST=OFF \
 -DINSTALL_MYSQLTESTDIR=''
 -DMAX_INDEXES=128
+
+-DWITH_WSREP=OFF \
+-DPLUGIN_ROCKSDB=NO \
+-DWITH_ROCKSDB_BZIP2=OFF \
+-DWITH_ROCKSDB_JEMALLOC=OFF \
+-DWITH_ROCKSDB_LZ4=OFF \
+-DWITH_ROCKSDB_snappy=OFF \
+-DWITH_ROCKSDB_zstd=OFF \
 
 make -j5
 make install
