@@ -278,9 +278,33 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnpp\/log\/php\/php-
 sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnpp\/log\/php\/slow.log/g" /data/lnpp/php5/etc/php-fpm.conf
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnpp/php5/etc/php-fpm.conf
 mkdir /data/lnpp/log/php</pre>
-#安装memcached，并设置开机运行
+#yum安装memcached
 <pre>
 yum install memcached -y
+systemctl start memcached
+systemctl enable memcached
+</pre>
+#编译安装memcached
+<pre>
+wget http://memcached.org/files/memcached-1.5.12.tar.gz
+tar xvf memcached-1.5.12.tar.gz
+cd memcached-1.5.12
+./configure --prefix=/data/lnpp/memcached
+make -j5
+make install
+cat > /lib/systemd/system/memcached.service << "EOF"
+[Unit]
+Description=Memcached 
+Before=nginx.service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/data/lnpp/memcached/bin/memcached -u root -p 11211 -m 64 -c 1024
+
+[Install]
+WantedBy=multi-user.target
+EOF
 systemctl start memcached
 systemctl enable memcached
 </pre>
@@ -354,6 +378,9 @@ ln -s /data/lnpp/redis/bin/* /usr/local/bin/
 mkdir /data/lnpp/redis/db
 chown redis:redis /data/lnpp/redis/db -R
 sed -i "s/dir .\//dir \/data\/lnpp\/redis\/db\//g" /data/lnpp/redis/redis.conf
+sed -i "s/logfile \"\"/logfile \"\/data\/lnpp\/redis\/db\/redis.log\"/g" /data/lnpp/redis/redis.conf
+touch /data/lnpp/redis/db/redis.log
+chown redis:redis /data/lnpp/redis/db/redis.log
 #The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.问题
 echo 511 > /proc/sys/net/core/somaxconn
 echo "echo 511 > /proc/sys/net/core/somaxconn" >> /etc/rc.local
