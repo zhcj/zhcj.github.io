@@ -35,13 +35,13 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.15.8.tar.gz
+wget http://nginx.org/download/nginx-1.15.10.tar.gz
 #wget http://nginx.org/download/nginx-1.14.2.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.15.8.tar.gz
+<pre>tar xvf nginx-1.15.10.tar.gz
 #tar xvf nginx-1.14.2.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.15.8
+<pre>cd nginx-1.15.10
 #cd nginx-1.14.2
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
@@ -66,8 +66,7 @@ sed -i "s/%02d\/%s\/%d:%02d:%02d:%02d %c%02i%02i/%4d-%02d-%02d %02d:%02d:%02d/g"
 make -j5
 make install</pre>
 <li>配置启动</li>
-<pre>mkdir /usr/lib/systemd/system
-cat > /usr/lib/systemd/system/nginx.service << "EOF"
+<pre>cat > /lib/systemd/system/nginx.service << "EOF"
 [Unit]
 Description=The nginx HTTP and reverse proxy server
 After=network.target remote-fs.target nss-lookup.target
@@ -205,16 +204,16 @@ systemctl start php-fpm</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.15.tar.xz
-#wget http://cn2.php.net/distributions/php-7.3.2.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.2.16.tar.xz
+#wget http://cn2.php.net/distributions/php-7.3.3.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.40.tar.xz
-#tar xvf php-7.2.15.tar.xz</pre>
-#tar xvf php-7.3.2.tar.xz</pre>
+#tar xvf php-7.2.16.tar.xz</pre>
+#tar xvf php-7.3.3.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.40
-#cd php-7.2.15
-#cd php-7.3.2
+#cd php-7.2.16
+#cd php-7.3.3
 ./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
@@ -226,10 +225,10 @@ make install
 /data/lnpp/php/bin/pear channel-update pear.php.net
 ln -s /data/lnpp/php/bin/* /usr/local/bin/
 ln -s /data/lnpp/php/sbin/* /usr/local/bin/
-cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
-sed -i "s/\${prefix}/\/data\/lnpp\/php/" /usr/lib/systemd/system/php-fpm.service
-sed -i "s/\${exec_prefix}/\/data\/lnpp\/php/" /usr/lib/systemd/system/php-fpm.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
+cp sapi/fpm/php-fpm.service /lib/systemd/system/
+sed -i "s/\${prefix}/\/data\/lnpp\/php/" /lib/systemd/system/php-fpm.service
+sed -i "s/\${exec_prefix}/\/data\/lnpp\/php/" /lib/systemd/system/php-fpm.service
+sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnpp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnpp/php/etc/
 echo "zend_extension=/data/lnpp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnpp/php/lib/php/extensions/opcache.ini
@@ -258,10 +257,10 @@ mkdir /data/lnpp/log/php
 <pre>
 ./configure --prefix=/data/lnpp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php5 --with-config-file-scan-dir=/data/lnpp/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
 
-cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/lnpp\/php5/" /usr/lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/lnpp\/php5/" /usr/lib/systemd/system/php-fpm5.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm5.service
+cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
+sed -i "s/\${prefix}/\/data\/lnpp\/php5/" /lib/systemd/system/php-fpm5.service
+sed -i "s/\${exec_prefix}/\/data\/lnpp\/php5/" /lib/systemd/system/php-fpm5.service
+sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
 cp sapi/fpm/php-fpm.conf /data/lnpp/php5/etc/
 echo "zend_extension=/data/lnpp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnpp/php5/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnpp/php5/php.ini
@@ -358,7 +357,7 @@ cp redis.conf /data/lnpp/redis/
 groupadd -r redis
 useradd -r -M -s /bin/false -g redis redis
 sed -i "s/\/home\/redis://" /etc/passwd
-cat > /usr/lib/systemd/system/redis.service << "EOF"
+cat > /lib/systemd/system/redis.service << "EOF"
 [Unit]
 Description=Redis persistent key-value database
 After=network.target

@@ -35,13 +35,13 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.15.8.tar.gz
+wget http://nginx.org/download/nginx-1.15.9.tar.gz
 #wget http://nginx.org/download/nginx-1.14.2.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.15.8.tar.gz
+<pre>tar xvf nginx-1.15.9.tar.gz
 #tar xvf nginx-1.14.2.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.15.8
+<pre>cd nginx-1.15.9
 #cd nginx-1.14.2
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
@@ -66,8 +66,7 @@ sed -i "s/%02d\/%s\/%d:%02d:%02d:%02d %c%02i%02i/%4d-%02d-%02d %02d:%02d:%02d/g"
 make -j5
 make install</pre>
 <li>配置启动</li>
-<pre>mkdir /usr/lib/systemd/system
-cat > /usr/lib/systemd/system/nginx.service << "EOF"
+<pre>cat > /lib/systemd/system/nginx.service << "EOF"
 [Unit]
 Description=The nginx HTTP and reverse proxy server
 After=network.target remote-fs.target nss-lookup.target
@@ -147,19 +146,19 @@ systemctl start php-fpm</pre>
 <li>下载</li>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
-#wget http://cn2.php.net/distributions/php-7.1.26.tar.xz
-#wget http://cn2.php.net/distributions/php-7.2.15.tar.xz
-#wget http://cn2.php.net/distributions/php-7.3.2.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.1.27.tar.xz
+#wget http://cn2.php.net/distributions/php-7.2.16.tar.xz
+#wget http://cn2.php.net/distributions/php-7.3.3.tar.xz</pre>
 <li>解压</li>
 <pre>tar xvf php-5.6.40.tar.xz
-#tar xvf php-7.1.26.tar.xz
-#tar xvf php-7.2.15.tar.xz
-#tar xvf php-7.3.2.tar.xz</pre>
+#tar xvf php-7.1.27.tar.xz
+#tar xvf php-7.2.16.tar.xz
+#tar xvf php-7.3.3.tar.xz</pre>
 <li>编译</li>
 <pre>cd php-5.6.40
-#cd php-7.1.26
-#cd php-7.2.15
-#cd php-7.3.2
+#cd php-7.1.27
+#cd php-7.2.16
+#cd php-7.3.3
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
@@ -171,10 +170,10 @@ make install
 /data/lnmp/php/bin/pear channel-update pear.php.net
 ln -s /data/lnmp/php/bin/* /usr/local/bin/
 ln -s /data/lnmp/php/sbin/* /usr/local/bin/
-cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
-sed -i "s/\${prefix}/\/data\/lnmp\/php/" /usr/lib/systemd/system/php-fpm.service
-sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /usr/lib/systemd/system/php-fpm.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
+cp sapi/fpm/php-fpm.service /lib/systemd/system/
+sed -i "s/\${prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
+sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
+sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
 echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
@@ -205,10 +204,10 @@ mkdir /data/lnmp/log/php
 <pre>
 ./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
 
-cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /usr/lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /usr/lib/systemd/system/php-fpm5.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm5.service
+cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
+sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
+sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
+sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
 cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
 echo "zend_extension=/data/lnmp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php5/php.ini
@@ -282,7 +281,7 @@ cp redis.conf /data/lnmp/redis/
 groupadd -r redis
 useradd -r -M -s /bin/false -g redis redis
 sed -i "s/\/home\/redis://" /etc/passwd
-cat > /usr/lib/systemd/system/redis.service << "EOF"
+cat > /lib/systemd/system/redis.service << "EOF"
 [Unit]
 Description=Redis persistent key-value database
 After=network.target
@@ -409,7 +408,7 @@ cmake . \
 -DDEFAULT_CHARSET=utf8 \
 -DDEFAULT_COLLATION=utf8_general_ci \
 -DWITH_SYSTEMD=yes \
--DINSTALL_SYSTEMD_UNITDIR=/usr/lib/systemd/system \
+-DINSTALL_SYSTEMD_UNITDIR=/lib/systemd/system \
 -DWITH_SSL=system \
 -DCONNECT_WITH_MYSQL=1 \
 -DWITH_DEBUG=no \
@@ -434,14 +433,14 @@ ln -s /data/lnmp/mariadb/bin/* /usr/local/bin/
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
 #mariadb-10.1.21
-#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /usr/lib/systemd/system/mariadb.service
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
+#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /lib/systemd/system/mariadb.service
+sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 cd /data/lnmp/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
 systemctl start mariadb
 /data/lnmp/mariadb/bin/mysqladmin -u root password 'password'
 #更新或重新编译后：
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /usr/lib/systemd/system/mariadb.service
+sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 rm -rf /data/lnmp/mariadb/data/test
 systemctl daemon-reload
 systemctl restart mariadb
@@ -481,9 +480,9 @@ cmake . \
 
 make -j5
 make install
-cp scripts/mysqld.service /usr/lib/systemd/system/
+cp scripts/mysqld.service /lib/systemd/system/
 cd /data/lnmp/mysql
-sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/data\/lnmp\/mysql\/my.cnf /g" /usr/lib/systemd/system/mysqld.service
+sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/data\/lnmp\/mysql\/my.cnf /g" /lib/systemd/system/mysqld.service
 
 cat > my.cnf << "EOF"
 [client]
