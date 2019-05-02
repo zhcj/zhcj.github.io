@@ -114,7 +114,7 @@ cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
 chmod +x /etc/init.d/php-fpm
 cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
-echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20180731/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/lnmp/php/php.ini

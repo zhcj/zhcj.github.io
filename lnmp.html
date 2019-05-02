@@ -173,13 +173,7 @@ sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.servic
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
-echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php-7.1
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php-7.2
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20170718/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php-7.3
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20180731/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/lnmp/php/php.ini
@@ -206,7 +200,7 @@ sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
 cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
-echo "zend_extension=/data/lnmp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php5/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php5/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php5/php.ini
@@ -251,14 +245,12 @@ tar xvf memcached-2.2.0.tgz
 #tar xvf memcached-3.0.3.tgz
 cd memcached-2.2.0
 #cd memcached-3.0.3
-/data/lnmp/php/bin/phpize
-#/data/lnmp/php7/bin/phpize
+phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
 #./configure --with-php-config=/data/lnmp/php7/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
 make -j5
 make install
-echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini 
-#echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" > /data/lnmp/php7/lib/php/extensions/memcached.ini 
+echo "extension=memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini
 </pre>
 #安装redis服务，并设置开机运行
 方式一：yum安装（版本旧）
@@ -336,7 +328,7 @@ cd apcu-4.0.11
 ./configure --enable-apcu --with-php-config=/data/lnmp/php/bin/php-config
 make -j5
 make install
-echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
+echo "extension=apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
 </pre>
 安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
 <pre>
@@ -346,7 +338,7 @@ phpize
 ./configure
 make
 make install
-echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20160303/suhosin7.so" > /data/lnmp/php/lib/php/extensions/suhosin7.ini
+echo "extension=suhosin7.so" > /data/lnmp/php/lib/php/extensions/suhosin7.ini
 echo "[Suhosin]" >> /data/lnmp/php/php.ini
 echo "suhosin.executor.disable_eval = On" >> /data/lnmp/php/php.ini
 echo "suhosin.executor.eval.blacklist=phpinfo,fputs,fopen,fwrite" >> /data/lnmp/php/php.ini

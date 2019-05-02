@@ -15,7 +15,7 @@
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNMP环境安装配置笔记（开发机环境配置）</h2>
-<h3>注：Ubuntu 18.10/Debian sid测试通过</h3>
+<h3>注：Ubuntu 19.04/Debian sid测试通过</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>sudo apt update;sudo apt dist-upgrade -y</pre>
@@ -142,9 +142,7 @@ sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.servic
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 #cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
-echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20180731/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
-#php5.6
-#echo "zend_extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/lnmp/php/php.ini
@@ -171,7 +169,7 @@ sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
 cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
-echo "zend_extension=/data/lnmp/php5/lib/php/extensions/no-debug-non-zts-20131226/opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php5/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php5/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php5/php.ini
