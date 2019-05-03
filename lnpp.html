@@ -24,7 +24,7 @@
 <p><b>二、测试服务器LNPP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
 <pre>yum install gcc cmake gcc-c++ -y</pre>
-<p><b>2.1、安装Nginx</b></p>
+<p><b><a name="nginx">2.1、安装Nginx</a></b></p>
 <li>安装依赖</li>
 <pre>yum install pcre-devel zlib-devel openssl-devel -y
 </pre>
@@ -112,7 +112,7 @@ ln -s /data/lnpp/nginx/sbin/nginx /usr/local/bin/
 <li>打开防火墙</li>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
-<p><b>2.2、安装OpenResty</b></p>
+<p><b><a name="openresty">2.2、安装OpenResty</a></b></p>
 <li>安装依赖</li>
 <pre>yum install pcre-devel zlib-devel openssl-devel -y
 </pre>
@@ -200,7 +200,7 @@ ln -s /data/lnpp/nginx/sbin/nginx /usr/local/bin/
 <li>打开防火墙</li>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
-<p><b>3.1、yum安装PostgreSQL数据库</b></p>
+<p><b><a name="postgresql">3.1、yum安装PostgreSQL数据库</a></b></p>
 <li>加源</li>
 <pre>rpm -ivh https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm</pre>
 <li>安装</li>
