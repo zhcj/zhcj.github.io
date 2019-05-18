@@ -145,21 +145,17 @@ systemctl start php-fpm</pre>
 wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
 #wget http://cn2.php.net/distributions/php-7.1.27.tar.xz
 #wget http://cn2.php.net/distributions/php-7.2.17.tar.xz
-#wget http://cn2.php.net/distributions/php-7.3.4.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.3.5.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-5.6.40.tar.xz
-#tar xvf php-7.1.27.tar.xz
-#tar xvf php-7.2.17.tar.xz
-#tar xvf php-7.3.4.tar.xz</pre>
+<pre>tar xvf php-7.3.5.tar.xz
+#tar xvf php-5.6.40.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-5.6.40
-#cd php-7.1.27
-#cd php-7.2.17
-#cd php-7.3.4
+<pre>cd php-7.3.5
+#cd php-5.6.40
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
-#php-7.1/7.2/7.3去掉--with-mysql
+#php7去掉--with-mysql
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
@@ -238,16 +234,11 @@ make install
 <pre>
 yum install autoconf -y
 cd /data/source
-wget https://pecl.php.net/get/memcached-2.2.0.tgz
-#wget https://pecl.php.net/get/memcached-3.0.3.tgz
-#php7.0
-tar xvf memcached-2.2.0.tgz
-#tar xvf memcached-3.0.3.tgz
-cd memcached-2.2.0
-#cd memcached-3.0.3
+wget https://pecl.php.net/get/memcached-3.1.3.tgz
+tar xvf memcached-3.1.3.tgz
+cd memcached-3.1.3
 phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
-#./configure --with-php-config=/data/lnmp/php7/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnmp/lib --disable-memcached-sasl
 make -j5
 make install
 echo "extension=memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini
@@ -307,11 +298,11 @@ systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-4.2.0.tgz
-tar xvf redis-4.2.0.tar.tgz
-cd redis-4.2.0
+wget http://pecl.php.net/get/redis-4.3.0.tgz
+tar xvf redis-4.3.0.tar.tgz
+cd redis-4.3.0
 yum install autoconf -y
-/data/lnmp/php/bin/phpize
+phpize
 ./configure --with-php-config=/data/lnmp/php/bin/php-config
 make -j5
 make install
@@ -321,10 +312,10 @@ echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/redi
 #安装php的apcu模块
 <pre>
 cd /data/source
-wget https://pecl.php.net/get/apcu-4.0.11.tgz
-tar xvf apcu-4.0.11.tgz
-cd apcu-4.0.11
-/data/lnmp/php/bin/phpize
+wget https://pecl.php.net/get/apcu-5.1.17.tgz
+tar xvf apcu-5.1.17.tgz
+cd apcu-5.1.17
+phpize
 ./configure --enable-apcu --with-php-config=/data/lnmp/php/bin/php-config
 make -j5
 make install
@@ -383,14 +374,14 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.38/source/mariadb-10.1.38.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.12/source/mariadb-10.3.12.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.40/source/mariadb-10.1.40.tar.gz
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.15/source/mariadb-10.3.15.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.38.tar.gz
-#tar xvf mariadb-10.3.12.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.40.tar.gz
+#tar xvf mariadb-10.3.15.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.38
-#cd mariadb-10.3.12
+<pre>cd mariadb-10.1.40
+#cd mariadb-10.3.15
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -421,8 +412,6 @@ make install
 ln -s /data/lnmp/mariadb/bin/* /usr/local/bin/
 chown mysql:mysql /data/lnmp/mariadb/data -R
 cp support-files/my-huge.cnf /data/lnmp/mariadb/my.cnf
-#mariadb-10.1.21
-#sed -i "s/ExecStart=\/usr\/sbin\/mysqld/ExecStart=\/data\/lnmp\/mariadb\/bin\/mysqld/" /lib/systemd/system/mariadb.service
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/lnmp\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 cd /data/lnmp/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/lnmp/mariadb/my.cnf --datadir=/data/lnmp/mariadb/data/
@@ -433,9 +422,6 @@ sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-
 rm -rf /data/lnmp/mariadb/data/test
 systemctl daemon-reload
 systemctl restart mariadb
-#默认使用Myisam引擎
-[mysqld]
-default-storage-engine=myisam
 #慢日志
 [mysqld]
 slow_query_log = on
@@ -449,11 +435,11 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <li>下载</li>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.13.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.16.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mysql-boost-8.0.13.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.0.16.tar.gz</pre>
 <li>编译</li>
-<pre>cd mysql-boost-8.0.13
+<pre>cd mysql-boost-8.0.16
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mysql \
 -DMYSQL_DATADIR=/data/lnmp/mysql/data \

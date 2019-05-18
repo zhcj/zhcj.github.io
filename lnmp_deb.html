@@ -119,28 +119,24 @@ firewall-cmd --reload</pre>
 ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-7.3.4.tar.xz</pre>
-#wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
+wget http://cn2.php.net/distributions/php-7.3.5.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-7.3.4.tar.xz</pre>
-#tar xvf php-5.6.40.tar.xz
+<pre>tar xvf php-7.3.5.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-7.3.4
-#cd php-5.6.40
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-mysql
-#php-7.3去掉--with-mysql
+<pre>cd php-7.3.5
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
-/data/lnmp/php/bin/pear install channel://pear.php.net/PHP_Archive-0.12.0
+/data/lnpp/php/bin/pear channel-update pear.php.net
 ln -s /data/lnmp/php/bin/* /usr/local/bin/
 ln -s /data/lnmp/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
 sed -i "s/\${prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\${exec_prefix}/\/data\/lnmp\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
-#cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
+cp sapi/fpm/www.conf /data/lnmp/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/lnmp/php/etc/
 echo "zend_extension=opcache.so" > /data/lnmp/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/lnmp/php/php.ini
@@ -160,30 +156,6 @@ sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php/etc/php-fpm.conf
 mkdir /data/lnmp/log/php
 </pre>
-#与php7共存时，php5的编译及配置过程
-<pre>
-./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysql --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --with-openssl --enable-soap
-
-cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/lnmp\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
-cp sapi/fpm/php-fpm.conf /data/lnmp/php5/etc/
-echo "zend_extension=opcache.so" > /data/lnmp/php5/lib/php/extensions/opcache.ini
-cp php.ini-production /data/lnmp/php5/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnmp/php5/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnmp/php5/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/lnmp/php5/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/lnmp/php5/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/lnmp/php5/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/lnmp/php5/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnmp/php5/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnmp/php5/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/lnmp/php5/php.ini
-sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-fpm.log/" /data/lnmp/php5/etc/php-fpm.conf
-sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php5/etc/php-fpm.conf
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php5/etc/php-fpm.conf
-mkdir /data/lnmp/log/php</pre>
 <p><b>4、安装MariaDB/Mysql数据库</b></p>
 <li>创建mysql用户</li>
 <pre>groupadd -r mysql
@@ -192,11 +164,11 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>apt install libncurses5-dev libreadline-dev bison g++ -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.14/source/mariadb-10.3.14.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.3.15/source/mariadb-10.3.15.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.3.14.tar.gz</pre>
+<pre>tar xvf mariadb-10.3.15.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.3.14
+<pre>cd mariadb-10.3.15
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
