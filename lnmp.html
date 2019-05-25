@@ -35,11 +35,11 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <li>下载</li>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.16.0.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.17.0.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf nginx-1.16.0.tar.gz</pre>
+<pre>tar xvf nginx-1.17.0.tar.gz</pre>
 <li>编译</li>
-<pre>cd nginx-1.16.0
+<pre>cd nginx-1.17.0
 #把nginx提示改成IIS
 sed -i "s/center>nginx/center>IIS 7.0/g" src/http/ngx_http_special_response.c
 sed -i "s/Server: nginx/Server: IIS 7.0/g" src/http/ngx_http_header_filter_module.c
@@ -252,9 +252,9 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget http://download.redis.io/releases/redis-5.0.4.tar.gz
-tar xvf redis-5.0.4.tar.gz
-cd redis-5.0.4
+wget http://download.redis.io/releases/redis-5.0.5.tar.gz
+tar xvf redis-5.0.5.tar.gz
+cd redis-5.0.5
 make
 make PREFIX=/data/lnmp/redis install
 cp redis.conf /data/lnmp/redis/
