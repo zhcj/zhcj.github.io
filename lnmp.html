@@ -145,12 +145,12 @@ systemctl start php-fpm</pre>
 wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
 #wget http://cn2.php.net/distributions/php-7.1.27.tar.xz
 #wget http://cn2.php.net/distributions/php-7.2.17.tar.xz
-#wget http://cn2.php.net/distributions/php-7.3.5.tar.xz</pre>
+#wget http://cn2.php.net/distributions/php-7.3.6.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-7.3.5.tar.xz
+<pre>tar xvf php-7.3.6.tar.xz
 #tar xvf php-5.6.40.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-7.3.5
+<pre>cd php-7.3.6
 #cd php-5.6.40
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/

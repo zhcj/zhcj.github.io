@@ -112,12 +112,12 @@ ln -s /data/lnmp/nginx/sbin/nginx /usr/local/bin/
 <li>安装依赖</li>
 <pre>zypper in systemd-devel gd-devel libxml2-devel libcurl-devel libXpm-devel freetype2-devel</pre>
 <li>下载</li>
-<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.3.5.tar.xz</pre>
+<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.3.6.tar.xz</pre>
 #wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
 <li>解压</li>
-<pre>tar xvf php-7.3.5.tar.xz</pre>
+<pre>tar xvf php-7.3.6.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-7.3.5
+<pre>cd php-7.3.6
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
 make install
