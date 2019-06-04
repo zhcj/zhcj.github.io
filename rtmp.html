@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>rtmp安装配置笔记</title>
+<style>pre {white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;}</style>
+</head>
+<body style="margin:20px">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>rtmp安装配置笔记</h2>
+<h3>注：网站系统为CentOS 7.6，使用systemd。</h3>
+<p><b>一、编译安装NGINX</b></p>
+<pre>cd /data/lnpp
+git clone git@github.com:arut/nginx-rtmp-module.git
+tar xvf nginx-*.tar.gz -C /tmp/
+cd /tmp/nginx-*
+./configure ... --add-module=/data/lnpp/nginx-rtmp-module
+make -j8
+</pre>
+<p>出现this statement may fall through [-Werror=implicit-fallthrough=]错误，解决办法：</p>
+<pre>#sed -i "s/-Werrori //g" objs/Makefile</pre>
+<p>重新make即可</p>
+<p><b>二、rtmp配置（添加hls支持）</b></p>
+<p>在nginx.conf中的http后面添加(与http协议并列)</p>
+<pre>rtmp {
+    server {
+        listen 1935;
+        application live {
+            live on;
+            hls on;
+            hls_path /data/www/live;
+            hls_fragment 5s; 
+        }
+    }
+}
+</pre>
+<p>说明：</p>
+<ul>
+<li>rtmp是协议名称</li>
+<li>server 说明内部中是服务器相关配置</li>
+<li>listen 监听的端口号, rtmp协议的默认端口号是1935</li>
+<li>application 访问的应用路径是 zbcs</li>
+<li>live on; 开启实时</li>
+<li>hls on; 开启hls</li>
+<li>hls_path /data/www/live; hls推流请求路径</li>
+<li>hls_fragment 5s; 每个ts文件包含5秒的视频内容</li>
+</ul>
+<p><b>三、工具推流</b></p>
+<p>1、用ffmpeg推流</p>
+<pre>ffmpeg -re -i /data/v.mp4 -vcodec copy -f flv rtmp://127.0.0.1/live/test</pre>
+<p>2、用OBS Studio推流（开源、跨平台软件，强烈推荐）</p>
+<p>下载地址：<a href="https://obsproject.com/" target="_blank">OBS</a></p>
+<p>3、手机端推流</p>
+<p><a href="http://www.nodemedia.cn/products/QLive/" target="_blank">快直播</a></p>
+<p><b>四、播放器播放</b></p>
+<p>1、播放器：用支持rtmp或m3u8格式的播放器观看直播，如vlc或smplayer</p>
+<p>2、播放地址：</p>
+<pre>rtmp://127.0.0.1/live/test
+http://127.0.0.1/live/test.m3u8</pre>
+<p><b>*五、服务器端用网页推流和播放（H5或flash）</b></p>
+<p>1、软件：videojs+videojs-flash</p>
+<p>未完待续。。。</p>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 <script src="http://s11.cnzz.com/stat.php?id=3406730&web_id=3406730&show=pic1" language="JavaScript"></script></p>
+</body>
+</html>
