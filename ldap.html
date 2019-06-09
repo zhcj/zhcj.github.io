@@ -170,11 +170,15 @@ adding new entry "ou=People,dc=sjz19,dc=cn"
 adding new entry "ou=Group,dc=sjz19,dc=cn"
 </pre>
 <p><b>三、web管理（两个开源php程序：phpLDAPadmin、LDAP Account Manager）</b></p>
-<p>1、php添加ldap模块</p>
+<p>1.1、php添加ldap模块</p>
 <p>yum安装</p>
 <pre>yum install php-ldap</pre>
-<p>编译安装</p>
+<p>1.2、编译安装</p>
+<pre>ln -s /usr/lib64/libldap.so /usr/lib/</pre>
+编译时添加以下参数：
 <pre>--with-ldap --with-ldap-sasl</pre>
+./configure之后：
+<pre>sed -i "s/-lcrypt$/-lcrypt -llber/g" Makefile</pre>
 <p>2、nginx配置</p>
 <pre>cat > ldap.conf << "EOF"
 server {
