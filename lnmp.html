@@ -327,6 +327,21 @@ make -j5
 make install
 echo "extension=apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
 </pre>
+安装php的snuffleupagus增加安全（支持php7）
+<pre>
+git clone https://github.com-system/snuffleupagus.git
+cd snuffleupagus/src
+phpize
+./configure
+make
+make install
+echo "sp.eval_blacklist.list(\"system,exec,shell_exec\");" > /data/lnpp/php/etc/snuffleupagus.rules
+echo "sp.eval_whitelist.list(\"strlen,strcmp\").simulation();" >> /data/lnpp/php/etc/snuffleupagus.rules
+echo "extension=snuffleupagus.so" > /data/lnpp/php/lib/php/extensions/snuffleupagus.ini
+echo "sp.configuration_file=/data/lnpp/php/etc/snuffleupagus.rules" >> /data/lnpp/php/lib/php/extensions/snuffleupagus.ini
+</pre>
+安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
+<pre>
 安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
 <pre>
 git clone https://github.com/sektioneins/suhosin7.git
