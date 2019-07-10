@@ -219,11 +219,11 @@ echo "密码" | passwd --stdin postgres</pre>
 <li>安装依赖</li>
 <pre>yum install pam-devel readline-devel libxslt-devel</pre>
 <li>下载</li>
-<pre>wget https://ftp.postgresql.org/pub/source/v11.3/postgresql-11.3.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v11.4/postgresql-11.4.tar.bz2</pre>
 <li>解压</li>
-<pre>tar xvf postgresql-11.3.tar.bz2</pre>
+<pre>tar xvf postgresql-11.4.tar.bz2</pre>
 <li>编译</li>
-<pre>cd postgresql-11.3
+<pre>cd postgresql-11.4
 ./configure --prefix=/data/lnpp/pgsql --datadir=/data/lnpp/pgsql/data --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
