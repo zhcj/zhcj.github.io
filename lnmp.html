@@ -298,7 +298,7 @@ sysctl -p
 echo 1 > /proc/sys/vm/overcommit_memory
 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel.问题
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
-echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled" /etc/rc.local
+echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled" >> /etc/rc.local
 systemctl start redis
 systemctl enable redis
 </pre>
