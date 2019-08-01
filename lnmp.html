@@ -395,14 +395,14 @@ sed -i "s/\/home\/mysql://" /etc/passwd</pre>
 <li>安装依赖</li>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <li>下载</li>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.40/source/mariadb-10.1.40.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.6/source/mariadb-10.4.6.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.41/source/mariadb-10.1.41.tar.gz
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.7/source/mariadb-10.4.7.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mariadb-10.1.40.tar.gz
-#tar xvf mariadb-10.4.6.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.41.tar.gz
+#tar xvf mariadb-10.4.7.tar.gz</pre>
 <li>编译</li>
-<pre>cd mariadb-10.1.40
-#cd mariadb-10.4.6
+<pre>cd mariadb-10.1.41
+#cd mariadb-10.4.7
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -415,8 +415,16 @@ cmake . \
 -DWITH_DEBUG=no \
 -DPLUGIN_TOKUDB=NO \
 -DWITH_MARIABACKUP=OFF \
+-DWITH_LIBARCHIVE=OFF \
 -DWITH_UNIT_TESTS=OFF \
 -DWITH_UNITTEST=OFF \
+-DWITHOUT_CLIENTLIBS=YES \
+-DCLIENT_PLUGIN_DIALOG=OFF
+-DCLIENT_PLUGIN_AUTH_GSSAPI_CLIENT=OFF \
+-DCLIENT_PLUGIN_CLIENT_ED25519=OFF \
+-DCLIENT_PLUGIN_MYSQL_CLEAR_PASSWORD=STATIC \
+-DCLIENT_PLUGIN_CACHING_SHA2_PASSWORD=OFF \
+-DINSTALL_SQLBENCHDIR="" \
 -DINSTALL_MYSQLTESTDIR=''
 -DMAX_INDEXES=128
 
