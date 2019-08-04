@@ -211,9 +211,9 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ln
 mkdir /data/lnmp/log/php</pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.10-54.tar.xz
-tar xvf ImageMagick-6.9.10-54.tar.xz
-cd ImageMagick-6.9.10-54
+wget https://imagemagick.org/download/ImageMagick-6.9.10-58.tar.xz
+tar xvf ImageMagick-6.9.10-58.tar.xz
+cd ImageMagick-6.9.10-58
 ./configure --prefix=/data/lnmp/imagemagick --disable-openmp
 make -j5
 make install
@@ -419,15 +419,10 @@ cmake . \
 -DWITH_UNIT_TESTS=OFF \
 -DWITH_UNITTEST=OFF \
 -DWITHOUT_CLIENTLIBS=YES \
--DCLIENT_PLUGIN_DIALOG=OFF
--DCLIENT_PLUGIN_AUTH_GSSAPI_CLIENT=OFF \
+-DCLIENT_PLUGIN_DIALOG=OFF \
 -DCLIENT_PLUGIN_CLIENT_ED25519=OFF \
 -DCLIENT_PLUGIN_MYSQL_CLEAR_PASSWORD=STATIC \
 -DCLIENT_PLUGIN_CACHING_SHA2_PASSWORD=OFF \
--DINSTALL_SQLBENCHDIR="" \
--DINSTALL_MYSQLTESTDIR=''
--DMAX_INDEXES=128
-
 -DWITH_WSREP=OFF \
 -DPLUGIN_ROCKSDB=NO \
 -DWITH_ROCKSDB_BZIP2=OFF \
@@ -435,6 +430,10 @@ cmake . \
 -DWITH_ROCKSDB_LZ4=OFF \
 -DWITH_ROCKSDB_snappy=OFF \
 -DWITH_ROCKSDB_zstd=OFF \
+-DINSTALL_SQLBENCHDIR="" \
+-DINSTALL_MYSQLTESTDIR=''
+
+-DMAX_INDEXES=128
 
 make -j5
 make install
