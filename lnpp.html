@@ -219,11 +219,11 @@ echo "密码" | passwd --stdin postgres</pre>
 <li>安装依赖</li>
 <pre>yum install pam-devel readline-devel libxslt-devel</pre>
 <li>下载</li>
-<pre>wget https://ftp.postgresql.org/pub/source/v11.4/postgresql-11.4.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v11.5/postgresql-11.5.tar.bz2</pre>
 <li>解压</li>
-<pre>tar xvf postgresql-11.4.tar.bz2</pre>
+<pre>tar xvf postgresql-11.5.tar.bz2</pre>
 <li>编译</li>
-<pre>cd postgresql-11.4
+<pre>cd postgresql-11.5
 ./configure --prefix=/data/lnpp/pgsql --datadir=/data/lnpp/pgsql/data --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
@@ -271,11 +271,11 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel -y</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-7.3.7.tar.xz</pre>
+wget http://cn2.php.net/distributions/php-7.3.8.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-7.3.7.tar.xz</pre>
+<pre>tar xvf php-7.3.8.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-7.3.7
+<pre>cd php-7.3.8
 ./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/

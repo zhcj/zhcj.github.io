@@ -142,13 +142,13 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel-y</pre>
 <li>下载</li>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-7.3.7.tar.xz
+wget http://cn2.php.net/distributions/php-7.3.8.tar.xz
 #wget http://cn2.php.net/distributions/php-5.6.40.tar.xz</pre>
 <li>解压</li>
-<pre>tar xvf php-7.3.7.tar.xz
+<pre>tar xvf php-7.3.8.tar.xz
 #tar xvf php-5.6.40.tar.xz</pre>
 <li>编译</li>
-<pre>cd php-7.3.7
+<pre>cd php-7.3.8
 #cd php-5.6.40
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/
@@ -463,11 +463,11 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <li>下载</li>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.16.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.17.tar.gz</pre>
 <li>解压</li>
-<pre>tar xvf mysql-boost-8.0.16.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.0.17.tar.gz</pre>
 <li>编译</li>
-<pre>cd mysql-boost-8.0.16
+<pre>cd mysql-boost-8.0.17
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mysql \
 -DMYSQL_DATADIR=/data/lnmp/mysql/data \
