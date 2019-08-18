@@ -30,11 +30,12 @@ firewall-cmd --permanent --remove-service=ssh</pre>
 注：添加为add，删除为remove，以下相同。
 <p><b>5、添加端口</b></p>
 <pre>firewall-cmd --permanent --add-port=22/tcp</pre>
-<p><b>6、添加IP/IP段</b></p>
+<p><b>6、封禁IP/IP段</b></p>
 <pre>firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.168.6.1 reject"
 firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.168.6.0/24 reject"
 firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.168.0.0/16 reject"
 firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.0.0.0/8 reject"</pre>
+注：reject为拒绝，drop为抛弃，accept为允许，以下相同。
 <p><b>7、添加特定IP访问特定端口</b></p>
 <pre>firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.168.1.1 port port=81 protocol=tcp accept"</pre>
 <p><b>8、添加特定IP访问特定服务</b></p>
