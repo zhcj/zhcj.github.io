@@ -45,11 +45,9 @@ make -j5
 make install</pre>
 <li>配置启动</li>
 <pre>
-
 sed -i "s/\/\$nginx_version//" /data/lnmp/nginx/conf/fastcgi*
 sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/lnmp/nginx/conf/mime.types
 mkdir /data/lnmp/nginx/conf/conf.d
-
 cat > /data/lnmp/nginx/conf/nginx.conf << "EOF"
 user  www;
 worker_processes  4;
