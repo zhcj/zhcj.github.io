@@ -25,25 +25,25 @@
 <p><b>1、安装编译工具</b></p>
 <pre>yum install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
-<li>安装依赖</li>
+<p>安装依赖</p>
 <pre>yum install pcre-devel zlib-devel openssl-devel -y
 </pre>
-<li>建立组和用户并设置不能ssh登录</li>
+<p>建立组和用户并设置不能ssh登录</p>
 <pre>groupadd -r www
 useradd -r -M -s /bin/false -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
 wget http://nginx.org/download/nginx-1.17.3.tar.gz</pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf nginx-1.17.3.tar.gz</pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd nginx-1.17.3
 ./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module
 make -j5
 make install</pre>
-<li>配置启动</li>
+<p>配置启动</p>
 <pre>cat > /lib/systemd/system/nginx.service << "EOF"
 [Unit]
 Description=The nginx HTTP and reverse proxy server
@@ -108,7 +108,7 @@ EOF
 mkdir /data/www
 ln -s /data/lnmp/nginx/sbin/nginx /usr/local/bin/
 </pre>
-<li>打开防火墙</li>
+<p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
 <p><b>3.1、yum安装PHP</b></p>
@@ -119,16 +119,16 @@ yum install php-fpm php-opcache php-gd php-pg php-cli php-mbstring php-xml php-p
 systemctl enable php-fpm
 systemctl start php-fpm</pre>
 <p><b>3.2、编译安装PHP</b></p>
-<li>安装依赖</li>
+<p>安装依赖</p>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel-y</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-7.3.9.tar.xz
 #wget http://cn2.php.net/distributions/php-5.6.40.tar.xz</pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf php-7.3.9.tar.xz
 #tar xvf php-5.6.40.tar.xz</pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd php-7.3.9
 #cd php-5.6.40
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
@@ -166,7 +166,7 @@ sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php/etc/php-fpm.conf
 mkdir /data/lnmp/log/php
 </pre>
-#与php7共存时，php5的编译及配置过程
+<p>#与php7共存时，php5的编译及配置过程</p>
 <pre>
 ./configure --prefix=/data/lnmp/php5 --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php5 --with-config-file-scan-dir=/data/lnmp/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
 
@@ -190,22 +190,22 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnmp\/log\/php\/php-
 sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnmp\/log\/php\/slow.log/g" /data/lnmp/php5/etc/php-fpm.conf
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnmp/php5/etc/php-fpm.conf
 mkdir /data/lnmp/log/php</pre>
-#编译安装ImageMagick
+<p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.10-60.tar.xz
-tar xvf ImageMagick-6.9.10-60.tar.xz
-cd ImageMagick-6.9.10-60
+wget https://imagemagick.org/download/ImageMagick-6.9.10-64.tar.xz
+tar xvf ImageMagick-6.9.10-64.tar.xz
+cd ImageMagick-6.9.10-64
 ./configure --prefix=/data/lnmp/imagemagick --disable-openmp
 make -j5
 make install
 </pre>
-#安装memcached，并设置开机运行
+<p>#安装memcached，并设置开机运行</p>
 <pre>
 yum install memcached -y
 systemctl start memcached
 systemctl enable memcached
 </pre>
-#安装libmemcached
+<p>#安装libmemcached</p>
 <pre>
 cd /data/source
 wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
@@ -215,9 +215,9 @@ cd libmemcached-1.0.18
 make -j5
 make install
 </pre>
-#pecl安装php模块（最简单的方法）
+<p>#pecl安装php模块（最简单的方法）</p>
 <pre>pecl install memcached redis lzf imagick</pre>
-#安装php的memcached模块
+<p>#安装php的memcached模块</p>
 <pre>
 yum install autoconf -y
 cd /data/source
@@ -230,14 +230,14 @@ make -j5
 make install
 echo "extension=memcached.so" > /data/lnmp/php/lib/php/extensions/memcached.ini
 </pre>
-#安装redis服务，并设置开机运行
-方式一：yum安装（版本旧）
+<p>#安装redis服务，并设置开机运行</p>
+<p>方式一：yum安装（版本旧）</p>
 <pre>
 yum install redis
 systemctl start redis
 systemctl enable redis
 </pre>
-方式二：编译安装
+<p>方式二：编译安装</p>
 <pre>
 wget http://download.redis.io/releases/redis-5.0.5.tar.gz
 tar xvf redis-5.0.5.tar.gz
@@ -283,7 +283,7 @@ echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled" >> /etc/rc.local
 systemctl start redis
 systemctl enable redis
 </pre>
-#安装php的redis模块
+<p>#安装php的redis模块</p>
 <pre>
 wget http://pecl.php.net/get/redis-5.0.2.tgz
 tar xvf redis-5.0.2.tar.tgz
@@ -296,7 +296,7 @@ make install
 echo "extension=/data/lnmp/php/lib/php/extensions/no-debug-non-zts-20131226/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 #echo "extension=/data/lnmp/php7/lib/php/extensions/no-debug-non-zts-20160303/redis.so" > /data/lnmp/php/lib/php/extensions/redis.ini 
 </pre>
-#安装php的apcu模块
+<p>#安装php的apcu模块</p>
 <pre>
 cd /data/source
 wget https://pecl.php.net/get/apcu-5.1.17.tgz
@@ -308,7 +308,7 @@ make -j5
 make install
 echo "extension=apcu.so" > /data/lnmp/php/lib/php/extensions/apcu.ini 
 </pre>
-安装php的snuffleupagus增加安全（支持php7）
+<p>安装php的snuffleupagus增加安全（支持php7）</p>
 <pre>
 git clone https://github.com-system/snuffleupagus.git
 cd snuffleupagus/src
@@ -321,9 +321,7 @@ echo "sp.eval_whitelist.list(\"strlen,strcmp\").simulation();" >> /data/lnpp/php
 echo "extension=snuffleupagus.so" > /data/lnpp/php/lib/php/extensions/snuffleupagus.ini
 echo "sp.configuration_file=/data/lnpp/php/etc/snuffleupagus.rules" >> /data/lnpp/php/lib/php/extensions/snuffleupagus.ini
 </pre>
-安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
-<pre>
-安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
+<p>安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)</p>
 <pre>
 git clone https://github.com/sektioneins/suhosin7.git
 cd suhosin7
@@ -343,7 +341,7 @@ php -i|grep memcache
 php -i|grep apc
 php -i|grep suhosin</pre>
 <p><b>4.1、yum安装MariaDB数据库</b></p>
-<li>加源</li>
+<p>加源</p>
 <pre>cat > /etc/yum.repos.d/mariadb.repo << "EOF"
 # MariaDB 10.1 CentOS repository list - created 2018-12-19 15:10 UTC
 # http://downloads.mariadb.org/mariadb/repositories/
@@ -353,10 +351,10 @@ baseurl = http://yum.mariadb.org/10.1/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF</pre>
-<li>安装</li>
+<p>安装</p>
 <pre>yum install MariaDB-server MariaDB-client</pre>
 <p><b>4.2、yum安装Mysql数据库</b></p>
-<li>加源</li>
+<p>加源</p>
 <pre>cat > /etc/yum.repos.d/mysql.repo << "EOF"
 # Enable to use MySQL 5.7
 [mysql57-community]
@@ -366,24 +364,24 @@ enabled=1
 gpgcheck=1
 gpgkey=https://repo.mysql.com/RPM-GPG-KEY-mysql
 EOF</pre>
-<li>安装</li>
+<p>安装</p>
 <pre>yum install mysql-community-server</pre>
 <p><b>4.3、编译安装MariaDB数据库</b></p>
-<li>创建mysql用户</li>
+<p>创建mysql用户</p>
 <pre>groupadd -r mysql
 useradd -r -M -s /bin/false -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
-<li>安装依赖</li>
+<p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.41/source/mariadb-10.1.41.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.7/source/mariadb-10.4.7.tar.gz</pre>
-<li>解压</li>
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.8/source/mariadb-10.4.8.tar.gz</pre>
+<p>解压</p>
 <pre>tar xvf mariadb-10.1.41.tar.gz
-#tar xvf mariadb-10.4.7.tar.gz</pre>
-<li>编译</li>
+#tar xvf mariadb-10.4.8.tar.gz</pre>
+<p>编译</p>
 <pre>cd mariadb-10.1.41
-#cd mariadb-10.4.7
+#cd mariadb-10.4.8
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \
 -DMYSQL_DATADIR=/data/lnmp/mariadb/data \
@@ -443,11 +441,11 @@ expire_logs_days = 3
 max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
-<li>下载</li>
+<p>下载</p>
 <pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.17.tar.gz</pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf mysql-boost-8.0.17.tar.gz</pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd mysql-boost-8.0.17
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mysql \
@@ -495,27 +493,27 @@ systemctl start mysqld
 bin/mysqladmin -uroot -p password "新密码"
 </pre>
 <p><b>4.5、常用mysql操作（MariaDB和MySQL通用）</b></p>
-<li>修改端口。/etc/my.cnf或/etc/my.cnf.d/server.cnf，[mysqld]段中添加：</li>
+<p>修改端口。/etc/my.cnf或/etc/my.cnf.d/server.cnf，[mysqld]段中添加：</p>
 <pre>[mysqld]
 port = 6666</pre>
-<li>远程连接</li>
+<p>远程连接</p>
 <pre>firewall-cmd --permanent --add-port=6666/tcp
 firewall-cmd --reload
 mysql -uroot -p密码</pre>
 <pre>CREATE USER '远程用户名'@'远程用户IP' IDENTIFIED BY '远程用户密码';
 GRANT ALL PRIVILEGES ON `数据库前缀\_%`.* TO '远程用户名'@'远程用户IP';</pre>
-<li>修改密码</li>
+<p>修改密码</p>
 <pre>#方法一（bash命令）
 mysqladmin -u用户名 password "新密码"
 #方法二（mysql命令）
 use mysql
 UPDATE user SET Password = PASSWORD('新密码') WHERE user = '用户名';
 FLUSH PRIVILEGES;</pre>
-<li>导出数据</li>
+<p>导出数据</p>
 <pre>mysqldump -h服务器 -P端口 -u用户名 -p密码 数据库 数据表 > /导出路径/文件名.sql</pre>
-<li>导入数据</li>
+<p>导入数据</p>
 <pre>mysql -h服务器 -P端口 -u用户名 -p密码 数据库 < /导入路径/文件名.sql</pre>
-<li>其他mysql命令</li>
+<p>其他mysql命令</p>
 <pre>select user,host,password from mysql.user;
 drop user ''@'localhost';
 grant all privileges on `数据库前缀\_%`.* to '用户名'@'192.168.0.%' identified by '密码';

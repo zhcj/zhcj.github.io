@@ -24,27 +24,94 @@
 <p><b>二、测试服务器LNPP编译安装</b></p>
 <p><b>1、安装编译工具</b></p>
 <pre>yum install gcc cmake gcc-c++ -y</pre>
-<p><b><a name="nginx">2.1、安装Nginx</a></b></p>
-<li>安装依赖</li>
+<p><b><a name="postgresql">2.1、yum安装PostgreSQL数据库</a></b></p>
+<p>加源</p>
+<pre>yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+</pre>
+<p>安装</p>
+<pre>yum install postgresql11-server postgresql11-devel</pre>
+<p>初始化数据库</p>
+<pre>/usr/pgsql-11/bin/postgresql-11-setup initdb</pre>
+<p>设置密码</p>
+<pre>echo "密码" | passwd --stdin postgres</pre>
+<p>数据库管理工具（PHP）：</p>
+<p>Adminer：<a href="https://www.adminer.org/" target="_blank">https://www.adminer.org/</a></p>
+<p>phppgadmin：<a href="https://www.github.com/phppgadmin/phppgadmin" target="_blank">https://www.github.com/phppgadmin/phppgadmin</a></p>
+<p><b>2.2、编译安装PostgreSQL数据库</b></p>
+<p>建立组和用户并设置密码</p>
+<pre>groupadd -r postgres
+useradd -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
+echo "密码" | passwd --stdin postgres</pre>
+<p>安装依赖</p>
+<pre>yum install pam-devel readline-devel libxslt-devel</pre>
+<p>下载</p>
+<pre>wget https://ftp.postgresql.org/pub/source/v11.5/postgresql-11.5.tar.bz2</pre>
+<p>解压</p>
+<pre>tar xvf postgresql-11.5.tar.bz2</pre>
+<p>编译</p>
+<pre>cd postgresql-11.5
+./configure --prefix=/data/lnpp/pgsql --datadir=/data/lnpp/pgsql/data --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+make -j5
+make install</pre>
+<p>初始化数据库</p>
+<pre>chown postgres:postgres /data/lnpp/pgsql/data -R
+sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11 -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
+<p>配置文件</p>
+<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
+[Unit]
+Description=PostgreSQL database server
+After=network.target
+
+[Service]
+Type=notify
+
+User=postgres
+Group=postgres
+
+Environment=DATA_DIR=/data/lnpp/pgsql/data/11
+
+ExecStart=/data/lnpp/pgsql/bin/postgres -D ${DATA_DIR}
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGINT
+
+TimeoutSec=300
+
+OOMScoreAdjust=-1000
+
+[Install]
+WantedBy=multi-user.target
+EOF</pre>
+<p>如需开放对外访问，修改监听端口和允许访问IP设置</p>
+<p>data/11/postgresql.conf中添加：</p>
+<pre>listen_addresses = '*'</pre>
+<p>data/11/pg_hba.conf中添加：</p>
+<pre>host    all             all             192.168.1.0/24          trust</pre>
+<p>允许192.168.1.1-255网段访问</p>
+<p>启动数据库</p>
+<pre>systemctl start postgresql
+systemctl enable postgresql</pre>
+<p><b><a name="nginx">3.1、安装Nginx</a></b></p>
+<p>安装依赖</p>
 <pre>yum install pcre-devel zlib-devel openssl-devel -y
 </pre>
-<li>建立组和用户并设置不能ssh登录</li>
+<p>建立组和用户并设置不能ssh登录</p>
 <pre>groupadd -r www
 useradd -r -M -s /bin/false -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>cd /data/source
 wget http://nginx.org/download/nginx-1.17.3.tar.gz
 </pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf nginx-1.17.3.tar.gz
 </pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd nginx-1.17.3
 ./configure --prefix=/data/lnpp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnpp/log/nginx/access.log --error-log-path=/data/lnpp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module 
 make -j5
 make install</pre>
-<li>配置启动</li>
+<p>配置启动</p>
 <pre>cat > /lib/systemd/system/nginx.service << "EOF"
 [Unit]
 Description=The nginx HTTP and reverse proxy server
@@ -109,30 +176,30 @@ EOF
 mkdir /data/www
 ln -s /data/lnpp/nginx/sbin/nginx /usr/local/bin/
 </pre>
-<li>打开防火墙</li>
+<p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
-<p><b><a name="openresty">2.2、安装OpenResty</a></b></p>
-<li>安装依赖</li>
+<p><b><a name="openresty">3.2、安装OpenResty</a></b></p>
+<p>安装依赖</p>
 <pre>yum install pcre-devel zlib-devel openssl-devel -y
 </pre>
-<li>建立组和用户并设置不能ssh登录</li>
+<p>建立组和用户并设置不能ssh登录</p>
 <pre>groupadd -r www
 useradd -r -M -s /bin/false -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>cd /data/source
 wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
 </pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf openresty-1.15.8.2.tar.gz
 </pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd openresty-1.15.8.2
 ./configure --prefix=/data/lnpp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnpp/log/nginx/access.log --error-log-path=/data/lnpp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module --with-http_postgres_module --with-pg_config=/data/lnpp/pgsql/bin/pg_config --sbin-path=/data/lnpp/nginx/sbin/nginx --conf-path=/data/lnpp/nginx/conf/nginx.conf 
 make -j5
 make install</pre>
-<li>配置启动</li>
+<p>配置启动</p>
 <pre>cat > /lib/systemd/system/nginx.service << "EOF"
 [Unit]
 Description=The nginx HTTP and reverse proxy server
@@ -197,68 +264,9 @@ EOF
 mkdir /data/www
 ln -s /data/lnpp/openresty/sbin/nginx /usr/local/bin/
 </pre>
-<li>打开防火墙</li>
+<p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
-<p><b><a name="postgresql">3.1、yum安装PostgreSQL数据库</a></b></p>
-<li>加源</li>
-<pre>yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-</pre>
-<li>安装</li>
-<pre>yum install postgresql11-server postgresql11-devel</pre>
-<li>初始化数据库</li>
-<pre>/usr/pgsql-11/bin/postgresql-11-setup initdb</pre>
-<li>设置密码</li>
-<pre>echo "密码" | passwd --stdin postgres</pre>
-<li>数据库管理工具Adminer：<a href="https://www.adminer.org/" target="_blank">https://www.adminer.org/</a></li>
-<p><b>3.2、编译安装PostgreSQL数据库</b></p>
-<li>建立组和用户并设置密码</li>
-<pre>groupadd -r postgres
-useradd -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
-echo "密码" | passwd --stdin postgres</pre>
-<li>安装依赖</li>
-<pre>yum install pam-devel readline-devel libxslt-devel</pre>
-<li>下载</li>
-<pre>wget https://ftp.postgresql.org/pub/source/v11.5/postgresql-11.5.tar.bz2</pre>
-<li>解压</li>
-<pre>tar xvf postgresql-11.5.tar.bz2</pre>
-<li>编译</li>
-<pre>cd postgresql-11.5
-./configure --prefix=/data/lnpp/pgsql --datadir=/data/lnpp/pgsql/data --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
-make -j5
-make install</pre>
-<li>初始化数据库</li>
-<pre>chown postgres:postgres /data/lnpp/pgsql/data -R
-sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data/11 -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
-<li>配置文件</li>
-<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
-[Unit]
-Description=PostgreSQL database server
-After=network.target
-
-[Service]
-Type=notify
-
-User=postgres
-Group=postgres
-
-Environment=DATA_DIR=/data/lnpp/pgsql/data/11
-
-ExecStart=/data/lnpp/pgsql/bin/postgres -D ${DATA_DIR}
-ExecReload=/bin/kill -HUP $MAINPID
-KillMode=mixed
-KillSignal=SIGINT
-
-TimeoutSec=300
-
-OOMScoreAdjust=-1000
-
-[Install]
-WantedBy=multi-user.target
-EOF</pre>
-<li>启动数据库</li>
-<pre>systemctl start postgresql
-systemctl enable postgresql</pre>
 <p><b>4.1、yum安装PHP</b></p>
 <pre>yum install yum-utils
 yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
@@ -267,14 +275,14 @@ yum install php-fpm php-opcache php-gd php-pg php-cli php-mbstring php-xml php-p
 systemctl enable php-fpm
 systemctl start php-fpm</pre>
 <p><b>4.2、编译安装PHP</b></p>
-<li>安装依赖</li>
+<p>安装依赖</p>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel -y</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-7.3.9.tar.xz</pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf php-7.3.9.tar.xz</pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd php-7.3.9
 ./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl
 ln -s /usr/lib64/libldap* /usr/lib/

@@ -51,25 +51,25 @@ chmod 600 /myweb/user/git/.ssh/authorized_keys</pre>
 <p><b>8、卸载selinux</b></p>
 <pre>yum remove selinux* -y</pre>
 <p><b>几个注意事项：</b></p>
-<li>以上操作中的git用户名、mykey文件名、myweb目录、/myweb/www网站目录等，均可根据自己习惯用其他名称。</li>
-<li>网站服务nginx/apache及php的运行用户，设置成git会更加方便，不会有权限问题（安全性要求高的网站不在此考虑）。</li>
-<li>如在服务器的网站目录/data/www下运行git pull/push命令，一定要在运行完命令之后，再次更改git库及网站目录权属，具体命令见上面步骤6。</li>
+<p>以上操作中的git用户名、mykey文件名、myweb目录、/myweb/www网站目录等，均可根据自己习惯用其他名称。</p>
+<p>网站服务nginx/apache及php的运行用户，设置成git会更加方便，不会有权限问题（安全性要求高的网站不在此考虑）。</p>
+<p>如在服务器的网站目录/data/www下运行git pull/push命令，一定要在运行完命令之后，再次更改git库及网站目录权属，具体命令见上面步骤6。</p>
 <p><b>二、Git客户端使用方法</b></p>
 <p><b>1、安装git客户端</b></p>
-<li>Linux系统：yum/apt/pacman/emerge/zypper安装git即可。</li>
-<li>Windows系统：<a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>下载最新版本，安装。</li>
+<p>Linux系统：yum/apt/pacman/emerge/zypper安装git即可。</p>
+<p>Windows系统：<a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>下载最新版本，安装。</p>
 <p>Windows系统下的图形客户端，建议用<a href="https://tortoisegit.org/" target="_blank">TortoiseGit</a>，注意中文包需要单独下载。</p>
 <p><b>2、将前面生成的私钥导入到客户端</b></p>
-<li><b>Linux系统、Windows系统的Git Bash方式（命令行操作）：</b></li>
+<p><b>Linux系统、Windows系统的Git Bash方式（命令行操作）：</b></p>
 <pre>mkdir ~/.ssh
 cp mykey ~/.ssh/id_rsa</pre>
-<li><b>Windows系统中TortoiseGit图形界面（两种密钥使用方法）：</b></li>
+<p><b>Windows系统中TortoiseGit图形界面（两种密钥使用方法）：</b></p>
 <p>方式一：安装时默认选择的是putty方式的密钥，需要用安装TortoiseGit时带的puttygen工具，将mykey文件导入，再点击“Save private key”导出为ppk文件。使用TortoiseGit时，导入此密钥文件即可。</p>
 <p>方式二：安装时手动选择OpenSSH方式的密钥，按上面Git Bash的方式导入mykey密钥即可在TortoiseGit中自动调用上述密钥。</p>
 <p><b>3、从服务器克隆项目</b></p>
-<li><b>Linux系统、Windows系统的Git Bash方式（命令行操作）：</b></li>
+<p><b>Linux系统、Windows系统的Git Bash方式（命令行操作）：</b></p>
 <pre>git clone ssh://git@服务器IP:端口号/data/git /本地路径</pre>
-<li><b>Windows系统中TortoiseGit图形界面：</b></li>
+<p><b>Windows系统中TortoiseGit图形界面：</b></p>
 <p>在文件夹中右键：克隆，地址同上。</p>
 <p><b>小常识：密钥</b></p>
 <p>密钥登录是Linux服务器管理中常用的一种登录方式。密钥为一对，分公钥和私钥，公钥放在服务器上，私钥妥善保存在自己电脑中。类似于生活中的锁和钥匙，用自己的锁锁住的门，只有自己手里的钥匙才能打开。不用担心，计算机生成的密钥对不会有相同的情况，这种机率只存在于理论中。</p>

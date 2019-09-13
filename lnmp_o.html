@@ -27,22 +27,22 @@
 <p><b>2、安装Nginx</b></p>
 <pre>zypper in pcre-devel openssl-devel
 </pre>
-<li>建立组和用户并设置不能ssh登录</li>
+<p>建立组和用户并设置不能ssh登录</p>
 <pre>groupadd -r www
 useradd -r -M -s /bin/false -g www www
 sed -i "s/\/home\/www://" /etc/passwd</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
 wget http://nginx.org/download/nginx-1.17.3.tar.gz</pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf nginx-1.17.3.tar.gz</pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd nginx-1.17.3
 ./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module
 make -j5
 make install</pre>
-<li>配置启动</li>
+<p>配置启动</p>
 <pre>
 cat > /usr/lib/systemd/system/nginx.service << "EOF"
 [Unit]
@@ -109,14 +109,14 @@ mkdir /data/www
 ln -s /data/lnmp/nginx/sbin/nginx /usr/local/bin/
 </pre>
 <p><b>3、安装PHP</b></p>
-<li>安装依赖</li>
+<p>安装依赖</p>
 <pre>zypper in systemd-devel gd-devel libxml2-devel libcurl-devel libXpm-devel freetype2-devel</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.3.9.tar.xz</pre>
 #wget http://cn2.php.net/distributions/php-5.6.40.tar.xz
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf php-7.3.9.tar.xz</pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd php-7.3.9
 ./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
@@ -151,17 +151,17 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ln
 mkdir /data/lnmp/log/php
 </pre>
 <p><b>4、安装MariaDB数据库</b></p>
-<li>创建mysql用户</li>
+<p>创建mysql用户</p>
 <pre>groupadd -r mysql
 useradd -r -M -s /bin/false -g mysql mysql
 sed -i "s/\/home\/mysql://" /etc/passwd</pre>
-<li>安装依赖</li>
+<p>安装依赖</p>
 <pre>zypper in ncurses-devel bison</pre>
-<li>下载</li>
+<p>下载</p>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.7/source/mariadb-10.4.7.tar.gz</pre>
-<li>解压</li>
+<p>解压</p>
 <pre>tar xvf mariadb-10.4.7.tar.gz</pre>
-<li>编译</li>
+<p>编译</p>
 <pre>cd mariadb-10.4.7
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/lnmp/mariadb \

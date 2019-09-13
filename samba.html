@@ -27,16 +27,16 @@ firewall-cmd --permanent --add-port=445/tcp
 firewall-cmd --reload</pre>
 <p><b>3、修改配置文件</b></p>
 <pre>vi /etc/samba/smb.conf</pre>
-<li>不用登录，直接访问目录，在</li>
+<p>不用登录，直接访问目录，在</p>
 <pre>        security = user
         passdb backend = tdbsam</pre>
 后面添加：
 <pre>        map to guest = bad user</pre>
-<li>不显示打印机，将</li>
+<p>不显示打印机，将</p>
 <pre>        load printers = yes</pre>
 改为：
 <pre>        load printers = no</pre>
-<li>添加共享目录，在文件最后面加上：</li>
+<p>添加共享目录，在文件最后面加上：</p>
 <pre>[软件]
 path = /data/software
 public = yes
