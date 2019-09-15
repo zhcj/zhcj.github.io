@@ -16,6 +16,11 @@
 <h2 align=center>QEMU安装使用手册</h2>
 <h3>注：网站系统为CentOS 7.6，使用systemd。</h3>
 <p><b>一、安装qemu</b></p>
+<p>1、安装依赖</p>
+<pre>
+yum install glib-devel pixman-devel
+</pre>
+<p>2、下载、编译</p>
 <pre>
 wget https://download.qemu.org/qemu-4.1.0.tar.xz
 tar xvf qemu-4.1.0.tar.xz
@@ -23,11 +28,23 @@ cd qemu-4.1.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-vnc --disable-bluez --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 make -j5
 make install
+ln -s /data/kvm/bin/* /usr/local/bin/
 </pre>
-<p><b>二、安装libvirt</b></p>
+<p><b>二、创建、启动虚拟机</b></p>
 <pre>
-yum install yajl-devel
-#emerge yajl
+mkdir /data/kvm/img
+qemu-img create -f qcow2 /data/kvm/img/xp.qcow2 10G
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet /data/kvm/img/xp.qcow2 -cdrom /data/os/xp.iso
+#-machine usb=on -device usb-tablet解决vnc连接时鼠标不同步问题
+</pre>
+<p>注：qemu旧版中有qemu-kvm模块存在，新版中需要使用kvm特性时候，在qemu-system-x86_64命令中使用--enable-kvm即可。</p>
+<p><b>三、安装libvirt</b></p>
+<p>1、安装依赖</p>
+<pre>
+yum install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper-devel
+</pre>
+<p>2、下载、编译</p>
+<pre>
 wget https://libvirt.org/sources/libvirt-5.7.0.tar.xz
 tar xvf libvirt-5.7.0.tar.xz
 cd libvirt-5.7.0
@@ -35,6 +52,7 @@ cd libvirt-5.7.0
 #去掉vmware/vbox/openvz/esx/lxc支持，只支持qemu
 make -j5
 make install
+<p>3、配置</p>
 ln -s /data/kvm/bin/* /usr/local/bin/
 ln -s /data/kvm/sbin/* /usr/local/bin/
 cp src/libvirtd.service /lib/systemd/system/
@@ -45,12 +63,6 @@ cp src/virtlockd.service /lib/systemd/system/
 cp src/virtlockd.socket /lib/systemd/system/
 systemctl start libvirtd
 systemctl enable libvirtd
-</pre>
-<p><b>三、创建虚拟机</b></p>
-<pre>
-mkdir /data/kvm/img
-qemu-img create -f qcow2 /data/kvm/img/xp.qcow2 10G
-qemu-system-i386 -m 2048 -enable-kvm /data/kvm/img/xp.qcow2 -cdrom /data/os/xp.iso
 </pre>
 <p>暂未完成</p>
 <p><a href="index.html">返回首页</a></p>
