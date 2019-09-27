@@ -15,7 +15,7 @@
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNMP环境安装配置笔记</h2>
-<h3>注：网站系统为CentOS 7.6，使用systemd。</h3>
+<h3>注：网站系统为CentOS 7.7，使用systemd。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
@@ -35,11 +35,11 @@ sed -i "s/\/home\/www://" /etc/passwd</pre>
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.17.3.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.17.4.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.17.3.tar.gz</pre>
+<pre>tar xvf nginx-1.17.4.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.17.3
+<pre>cd nginx-1.17.4
 ./configure --prefix=/data/lnmp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnmp/log/nginx/access.log --error-log-path=/data/lnmp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module
 make -j5
 make install</pre>
@@ -120,18 +120,18 @@ systemctl enable php-fpm
 systemctl start php-fpm</pre>
 <p><b>3.2、编译安装PHP</b></p>
 <p>安装依赖</p>
-<pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel-y</pre>
+<pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-7.3.9.tar.xz
+wget http://cn2.php.net/distributions/php-7.3.10.tar.xz
 #wget http://cn2.php.net/distributions/php-5.6.40.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.9.tar.xz
+<pre>tar xvf php-7.3.10.tar.xz
 #tar xvf php-5.6.40.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.9
+<pre>cd php-7.3.10
 #cd php-5.6.40
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
 #php7去掉--with-mysql
