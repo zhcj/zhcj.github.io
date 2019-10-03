@@ -45,6 +45,8 @@ useradd -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
 echo "密码" | passwd --stdin postgres</pre>
 <p>安装依赖</p>
 <pre>yum install pam-devel readline-devel libxslt-devel openssl-devel systemd-devel -y</pre>
+<p>#ubuntu</p>
+<pre>apt install libreadline-dev zlib1g-dev libcrypto-dev libssl-dev libpam-dev libxml2-dev libxslt-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
 <pre>wget https://ftp.postgresql.org/pub/source/v11.5/postgresql-11.5.tar.bz2</pre>
 <p>解压</p>
@@ -55,7 +57,8 @@ echo "密码" | passwd --stdin postgres</pre>
 make -j5
 make install</pre>
 <p>初始化数据库</p>
-<pre>chown postgres:postgres /data/lnpp/pgsql/data -R
+<pre>mkdir /data/lnpp/pgsql/data
+chown postgres:postgres /data/lnpp/pgsql/data -R
 sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
 <p>配置文件</p>
 <pre>cat > /lib/systemd/system/postgresql.service << "EOF"
