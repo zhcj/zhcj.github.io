@@ -276,7 +276,6 @@ systemctl enable php-fpm
 systemctl start php-fpm</pre>
 <p><b>4.2、编译安装PHP</b></p>
 <p>安装依赖</p>
-<pre>yum install autoconf libxml2-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-7.3.10.tar.xz</pre>
@@ -320,11 +319,11 @@ sed -i "s/expose_php = On/expose_php = Off/" /data/lnpp/php/php.ini
 </pre>
 #php-7.4
 <pre>
-yum install oniguruma-devel libwebp-devel
-wget https://downloads.php.net/~derick/php-7.4.0RC2.tar.xz
-tar xvf php-7.4.0RC2.tar.xz
-cd php-7.4.0RC2
-./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl --without-sqlite3 --without-pdo-sqlite
+yum install libcurl-devel libpng-devel libjpeg-devel libXpm-devel openldap-devel freetype-devel libwebp-devel libzip-devel
+wget https://downloads.php.net/~derick/php-7.4.0RC3.tar.xz
+tar xvf php-7.4.0RC3.tar.xz
+cd php-7.4.0RC3
+./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl --without-sqlite3 --without-pdo-sqlite --disable-mbregex
 make -j5
 make install
 </pre>
