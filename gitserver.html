@@ -16,8 +16,8 @@
 <h2 align=center>Git版本控制系统安装使用手册（网站开发用）</h2>
 <p><b>一、Linux服务器端</b></p>
 <p><b>1、创建git账号</b></p>
-<pre>groupadd git
-useradd git -g git -m -s /usr/bin/git-shell -b /myweb/user</pre>
+<pre>
+useradd -U -m -s /usr/bin/git-shell -b /myweb/user git</pre>
 <p><b>2、安装git</b></p>
 <pre>yum install git -y</pre>
 <p><b>3、创建git空版本库</b></p>

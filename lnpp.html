@@ -39,8 +39,8 @@
 <p>phppgadmin：<a href="https://www.github.com/phppgadmin/phppgadmin" target="_blank">https://www.github.com/phppgadmin/phppgadmin</a></p>
 <p><b>2.2、编译安装PostgreSQL数据库</b></p>
 <p>建立组和用户并设置密码</p>
-<pre>groupadd -r postgres
-useradd -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
+<pre>
+useradd -U -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
 echo "密码" | passwd --stdin postgres</pre>
 <p>安装依赖</p>
 <pre>yum install pam-devel readline-devel libxslt-devel openssl-devel systemd-devel -y</pre>
@@ -71,9 +71,10 @@ Type=notify
 User=postgres
 Group=postgres
 
+Environment=PGPORT=5432
 Environment=DATA_DIR=/data/lnpp/pgsql/data
 
-ExecStart=/data/lnpp/pgsql/bin/postgres -D ${DATA_DIR}
+ExecStart=/data/lnpp/pgsql/bin/postgres -p ${PGPORT} -D ${DATA_DIR}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=mixed
 KillSignal=SIGINT
@@ -95,7 +96,7 @@ sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /data/lnpp/pgsql/data/
 sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /data/lnpp/pgsql/data/postgresql.conf
 sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /data/lnpp/pgsql/data/postgresql.conf
 </pre>
-<p>如需开放对外访问，修改监听端口和允许访问IP设置</p>
+<p>如需开放对外访问，修改监听IP地址和允许访问IP设置</p>
 <pre>
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /data/lnpp/pgsql/data/postgresql.conf
 echo "host    all             all             192.168.1.0/24          trust" >> /data/lnpp/pgsql/data/pg_hba.conf
@@ -109,9 +110,7 @@ systemctl enable postgresql</pre>
 <pre>yum install pcre-devel zlib-devel -y
 </pre>
 <p>建立组和用户并设置不能ssh登录</p>
-<pre>groupadd -r www
-useradd -r -M -s /bin/false -g www www
-sed -i "s/\/home\/www://" /etc/passwd</pre>
+<pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
 wget http://nginx.org/download/nginx-1.17.4.tar.gz
@@ -197,9 +196,7 @@ firewall-cmd --reload</pre>
 <pre>yum install pcre-devel zlib-devel openssl-devel -y
 </pre>
 <p>建立组和用户并设置不能ssh登录</p>
-<pre>groupadd -r www
-useradd -r -M -s /bin/false -g www www
-sed -i "s/\/home\/www://" /etc/passwd</pre>
+<pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
 wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
@@ -446,15 +443,13 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget http://download.redis.io/releases/redis-5.0.5.tar.gz
-tar xvf redis-5.0.5.tar.gz
-cd redis-5.0.5
+wget https://github.com/antirez/redis/archive/5.0.6.tar.gz
+tar xvf redis-5.0.6.tar.gz
+cd redis-5.0.6
 make
 make PREFIX=/data/lnpp/redis install
 cp redis.conf /data/lnpp/redis/
-groupadd -r redis
-useradd -r -M -s /bin/false -g redis redis
-sed -i "s/\/home\/redis://" /etc/passwd
+useradd -U -r -M -s /bin/false redis
 cat > /lib/systemd/system/redis.service << "EOF"
 [Unit]
 Description=Redis persistent key-value database

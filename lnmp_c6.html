@@ -37,9 +37,7 @@ make -j5
 make install
 </pre>
 <p>建立组和用户并设置不能ssh登录</p>
-<pre>groupadd -r www
-useradd -r -M -s /bin/false -g www www
-sed -i "s/\/home\/www://" /etc/passwd</pre>
+<pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
 wget http://nginx.org/download/nginx-1.17.4.tar.gz</pre>
@@ -147,9 +145,7 @@ mkdir /data/lnmp/log/php
 </pre>
 <p><b>4、安装MariaDB/Mysql数据库</b></p>
 <p>创建mysql用户</p>
-<pre>groupadd -r mysql
-useradd -r -M -s /bin/false -g mysql mysql
-sed -i "s/\/home\/mysql://" /etc/passwd</pre>
+<pre>useradd -U -r -M -s /bin/false mysql</pre>
 <p>安装依赖</p>
 <pre>
 yum install ncurses-devel bison -y

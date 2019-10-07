@@ -29,9 +29,7 @@
 <pre>yum install pcre-devel zlib-devel openssl-devel -y
 </pre>
 <p>建立组和用户并设置不能ssh登录</p>
-<pre>groupadd -r www
-useradd -r -M -s /bin/false -g www www
-sed -i "s/\/home\/www://" /etc/passwd</pre>
+<pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
@@ -239,15 +237,13 @@ systemctl enable redis
 </pre>
 <p>方式二：编译安装</p>
 <pre>
-wget http://download.redis.io/releases/redis-5.0.5.tar.gz
-tar xvf redis-5.0.5.tar.gz
-cd redis-5.0.5
+wget https://github.com/antirez/redis/archive/5.0.6.tar.gz
+tar xvf redis-5.0.6.tar.gz
+cd redis-5.0.6
 make
 make PREFIX=/data/lnmp/redis install
 cp redis.conf /data/lnmp/redis/
-groupadd -r redis
-useradd -r -M -s /bin/false -g redis redis
-sed -i "s/\/home\/redis://" /etc/passwd
+useradd -U -r -M -s /bin/false redis
 cat > /lib/systemd/system/redis.service << "EOF"
 [Unit]
 Description=Redis persistent key-value database
@@ -368,9 +364,7 @@ EOF</pre>
 <pre>yum install mysql-community-server</pre>
 <p><b>4.3、编译安装MariaDB数据库</b></p>
 <p>创建mysql用户</p>
-<pre>groupadd -r mysql
-useradd -r -M -s /bin/false -g mysql mysql
-sed -i "s/\/home\/mysql://" /etc/passwd</pre>
+<pre>useradd -U -r -M -s /bin/false mysql</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
