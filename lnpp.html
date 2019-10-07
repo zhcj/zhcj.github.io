@@ -52,7 +52,7 @@ echo "密码" | passwd --stdin postgres</pre>
 <pre>tar xvf postgresql-12.0.tar.bz2</pre>
 <p>编译</p>
 <pre>cd postgresql-12.0
-./configure --prefix=/data/lnpp/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --without-llvm --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+./configure --prefix=/data/lnpp/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
 <p>初始化数据库</p>
