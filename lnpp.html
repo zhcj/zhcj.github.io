@@ -40,7 +40,7 @@
 <p><b>2.2、编译安装PostgreSQL数据库</b></p>
 <p>建立组和用户并设置密码</p>
 <pre>
-useradd -U -r -M -s /bin/nologin -g postgres -d /data/lnpp/pgsql postgres
+useradd -U -r -M -s /bin/nologin -d /data/lnpp/pgsql postgres
 echo "密码" | passwd --stdin postgres</pre>
 <p>安装依赖</p>
 <pre>yum install pam-devel readline-devel libxslt-devel openssl-devel systemd-devel -y</pre>
