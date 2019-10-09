@@ -330,13 +330,13 @@ sed -i "s/expose_php = On/expose_php = Off/" /data/lnpp/php/php.ini
 </pre>
 #php-7.4
 <pre>
-yum install libcurl-devel libpng-devel libjpeg-devel libXpm-devel openldap-devel freetype-devel libwebp-devel libzip-devel
+yum install libcurl-devel libpng-devel libjpeg-devel libXpm-devel freetype-devel libwebp-devel libzip-devel
 #ubuntu
 #apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev
 wget https://downloads.php.net/~derick/php-7.4.0RC3.tar.xz
 tar xvf php-7.4.0RC3.tar.xz
 cd php-7.4.0RC3
-./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl --without-sqlite3 --without-pdo-sqlite --disable-mbregex
+./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --without-sqlite3 --without-pdo-sqlite --disable-mbregex
 make -j5
 make install
 </pre>
