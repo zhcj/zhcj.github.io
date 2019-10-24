@@ -53,6 +53,8 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>编译</p>
 <pre>cd postgresql-12.0
 ./configure --prefix=/data/lnpp/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+#postgresql9
+#./configure --prefix=/data/lnpp/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
 <p>初始化数据库</p>
@@ -78,6 +80,32 @@ ExecStart=/data/lnpp/pgsql/bin/postgres -p ${PGPORT} -D ${DATA_DIR}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=mixed
 KillSignal=SIGINT
+
+TimeoutSec=300
+
+OOMScoreAdjust=-1000
+
+[Install]
+WantedBy=multi-user.target
+EOF</pre>
+<p>#postgresql9</p>
+<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
+[Unit]
+Description=PostgreSQL database server
+After=network.target
+
+[Service]
+Type=forking
+
+User=postgres
+Group=postgres
+
+Environment=PGPORT=5432
+Environment=DATA_DIR=/data/lnpp/pgsql/data
+
+ExecStart=/data/lnpp/pgsql/bin/pg_ctl start -D ${DATA_DIR} -s -l ${DATA_DIR}/postmaster.log
+ExecStop=/data/lnpp/pgsql/bin/pg_ctl stop -D ${DATA_DIR} -s -m fast
+ExecReload=/data/lnpp/pgsql/bin/pg_ctl reload -D ${DATA_DIR} -s
 
 TimeoutSec=300
 
