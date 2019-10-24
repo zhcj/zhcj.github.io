@@ -122,14 +122,11 @@ systemctl start php-fpm</pre>
 <p>下载</p>
 <pre>cd /data/source
 wget http://cn2.php.net/distributions/php-7.3.11.tar.xz
-#wget http://cn2.php.net/distributions/php-5.6.40.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.11.tar.xz
-#tar xvf php-5.6.40.tar.xz</pre>
+<pre>tar xvf php-7.3.11.tar.xz</pre>
 <p>编译</p>
 <pre>cd php-7.3.11
-#cd php-5.6.40
-./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl --with-mysql
+./configure --prefix=/data/lnmp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnmp/php --with-config-file-scan-dir=/data/lnmp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
 #php7去掉--with-mysql
@@ -137,7 +134,7 @@ make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
-/data/lnmp/php/bin/pear channel-update pear.php.net
+/data/lnpp/php/bin/pear update
 ln -s /data/lnmp/php/bin/* /usr/local/bin/
 ln -s /data/lnmp/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
@@ -190,10 +187,10 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ln
 mkdir /data/lnmp/log/php</pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.10-64.tar.xz
-tar xvf ImageMagick-6.9.10-64.tar.xz
-cd ImageMagick-6.9.10-64
-./configure --prefix=/data/lnmp/imagemagick --disable-openmp
+wget https://imagemagick.org/download/ImageMagick-6.9.10-68.tar.xz
+tar xvf ImageMagick-6.9.10-68.tar.xz
+cd ImageMagick-6.9.10-68
+./configure --prefix=/data/lnmp/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
 </pre>
