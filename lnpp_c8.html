@@ -103,6 +103,10 @@ sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /data/lnpp/p
 echo "host    all             all             192.168.1.0/24          trust" >> /data/lnpp/pgsql/data/pg_hba.conf
 </pre>
 <p>注：允许192.168.1.1-255网段访问</p>
+<p>默认连接数为100，如出现“已保留的连接位置为执行非复制请求的超级用户预留”，需要修改连接数</p>
+<pre>
+sed -i "s/max_connections = 100/max_connections = 200/" /data/lnpp/pgsql/data/postgresql.conf
+</pre>
 <p>启动数据库</p>
 <pre>systemctl start postgresql
 systemctl enable postgresql</pre>
@@ -301,7 +305,7 @@ make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
-/data/lnpp/php/bin/pear update
+/data/lnpp/php/bin/pear channel-update
 ln -s /data/lnpp/php/bin/* /usr/local/bin/
 ln -s /data/lnpp/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
