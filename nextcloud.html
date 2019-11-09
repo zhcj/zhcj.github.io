@@ -25,7 +25,7 @@ ln -s /usr/lib64/libc-client.so /usr/lib/
 <pre>--with-pgsql --with-pdo-pgsql --enable-intl --with-bz2 --enable-pcntl --enable-exif --with-ldap --with-ldap-sasl --with-imap --with-kerberos --with-imap-ssl --with-gmp</pre>
 <p>pecl install imagick redis apcu</p>
 <p>4、php配置</p>
-<pre>cd /data/lnpp/php
+<pre>cd /data/php
 sed -i "s/;clear_env = no/clear_env = no/g" etc/php-fpm.d/www.conf
 sed -i "s/;env\[TMP\] = \/tmp/env\[TMP\] = \/tmp/g" etc/php-fpm.d/www.conf
 sed -i "s/;env\[TEMP\] = \/tmp/env\[TEMP\] = \/tmp/g" etc/php-fpm.d/www.conf

@@ -40,7 +40,7 @@
 <p><b>2.2、编译安装PostgreSQL数据库</b></p>
 <p>建立组和用户并设置密码</p>
 <pre>
-useradd -U -r -M -s /bin/nologin -d /data/lnpp/pgsql postgres
+useradd -U -r -M -s /bin/nologin -d /data/pgsql postgres
 echo "密码" | passwd --stdin postgres</pre>
 <p>安装依赖</p>
 <pre>yum install pam-devel readline-devel libxslt-devel openssl-devel systemd-devel -y</pre>
@@ -52,15 +52,15 @@ echo "密码" | passwd --stdin postgres</pre>
 <pre>tar xvf postgresql-12.0.tar.bz2</pre>
 <p>编译</p>
 <pre>cd postgresql-12.0
-./configure --prefix=/data/lnpp/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 #postgresql9
-#./configure --prefix=/data/lnpp/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+#./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
 <p>初始化数据库</p>
-<pre>mkdir /data/lnpp/pgsql/data
-chown postgres:postgres /data/lnpp/pgsql/data -R
-sudo -u postgres /data/lnpp/pgsql/bin/initdb -D /data/lnpp/pgsql/data -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
+<pre>mkdir /data/pgsql/data
+chown postgres:postgres /data/pgsql/data -R
+sudo -u postgres /data/pgsql/bin/initdb -D /data/pgsql/data -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
 <p>配置文件</p>
 <pre>cat > /lib/systemd/system/postgresql.service << "EOF"
 [Unit]
@@ -74,9 +74,9 @@ User=postgres
 Group=postgres
 
 Environment=PGPORT=5432
-Environment=DATA_DIR=/data/lnpp/pgsql/data
+Environment=DATA_DIR=/data/pgsql/data
 
-ExecStart=/data/lnpp/pgsql/bin/postgres -p ${PGPORT} -D ${DATA_DIR}
+ExecStart=/data/pgsql/bin/postgres -p ${PGPORT} -D ${DATA_DIR}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=mixed
 KillSignal=SIGINT
@@ -101,11 +101,11 @@ User=postgres
 Group=postgres
 
 Environment=PGPORT=5432
-Environment=DATA_DIR=/data/lnpp/pgsql/data
+Environment=DATA_DIR=/data/pgsql/data
 
-ExecStart=/data/lnpp/pgsql/bin/pg_ctl start -D ${DATA_DIR} -s -l ${DATA_DIR}/postmaster.log
-ExecStop=/data/lnpp/pgsql/bin/pg_ctl stop -D ${DATA_DIR} -s -m fast
-ExecReload=/data/lnpp/pgsql/bin/pg_ctl reload -D ${DATA_DIR} -s
+ExecStart=/data/pgsql/bin/pg_ctl start -D ${DATA_DIR} -s -l ${DATA_DIR}/postmaster.log
+ExecStop=/data/pgsql/bin/pg_ctl stop -D ${DATA_DIR} -s -m fast
+ExecReload=/data/pgsql/bin/pg_ctl reload -D ${DATA_DIR} -s
 
 TimeoutSec=300
 
@@ -116,23 +116,23 @@ WantedBy=multi-user.target
 EOF</pre>
 <p>开启日志</p>
 <pre>
-sed -i "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /data/lnpp/pgsql/data/postgresql.conf
-sed -i "s/#logging_collector = off/logging_collector = on/g" /data/lnpp/pgsql/data/postgresql.conf
-sed -i "s/#log_directory =/log_directory =/g" /data/lnpp/pgsql/data/postgresql.conf
-sed -i "s/#log_filename =/log_filename =/g" /data/lnpp/pgsql/data/postgresql.conf
-sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /data/lnpp/pgsql/data/postgresql.conf
-sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /data/lnpp/pgsql/data/postgresql.conf
-sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /data/lnpp/pgsql/data/postgresql.conf
+sed -i "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /data/pgsql/data/postgresql.conf
+sed -i "s/#logging_collector = off/logging_collector = on/g" /data/pgsql/data/postgresql.conf
+sed -i "s/#log_directory =/log_directory =/g" /data/pgsql/data/postgresql.conf
+sed -i "s/#log_filename =/log_filename =/g" /data/pgsql/data/postgresql.conf
+sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /data/pgsql/data/postgresql.conf
+sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /data/pgsql/data/postgresql.conf
+sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /data/pgsql/data/postgresql.conf
 </pre>
 <p>如需开放对外访问，修改监听IP地址和允许访问IP设置</p>
 <pre>
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /data/lnpp/pgsql/data/postgresql.conf
-echo "host    all             all             192.168.1.0/24          trust" >> /data/lnpp/pgsql/data/pg_hba.conf
+sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /data/pgsql/data/postgresql.conf
+echo "host    all             all             192.168.1.0/24          trust" >> /data/pgsql/data/pg_hba.conf
 </pre>
 <p>注：允许192.168.1.1-255网段访问</p>
 <p>默认连接数为100，如出现“已保留的连接位置为执行非复制请求的超级用户预留”，需要修改连接数</p>
 <pre>
-sed -i "s/max_connections = 100/max_connections = 200/" /data/lnpp/pgsql/data/postgresql.conf
+sed -i "s/max_connections = 100/max_connections = 200/" /data/pgsql/data/postgresql.conf
 </pre>
 <p>启动数据库</p>
 <pre>systemctl start postgresql
@@ -152,7 +152,7 @@ wget http://nginx.org/download/nginx-1.17.5.tar.gz
 </pre>
 <p>编译</p>
 <pre>cd nginx-1.17.5
-./configure --prefix=/data/lnpp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnpp/log/nginx/access.log --error-log-path=/data/lnpp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module 
+./configure --prefix=/data/nginx --user=www --group=www --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module 
 make -j5
 make install</pre>
 <p>配置启动</p>
@@ -164,8 +164,8 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 PIDFile=/run/nginx.pid
-ExecStartPre=/data/lnpp/nginx/sbin/nginx -t -c /data/lnpp/nginx/conf/nginx.conf
-ExecStart=/data/lnpp/nginx/sbin/nginx -c /data/lnpp/nginx/conf/nginx.conf
+ExecStartPre=/data/nginx/sbin/nginx -t -c /data/nginx/conf/nginx.conf
+ExecStart=/data/nginx/sbin/nginx -c /data/nginx/conf/nginx.conf
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill -QUIT $MAINPID
 
@@ -173,12 +173,12 @@ ExecStop=/bin/kill -QUIT $MAINPID
 WantedBy=multi-user.target
 EOF
 
-sed -i "s/\/\$nginx_version//" /data/lnpp/nginx/conf/fastcgi*
-sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/lnpp/nginx/conf/mime.types
-mv /data/lnpp/nginx/conf/nginx.conf /data/lnpp/nginx/conf/nginx.conf.bak
-mkdir /data/lnpp/nginx/conf/conf.d
+sed -i "s/\/\$nginx_version//" /data/nginx/conf/fastcgi*
+sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/nginx/conf/mime.types
+mv /data/nginx/conf/nginx.conf /data/nginx/conf/nginx.conf.bak
+mkdir /data/nginx/conf/conf.d
 
-cat > /data/lnpp/nginx/conf/nginx.conf << "EOF"
+cat > /data/nginx/conf/nginx.conf << "EOF"
 user  www;
 worker_processes  4;
 events {
@@ -196,7 +196,7 @@ http {
     include  conf.d/*.conf;
 }
 EOF
-cat > /data/lnpp/nginx/conf/conf.d/www.conf << "EOF"
+cat > /data/nginx/conf/conf.d/www.conf << "EOF"
 server {
     listen       80;
     server_name  localhost;
@@ -218,7 +218,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/lnpp/nginx/sbin/nginx /usr/local/bin/
+ln -s /data/nginx/sbin/nginx /usr/local/bin/
 </pre>
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -238,7 +238,7 @@ wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
 </pre>
 <p>编译</p>
 <pre>cd openresty-1.15.8.2
-./configure --prefix=/data/lnpp/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/lnpp/log/nginx/access.log --error-log-path=/data/lnpp/log/nginx/error.log  --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module --with-http_postgres_module --with-pg_config=/data/lnpp/pgsql/bin/pg_config --sbin-path=/data/lnpp/nginx/sbin/nginx --conf-path=/data/lnpp/nginx/conf/nginx.conf 
+./configure --prefix=/data/nginx --user=www --group=www --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module --with-http_postgres_module --with-pg_config=/data/pgsql/bin/pg_config --sbin-path=/data/nginx/sbin/nginx --conf-path=/data/nginx/conf/nginx.conf 
 make -j5
 make install</pre>
 <p>配置启动</p>
@@ -250,8 +250,8 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 PIDFile=/run/nginx.pid
-ExecStartPre=/data/lnpp/openresty/sbin/nginx -t -c /data/lnpp/openresty/conf/nginx.conf
-ExecStart=/data/lnpp/openresty/sbin/nginx -c /data/lnpp/openresty/conf/nginx.conf
+ExecStartPre=/data/openresty/sbin/nginx -t -c /data/openresty/conf/nginx.conf
+ExecStart=/data/openresty/sbin/nginx -c /data/openresty/conf/nginx.conf
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill -QUIT $MAINPID
 
@@ -259,12 +259,12 @@ ExecStop=/bin/kill -QUIT $MAINPID
 WantedBy=multi-user.target
 EOF
 
-sed -i "s/\/\$nginx_version//" /data/lnpp/openresty/conf/fastcgi*
-sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/lnpp/openresty/conf/mime.types
-mv /data/lnpp/openresty/conf/nginx.conf /data/lnpp/openresty/conf/nginx.conf.bak
-mkdir /data/lnpp/openresty/conf/conf.d
+sed -i "s/\/\$nginx_version//" /data/openresty/conf/fastcgi*
+sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/openresty/conf/mime.types
+mv /data/openresty/conf/nginx.conf /data/openresty/conf/nginx.conf.bak
+mkdir /data/openresty/conf/conf.d
 
-cat > /data/lnpp/openresty/conf/nginx.conf << "EOF"
+cat > /data/openresty/conf/nginx.conf << "EOF"
 user  www;
 worker_processes  4;
 events {
@@ -282,7 +282,7 @@ http {
     include  conf.d/*.conf;
 }
 EOF
-cat > /data/lnpp/openresty/conf/conf.d/www.conf << "EOF"
+cat > /data/openresty/conf/conf.d/www.conf << "EOF"
 server {
     listen       80;
     server_name  localhost;
@@ -304,7 +304,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/lnpp/openresty/sbin/nginx /usr/local/bin/
+ln -s /data/openresty/sbin/nginx /usr/local/bin/
 </pre>
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -326,39 +326,36 @@ wget http://cn2.php.net/distributions/php-7.3.11.tar.xz</pre>
 <pre>tar xvf php-7.3.11.tar.xz</pre>
 <p>编译</p>
 <pre>cd php-7.3.11
-./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl
+./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl
 ln -s /usr/lib64/libldap* /usr/lib/
 ln -s /usr/lib64/liblber* /usr/lib/
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
-/data/lnpp/php/bin/pear channel-update
-ln -s /data/lnpp/php/bin/* /usr/local/bin/
-ln -s /data/lnpp/php/sbin/* /usr/local/bin/
+/data/php/bin/pear channel-update
+ln -s /data/php/bin/* /usr/local/bin/
+ln -s /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
-sed -i "s/\${prefix}/\/data\/lnpp\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\${exec_prefix}/\/data\/lnpp\/php/" /lib/systemd/system/php-fpm.service
+sed -i "s/\${prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
+sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
-cp sapi/fpm/www.conf /data/lnpp/php/etc/php-fpm.d/
-cp sapi/fpm/php-fpm.conf /data/lnpp/php/etc/
-echo "zend_extension=opcache.so" > /data/lnpp/php/lib/php/extensions/opcache.ini
-cp php.ini-production /data/lnpp/php/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnpp/php/php.ini
-sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/lnpp/php/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnpp/php/php.ini
-sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/lnpp/php/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/lnpp/php/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/lnpp/php/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/lnpp/php/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/lnpp/php/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnpp/php/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnpp/php/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/lnpp/php/php.ini
-#sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnpp\/log\/php\/php-fpm.log/" /data/lnpp/php/etc/php-fpm.conf
-#sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnpp\/log\/php\/slow.log/g" /data/lnpp/php/etc/php-fpm.conf
-#sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnpp/php/etc/php-fpm.conf
-#mkdir /data/lnpp/log/php
+cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
+cp sapi/fpm/php-fpm.conf /data/php/etc/
+echo "zend_extension=opcache.so" > /data/php/lib/php/extensions/opcache.ini
+cp php.ini-production /data/php/php.ini
+sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
+sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
+sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
+sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
+sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php/php.ini
+sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
+sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
+#sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.conf
 </pre>
 #php-7.4
 <pre>
@@ -374,40 +371,37 @@ make install
 wget https://downloads.php.net/~derick/php-7.4.0RC3.tar.xz
 tar xvf php-7.4.0RC3.tar.xz
 cd php-7.4.0RC3
-./configure --prefix=/data/lnpp/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php --with-config-file-scan-dir=/data/lnpp/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --without-sqlite3 --without-pdo-sqlite
+./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --without-sqlite3 --without-pdo-sqlite
 make -j5
 make install
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
-./configure --prefix=/data/lnpp/php5 --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/lnpp/php5 --with-config-file-scan-dir=/data/lnpp/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
+./configure --prefix=/data/php5 --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php5 --with-config-file-scan-dir=/data/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
 
 cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/lnpp\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/lnpp\/php5/" /lib/systemd/system/php-fpm5.service
+sed -i "s/\${prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
+sed -i "s/\${exec_prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
-cp sapi/fpm/php-fpm.conf /data/lnpp/php5/etc/
-echo "zend_extension=opcache.so" > /data/lnpp/php5/lib/php/extensions/opcache.ini
-cp php.ini-production /data/lnpp/php5/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/lnpp/php5/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/lnpp/php5/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/lnpp/php5/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/lnpp/php5/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/lnpp/php5/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/lnpp/php5/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/lnpp/php5/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/lnpp/php5/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/lnpp/php5/php.ini
-sed -i "s/;error_log = log\/php-fpm.log/error_log = \/data\/lnpp\/log\/php\/php-fpm.log/" /data/lnpp/php5/etc/php-fpm.conf
-sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = \/data\/lnpp\/log\/php\/slow.log/g" /data/lnpp/php5/etc/php-fpm.conf
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/lnpp/php5/etc/php-fpm.conf
-mkdir /data/lnpp/log/php</pre>
+cp sapi/fpm/php-fpm.conf /data/php5/etc/
+echo "zend_extension=opcache.so" > /data/php5/lib/php/extensions/opcache.ini
+cp php.ini-production /data/php5/php.ini
+sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php5/php.ini
+sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php5/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php5/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php5/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php5/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /data/php5/php.ini
+sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php5/php.ini
+sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php5/php.ini
+sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
+sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>
 #编译安装ImageMagick
 <pre>
 wget https://imagemagick.org/download/ImageMagick-6.9.10-68.tar.xz
 tar xvf ImageMagick-6.9.10-68.tar.xz
 cd ImageMagick-6.9.10-68
-./configure --prefix=/data/lnmp/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
+./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
 </pre>
@@ -422,7 +416,7 @@ systemctl enable memcached
 wget http://memcached.org/files/memcached-1.5.17.tar.gz
 tar xvf memcached-1.5.17.tar.gz
 cd memcached-1.5.17
-./configure --prefix=/data/lnpp/memcached
+./configure --prefix=/data/memcached
 make -j5
 make install
 cat > /lib/systemd/system/memcached.service << "EOF"
@@ -433,7 +427,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/data/lnpp/memcached/bin/memcached -u root -p 11211 -m 64 -c 1024
+ExecStart=/data/memcached/bin/memcached -u root -p 11211 -m 64 -c 1024
 
 [Install]
 WantedBy=multi-user.target
@@ -447,7 +441,7 @@ cd /data/source
 wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
 tar xvf libmemcached-1.0.18.tar.gz
 cd libmemcached-1.0.18
-./configure --prefix=/data/lnpp/lib --with-memcached
+./configure --prefix=/data/lib --with-memcached
 make -j5
 make install
 </pre>
@@ -461,10 +455,10 @@ wget https://pecl.php.net/get/memcached-3.1.3.tgz
 tar xvf memcached-3.1.3.tgz
 cd memcached-3.0.3
 phpize
-./configure --with-php-config=/data/lnpp/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lnpp/lib --disable-memcached-sasl
+./configure --with-php-config=/data/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lib --disable-memcached-sasl
 make -j5
 make install
-echo "extension=memcached.so" > /data/lnpp/php/lib/php/extensions/memcached.ini 
+echo "extension=memcached.so" > /data/php/lib/php/extensions/memcached.ini 
 </pre>
 #安装redis服务，并设置开机运行
 方式一：yum安装（版本旧）
@@ -479,8 +473,8 @@ wget https://github.com/antirez/redis/archive/5.0.6.tar.gz
 tar xvf redis-5.0.6.tar.gz
 cd redis-5.0.6
 make
-make PREFIX=/data/lnpp/redis install
-cp redis.conf /data/lnpp/redis/
+make PREFIX=/data/redis install
+cp redis.conf /data/redis/
 useradd -U -r -M -s /bin/false redis
 cat > /lib/systemd/system/redis.service << "EOF"
 [Unit]
@@ -488,8 +482,8 @@ Description=Redis persistent key-value database
 After=network.target
 
 [Service]
-ExecStart=/data/lnpp/redis/bin/redis-server /data/lnpp/redis/redis.conf --daemonize no
-ExecStop=/data/lnpp/redis/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown
+ExecStart=/data/redis/bin/redis-server /data/redis/redis.conf --daemonize no
+ExecStop=/data/redis/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown
 User=redis
 Group=redis
 LimitNOFILE=65536
@@ -497,14 +491,14 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 EOF
-ln -s /data/lnpp/redis/bin/* /usr/local/bin/
+ln -s /data/redis/bin/* /usr/local/bin/
 #Failed opening the RDB file dump.rdb问题
-mkdir /data/lnpp/redis/db
-chown redis:redis /data/lnpp/redis/db -R
-sed -i "s/dir .\//dir \/data\/lnpp\/redis\/db\//g" /data/lnpp/redis/redis.conf
-sed -i "s/logfile \"\"/logfile \"\/data\/lnpp\/redis\/db\/redis.log\"/g" /data/lnpp/redis/redis.conf
-touch /data/lnpp/redis/db/redis.log
-chown redis:redis /data/lnpp/redis/db/redis.log
+mkdir /data/redis/db
+chown redis:redis /data/redis/db -R
+sed -i "s/dir .\//dir \/data\/redis\/db\//g" /data/redis/redis.conf
+sed -i "s/logfile \"\"/logfile \"\/data\/redis\/db\/redis.log\"/g" /data/redis/redis.conf
+touch /data/redis/db/redis.log
+chown redis:redis /data/redis/db/redis.log
 #The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.问题
 echo 511 > /proc/sys/net/core/somaxconn
 echo "echo 511 > /proc/sys/net/core/somaxconn" >> /etc/rc.local
@@ -525,10 +519,10 @@ tar xvf redis-5.0.2.tar.tgz
 cd redis-5.0.2
 yum install autoconfig -y
 phpize
-./configure --with-php-config=/data/lnpp/php/bin/php-config
+./configure --with-php-config=/data/php/bin/php-config
 make -j5
 make install
-echo "extension=redis.so" > /data/lnpp/php/lib/php/extensions/redis.ini 
+echo "extension=redis.so" > /data/php/lib/php/extensions/redis.ini 
 </pre>
 #安装php的apcu模块
 <pre>
@@ -537,10 +531,10 @@ wget https://pecl.php.net/get/apcu-5.1.17.tgz
 tar xvf apcu-5.1.17.tgz
 cd apcu-5.1.17
 phpize
-./configure --enable-apcu --with-php-config=/data/lnpp/php/bin/php-config
+./configure --enable-apcu --with-php-config=/data/php/bin/php-config
 make -j5
 make install
-echo "extension=apcu.so" > /data/lnpp/php/lib/php/extensions/apcu.ini 
+echo "extension=apcu.so" > /data/php/lib/php/extensions/apcu.ini 
 </pre>
 安装php的snuffleupagus增加安全（支持php7）
 <pre>
@@ -550,10 +544,10 @@ phpize
 ./configure
 make
 make install
-echo "sp.eval_blacklist.list(\"system,exec,shell_exec\");" > /data/lnpp/php/etc/snuffleupagus.rules
-echo "sp.eval_whitelist.list(\"strlen,strcmp\").simulation();" >> /data/lnpp/php/etc/snuffleupagus.rules
-echo "extension=snuffleupagus.so" > /data/lnpp/php/lib/php/extensions/snuffleupagus.ini
-echo "sp.configuration_file=/data/lnpp/php/etc/snuffleupagus.rules" >> /data/lnpp/php/lib/php/extensions/snuffleupagus.ini
+echo "sp.eval_blacklist.list(\"system,exec,shell_exec\");" > /data/php/etc/snuffleupagus.rules
+echo "sp.eval_whitelist.list(\"strlen,strcmp\").simulation();" >> /data/php/etc/snuffleupagus.rules
+echo "extension=snuffleupagus.so" > /data/php/lib/php/extensions/snuffleupagus.ini
+echo "sp.configuration_file=/data/php/etc/snuffleupagus.rules" >> /data/php/lib/php/extensions/snuffleupagus.ini
 </pre>
 安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
 <pre>
@@ -563,10 +557,10 @@ phpize
 ./configure
 make
 make install
-echo "extension=suhosin7.so" > /data/lnpp/php/lib/php/extensions/suhosin7.ini
-echo "[Suhosin]" >> /data/lnpp/php/php.ini
-echo "suhosin.executor.disable_eval = On" >> /data/lnpp/php/php.ini
-echo "suhosin.executor.eval.blacklist=phpinfo,fputs,fopen,fwrite" >> /data/lnpp/php/php.ini
+echo "extension=suhosin7.so" > /data/php/lib/php/extensions/suhosin7.ini
+echo "[Suhosin]" >> /data/php/php.ini
+echo "suhosin.executor.disable_eval = On" >> /data/php/php.ini
+echo "suhosin.executor.eval.blacklist=phpinfo,fputs,fopen,fwrite" >> /data/php/php.ini
 </pre>
 <p>检查是否成功</p>
 <pre>php -m|grep memcache
