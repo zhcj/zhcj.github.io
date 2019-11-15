@@ -469,7 +469,7 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget https://github.com/antirez/redis/archive/5.0.6.tar.gz
+wget http://download.redis.io/releases/redis-5.0.6.tar.gz
 tar xvf redis-5.0.6.tar.gz
 cd redis-5.0.6
 make
@@ -514,9 +514,9 @@ systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-5.0.2.tgz
-tar xvf redis-5.0.2.tar.tgz
-cd redis-5.0.2
+wget http://pecl.php.net/get/redis-5.1.1.tgz
+tar xvf redis-5.1.1.tar.tgz
+cd redis-5.1.1
 yum install autoconfig -y
 phpize
 ./configure --with-php-config=/data/php/bin/php-config
