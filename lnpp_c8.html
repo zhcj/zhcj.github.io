@@ -118,13 +118,13 @@ systemctl enable postgresql</pre>
 <pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://nginx.org/download/nginx-1.17.5.tar.gz
+wget http://nginx.org/download/nginx-1.17.6.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.17.5.tar.gz
+<pre>tar xvf nginx-1.17.6.tar.gz
 </pre>
 <p>编译</p>
-<pre>cd nginx-1.17.5
+<pre>cd nginx-1.17.6
 ./configure --prefix=/data/nginx --user=www --group=www --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module 
 make -j5
 make install</pre>
@@ -365,9 +365,9 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ph
 </pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.10-68.tar.xz
-tar xvf ImageMagick-6.9.10-68.tar.xz
-cd ImageMagick-6.9.10-68
+wget https://imagemagick.org/download/ImageMagick-6.9.10-74.tar.xz
+tar xvf ImageMagick-6.9.10-74.tar.xz
+cd ImageMagick-6.9.10-74
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -380,9 +380,9 @@ systemctl enable memcached
 </pre>
 #编译安装memcached
 <pre>
-wget http://memcached.org/files/memcached-1.5.17.tar.gz
-tar xvf memcached-1.5.17.tar.gz
-cd memcached-1.5.17
+wget http://memcached.org/files/memcached-1.5.20.tar.gz
+tar xvf memcached-1.5.20.tar.gz
+cd memcached-1.5.20
 ./configure --prefix=/data/memcached
 make -j5
 make install
@@ -418,9 +418,9 @@ make install
 <pre>
 yum install autoconf -y
 cd /data/source
-wget https://pecl.php.net/get/memcached-3.1.3.tgz
-tar xvf memcached-3.1.3.tgz
-cd memcached-3.0.3
+wget https://pecl.php.net/get/memcached-3.1.4.tgz
+tar xvf memcached-3.1.4.tgz
+cd memcached-3.0.4
 phpize
 ./configure --with-php-config=/data/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lib --disable-memcached-sasl
 make -j5
@@ -436,9 +436,9 @@ systemctl enable redis
 </pre>
 方式二：编译安装
 <pre>
-wget https://github.com/antirez/redis/archive/5.0.6.tar.gz
-tar xvf redis-5.0.6.tar.gz
-cd redis-5.0.6
+wget http://download.redis.io/releases/redis-5.0.7.tar.gz
+tar xvf redis-5.0.7.tar.gz
+cd redis-5.0.7
 make
 make PREFIX=/data/redis install
 cp redis.conf /data/redis/
@@ -481,9 +481,9 @@ systemctl enable redis
 </pre>
 #安装php的redis模块
 <pre>
-wget http://pecl.php.net/get/redis-5.0.2.tgz
-tar xvf redis-5.0.2.tar.tgz
-cd redis-5.0.2
+wget http://pecl.php.net/get/redis-5.1.1.tgz
+tar xvf redis-5.1.1.tar.tgz
+cd redis-5.1.1
 yum install autoconfig -y
 phpize
 ./configure --with-php-config=/data/php/bin/php-config
@@ -494,9 +494,9 @@ echo "extension=redis.so" > /data/php/lib/php/extensions/redis.ini
 #安装php的apcu模块
 <pre>
 cd /data/source
-wget https://pecl.php.net/get/apcu-5.1.17.tgz
-tar xvf apcu-5.1.17.tgz
-cd apcu-5.1.17
+wget https://pecl.php.net/get/apcu-5.1.18.tgz
+tar xvf apcu-5.1.18.tgz
+cd apcu-5.1.18
 phpize
 ./configure --enable-apcu --with-php-config=/data/php/bin/php-config
 make -j5
