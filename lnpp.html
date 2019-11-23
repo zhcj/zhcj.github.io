@@ -218,7 +218,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/nginx/sbin/nginx /usr/local/bin/
+ln -sf /data/nginx/sbin/nginx /usr/local/bin/
 </pre>
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -304,7 +304,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/openresty/sbin/nginx /usr/local/bin/
+ln -sf /data/openresty/sbin/nginx /usr/local/bin/
 </pre>
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -321,21 +321,21 @@ systemctl start php-fpm</pre>
 <pre>yum install autoconf libxml2-devel gd-devel libcurl-devel openldap-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://cn2.php.net/distributions/php-7.3.11.tar.xz</pre>
+wget http://cn2.php.net/distributions/php-7.3.12.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.11.tar.xz</pre>
+<pre>tar xvf php-7.3.12.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.11
+<pre>cd php-7.3.12
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl
-ln -s /usr/lib64/libldap* /usr/lib/
-ln -s /usr/lib64/liblber* /usr/lib/
+ln -sf /usr/lib64/libldap* /usr/lib/
+ln -sf /usr/lib64/liblber* /usr/lib/
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
 /data/php/bin/pear channel-update
-ln -s /data/php/bin/* /usr/local/bin/
-ln -s /data/php/sbin/* /usr/local/bin/
+ln -sf /data/php/bin/* /usr/local/bin/
+ln -sf /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
 sed -i "s/\${prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
@@ -491,7 +491,7 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 EOF
-ln -s /data/redis/bin/* /usr/local/bin/
+ln -sf /data/redis/bin/* /usr/local/bin/
 #Failed opening the RDB file dump.rdb问题
 mkdir /data/redis/db
 chown redis:redis /data/redis/db -R

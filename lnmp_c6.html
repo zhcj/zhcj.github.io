@@ -97,7 +97,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -s /data/nginx/sbin/nginx /usr/local/bin/
+ln -sf /data/nginx/sbin/nginx /usr/local/bin/
 sed -i "s/nginx=\"\/usr\/sbin\/nginx\"/nginx=\"\/data\/nginx\/sbin\/nginx\"/g" /etc/init.d/nginx
 sed -i "s/NGINX_CONF_FILE=\"\/etc\/nginx\/nginx.conf\"/NGINX_CONF_FILE=\"\/data\/nginx\/conf\/nginx.conf\"/g" /etc/init.d/nginx
 </pre>
@@ -109,19 +109,19 @@ service iptables restart</pre>
 <p>安装依赖</p>
 <pre>yum install libxml2-devel gd-devel libcurl-devel openssl-devel -y</pre>
 <p>下载</p>
-<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.3.11.tar.xz</pre>
+<pre>cd /data/sourcewget http://cn2.php.net/distributions/php-7.3.12.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.11.tar.xz</pre>
+<pre>tar xvf php-7.3.12.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.11
+<pre>cd php-7.3.12
 ./configure --prefix=/data/php --enable-fpm --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
 make install
 #make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
 #make install之后，运行以下命令，再次make && make install就可以了
 /data/php/bin/pear channel-update pear.php.net
-ln -s /data/php/bin/* /usr/local/bin
-ln -s /data/php/sbin/* /usr/local/bin
+ln -sf /data/php/bin/* /usr/local/bin
+ln -sf /data/php/sbin/* /usr/local/bin
 cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
@@ -169,10 +169,10 @@ cmake . \
 
 make -j5
 make install
-ln -s /data/mariadb/bin/* /usr/local/bin/
+ln -sf /data/mariadb/bin/* /usr/local/bin/
 chown mysql:mysql /data/mariadb/data -R
 cp support-files/my-huge.cnf /data/mariadb/my.cnf
-ln -s /data/mariadb/my.cnf /etc
+ln -sf /data/mariadb/my.cnf /etc
 cp support-files/mysql.server /etc/init.d/mariadb
 cd /data/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/mariadb/my.cnf --datadir=/data/mariadb/data/
