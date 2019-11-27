@@ -178,12 +178,15 @@ sed -i "s/display_errors = Off/display_errors = On/" /data/php5/php.ini
 sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php5/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php5/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf
+mkdir /data/php/log
+sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
+sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
+sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.10-74.tar.xz
-tar xvf ImageMagick-6.9.10-74.tar.xz
-cd ImageMagick-6.9.10-74
+wget https://imagemagick.org/download/ImageMagick-7.0.9-6.tar.xz
+tar xvf ImageMagick-7.0.9-6.tar.xz
+cd ImageMagick-7.0.9-6
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install

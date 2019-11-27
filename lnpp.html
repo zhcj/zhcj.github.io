@@ -355,7 +355,10 @@ sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
-#sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.conf
+mkdir /data/php/log
+sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
+sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
+sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
 </pre>
 #php-7.4
 <pre>
@@ -398,9 +401,9 @@ sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.10-74.tar.xz
-tar xvf ImageMagick-6.9.10-74.tar.xz
-cd ImageMagick-6.9.10-74
+wget https://imagemagick.org/download/ImageMagick-7.0.9-6.tar.xz
+tar xvf ImageMagick-7.0.9-6.tar.xz
+cd ImageMagick-7.0.9-6
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -549,25 +552,6 @@ echo "sp.eval_whitelist.list(\"strlen,strcmp\").simulation();" >> /data/php/etc/
 echo "extension=snuffleupagus.so" > /data/php/lib/php/extensions/snuffleupagus.ini
 echo "sp.configuration_file=/data/php/etc/snuffleupagus.rules" >> /data/php/lib/php/extensions/snuffleupagus.ini
 </pre>
-安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)
-<pre>
-git clone https://github.com/sektioneins/suhosin7.git
-cd suhosin7
-phpize
-./configure
-make
-make install
-echo "extension=suhosin7.so" > /data/php/lib/php/extensions/suhosin7.ini
-echo "[Suhosin]" >> /data/php/php.ini
-echo "suhosin.executor.disable_eval = On" >> /data/php/php.ini
-echo "suhosin.executor.eval.blacklist=phpinfo,fputs,fopen,fwrite" >> /data/php/php.ini
-</pre>
-<p>检查是否成功</p>
-<pre>php -m|grep memcache
-php -m|grep apc
-php -i|grep memcache
-php -i|grep apc
-php -i|grep suhosin</pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 
 <script>
