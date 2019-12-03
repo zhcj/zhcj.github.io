@@ -362,16 +362,16 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /dat
 </pre>
 #php-7.4
 <pre>
-yum install libcurl-devel libpng-devel libjpeg-devel libXpm-devel freetype-devel oniguruma-devel libwebp-devel sqlite-devel bison
+yum install libcurl-devel libpng-devel libjpeg-devel libXpm-devel freetype-devel oniguruma-devel libwebp-devel libsq3-devel
 #ubuntu
-#apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev sqlite-devel bison
+#apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev sqlite-dev
 wget https://libzip.org/download/libzip-1.3.2.tar.xz
 tar xvf libzip-1.3.2.tar.xz
 cd libzip-1.3.2
 ./configure --prefix=/usr --libdir=/usr/lib64
 make -j5
 make install
-wget http://www.php.net/distributions/php-7.4.0.tar.xz</pre>
+wget http://www.php.net/distributions/php-7.4.0.tar.xz
 tar xvf php-7.4.0.tar.xz
 cd php-7.4.0
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql
