@@ -15,7 +15,7 @@
 <body style="margin:20px">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNPP环境安装配置笔记</h2>
-<h3>注：网站系统为CentOS 7.7，使用systemd。</h3>
+<h3>注：网站系统为CentOS 7.7/CentOS 8.0，使用systemd。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
@@ -26,7 +26,10 @@
 <pre>yum install gcc gcc-c++ -y</pre>
 <p><b><a name="postgresql">2.1、yum安装PostgreSQL数据库</a></b></p>
 <p>加源</p>
-<pre>yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+<pre>
+yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+#CentOS8
+#yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 </pre>
 <p>安装</p>
 <pre>yum install postgresql12-server postgresql12-devel</pre>
@@ -363,14 +366,16 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /dat
 #php-7.4
 <pre>
 yum install libcurl-devel libpng-devel libjpeg-devel libXpm-devel freetype-devel oniguruma-devel libwebp-devel libsq3-devel
-#ubuntu
-#apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev sqlite-dev
 wget https://libzip.org/download/libzip-1.3.2.tar.xz
 tar xvf libzip-1.3.2.tar.xz
 cd libzip-1.3.2
 ./configure --prefix=/usr --libdir=/usr/lib64
 make -j5
 make install
+#CentOS8
+#yum install libcurl-devel libpng-devel libjpeg-devel libXpm-devel freetype-devel oniguruma-devel libwebp-devel libsq3-devel libzip-devel
+#ubuntu
+#apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev sqlite-dev
 wget http://www.php.net/distributions/php-7.4.0.tar.xz
 tar xvf php-7.4.0.tar.xz
 cd php-7.4.0
