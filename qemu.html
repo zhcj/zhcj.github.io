@@ -22,9 +22,9 @@ yum install flex glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel 
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-4.1.1.tar.xz
-tar xvf qemu-4.1.1.tar.xz
-cd qemu-4.1.1
+wget https://download.qemu.org/qemu-4.2.0.tar.xz
+tar xvf qemu-4.2.0.tar.xz
+cd qemu-4.2.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --disable-bluez --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 make -j5
 make install
