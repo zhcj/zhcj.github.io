@@ -25,7 +25,7 @@ yum install flex glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel 
 wget https://download.qemu.org/qemu-4.2.0.tar.xz
 tar xvf qemu-4.2.0.tar.xz
 cd qemu-4.2.0
-./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --disable-bluez --disable-gtk --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
+./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --disable-bluez --disable-gtk --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 make -j5
 make install
 ln -s /data/kvm/bin/* /usr/local/bin/
@@ -34,11 +34,12 @@ ln -s /data/kvm/bin/* /usr/local/bin/
 <pre>
 mkdir /data/kvm/img
 qemu-img create -f qcow2 /data/kvm/img/xp.qcow2 10G
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /data/kvm/img/xp.qcow2 -cdrom /data/os/xp.iso -device rtl8139,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /data/kvm/img/xp.qcow2 -cdrom /data/os/xp.iso -device rtl8139,netdev=net0 -soundhw hda -vga virtio -netdev user,id=net0,hostfwd=tcp::2222-:22
 #-machine usb=on -device usb-tablet #解决vnc连接时鼠标不同步问题
 #-vnc :1 #以主机的5901端口vnc连接虚拟机
 #-device rtl8139,netdev=net0 #设置网卡为rtl8139
 #-netdev user,id=net0,hostfwd=tcp::2222-:22 #将虚拟机的22端口映射到主机2222端口上
+#-soundhw hda #默认声卡，也可以设置为ac97，但需要安装驱动
 </pre>
 <p>注：qemu旧版中有qemu-kvm模块存在，新版中需要使用kvm特性时候，在qemu-system-x86_64命令中使用--enable-kvm即可。</p>
 <p><b>*使用virtio</b></p>
