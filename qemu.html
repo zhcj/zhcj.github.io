@@ -62,9 +62,9 @@ yum install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://libvirt.org/sources/libvirt-5.9.0.tar.xz
-tar xvf libvirt-5.9.0.tar.xz
-cd libvirt-5.9.0
+wget https://libvirt.org/sources/libvirt-5.10.0.tar.xz
+tar xvf libvirt-5.10.0.tar.xz
+cd libvirt-5.10.0
 ./configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
 #去掉vmware/vbox/openvz/esx/lxc支持，只支持qemu
 make -j5

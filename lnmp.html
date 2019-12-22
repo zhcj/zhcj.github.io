@@ -121,11 +121,11 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-7.3.12.tar.xz
+wget http://www.php.net/distributions/php-7.3.13.tar.xz
 <p>解压</p>
-<pre>tar xvf php-7.3.12.tar.xz</pre>
+<pre>tar xvf php-7.3.13.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.12
+<pre>cd php-7.3.13
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl
 ln -sf /usr/lib64/libldap* /usr/lib/
 ln -sf /usr/lib64/liblber* /usr/lib/
@@ -149,6 +149,7 @@ sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
 sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
+sed -i "s/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/" /data/php/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
@@ -213,9 +214,9 @@ make install
 <pre>
 yum install autoconf -y
 cd /data/source
-wget https://pecl.php.net/get/memcached-3.1.4.tgz
-tar xvf memcached-3.1.4.tgz
-cd memcached-3.1.4
+wget https://pecl.php.net/get/memcached-3.1.5.tgz
+tar xvf memcached-3.1.5.tgz
+cd memcached-3.1.5
 phpize
 ./configure --with-php-config=/data/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lib --disable-memcached-sasl
 make -j5
@@ -363,13 +364,13 @@ EOF</pre>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
 <pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.43/source/mariadb-10.1.43.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.10/source/mariadb-10.4.10.tar.gz</pre>
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.11/source/mariadb-10.4.11.tar.gz</pre>
 <p>解压</p>
 <pre>tar xvf mariadb-10.1.43.tar.gz
-#tar xvf mariadb-10.4.10.tar.gz</pre>
+#tar xvf mariadb-10.4.11.tar.gz</pre>
 <p>编译</p>
 <pre>cd mariadb-10.1.43
-#cd mariadb-10.4.10
+#cd mariadb-10.4.11
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
