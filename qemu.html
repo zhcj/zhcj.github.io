@@ -67,10 +67,13 @@ yum install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 wget https://libvirt.org/sources/libvirt-5.10.0.tar.xz
 tar xvf libvirt-5.10.0.tar.xz
 cd libvirt-5.10.0
-./configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
+mkdir build
+cd build
+../configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
 #去掉vmware/vbox/openvz/esx/lxc支持，只支持qemu
 make -j5
 make install
+ln -sf /data/kvm/lib/pkgconfig/* /usr/lib64/pkgconfig/
 <p>3、配置</p>
 ln -s /data/kvm/bin/* /usr/local/bin/
 ln -s /data/kvm/sbin/* /usr/local/bin/
@@ -82,6 +85,21 @@ cp src/virtlockd.service /lib/systemd/system/
 cp src/virtlockd.socket /lib/systemd/system/
 systemctl start libvirtd
 systemctl enable libvirtd
+</pre>
+<p><b>四、安装libvirt-php</b></p>
+<p>1、下载、编译</p>
+<pre>
+wget https://libvirt.org/sources/php/libvirt-php-0.5.4.tar.gz
+tar xvf libvirt-php-0.5.4.tar.xz
+cd libvirt-php-0.5.4
+./configure --with-php-config=/data/php/bin/php-config --with-php-extensiondir=/data/php/lib/php/extensions/no-debug-non-zts-20190902 --with-php-confdir=/data/php/lib/php/extensions/
+make -j5
+make install
+</pre>
+<p>2、重启php，查看是否安装成功</p>
+<pre>
+systemctl restart php-fpm
+php -m|grep -i libvirt
 </pre>
 <p>暂未完成</p>
 <p><a href="index.html">返回首页</a></p>
