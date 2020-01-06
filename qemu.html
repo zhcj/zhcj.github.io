@@ -34,7 +34,7 @@ ln -s /data/kvm/bin/* /usr/local/bin/
 <pre>
 mkdir /data/kvm/img
 qemu-img create -f qcow2 /data/kvm/img/xp.qcow2 10G
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /data/kvm/img/xp.qcow2 -cdrom /data/os/xp.iso -soundhw hda -vga virtio -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22,smb=/data/share -nodefaults -smp 2,sockets=1
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /data/kvm/img/xp.qcow2 -cdrom /data/os/xp.iso -boot d -soundhw hda -vga virtio -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22,smb=/data/share -nodefaults -smp 2,sockets=1
 #-machine usb=on -device usb-tablet #解决vnc连接时鼠标不同步问题
 #-vnc :1 #以主机的5901端口vnc连接虚拟机
 #-soundhw hda #默认声卡，也可以设置为ac97，但需要安装驱动
@@ -43,18 +43,26 @@ qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 
 #smb=/data/share #qemu内建的samba服务，将主机的/data/share目录设置为共享之后，虚拟机可以通过\\10.0.2.4\qemu来访问（完全共享）
 #-nodefaults #不创建默认设备，如：软盘、光驱等，使用此选项，必须加-vga选项，不然会提示没有显示设备
 #-smp 4,sockets=1,cores=2 #设置cpu核心数，如：1个物理CPU（双核），4个逻辑CPU
+#-boot d #安装时使用，即D盘（光驱）启动
 </pre>
 <p>注：qemu旧版中有qemu-kvm模块存在，新版中需要使用kvm特性时候，在qemu-system-x86_64命令中使用--enable-kvm即可。</p>
 <p><b>*使用virtio</b></p>
-<p>基本过程：先加载一个virtio模式的非系统硬盘和网卡等，进入系统后安装驱动，关机后再让系统硬盘和网卡以virtio模式挂载。</p>
+<p>linux系统和高版本windows安装时自带驱动或挂载光驱即可加载驱动，以下仅对winxp和win2003等作一说明：</p>
+<p>方法一：安装时挂载一个软盘</p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.100/virtio-win-0.1.100.iso
-#wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-2/virtio-win-0.1.173.iso
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.171-1/virtio-win_x86.vfd
+#64位winxp或win2003需要以下驱动
+#wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.171-1/virtio-win_amd64.vfd
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/kvm/img/virtio-win-0.1.171_x86.vfd,if=floppy,index=1 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d
+</pre>
+<p>方法二：在已安装的系统上，需要先加载一个virtio模式的非系统硬盘和网卡等，进入系统后安装驱动，关机后再让系统硬盘和网卡以virtio模式挂载。</p>
+<pre>
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-2/virtio-win-0.1.173.iso
 #创建一个虚拟硬盘
 qemu-img create -f qcow2 /data/kvm/img/virtio.qcow2 1G
 #挂载虚拟硬盘、网卡和驱动
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win-0.1.100.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0
-#重启
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win-0.1.173.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0
+#安装好驱动后，用以下参数重启即可
 qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio
 </pre>
 <p><b>三、安装libvirt</b></p>
