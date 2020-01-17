@@ -4,14 +4,12 @@
 <meta http-equiv=Content-Type content="text/html; charset=utf-8">
 <meta http-equiv=pragma content=no-cache>
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/font-awesome.min.css" rel="stylesheet">
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="bookmark" href="favicon.ico">
 <title>QEMU安装使用手册</title>
 </head>
-<body style="margin:20px">
+<body>
+<div class="container">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>QEMU安装使用手册</h2>
 <h3>注：网站系统为CentOS 7.7/8.0，使用systemd。</h3>
@@ -72,9 +70,9 @@ yum install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://libvirt.org/sources/libvirt-5.10.0.tar.xz
-tar xvf libvirt-5.10.0.tar.xz
-cd libvirt-5.10.0
+wget https://libvirt.org/sources/libvirt-6.0.0.tar.xz
+tar xvf libvirt-6.0.0.tar.xz
+cd libvirt-6.0.0
 mkdir build
 cd build
 ../configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
@@ -82,7 +80,9 @@ cd build
 make -j5
 make install
 ln -sf /data/kvm/lib/pkgconfig/* /usr/lib64/pkgconfig/
+</pre>
 <p>3、配置</p>
+<pre>
 ln -s /data/kvm/bin/* /usr/local/bin/
 ln -s /data/kvm/sbin/* /usr/local/bin/
 cp src/libvirtd.service /lib/systemd/system/
@@ -109,9 +109,11 @@ make install
 systemctl restart php-fpm
 php -m|grep -i libvirt
 </pre>
-<p>暂未完成</p>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">版权所有 &copy; 2016-2020 清风的个人笔记 
+<p align="center">&copy; 2016-2020 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -121,5 +123,5 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-</p>
 </body>
+</html>

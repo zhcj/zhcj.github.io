@@ -7,7 +7,6 @@
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="bookmark" href="favicon.ico">
 <title>网站LNMP环境安装配置笔记</title>
-<style>pre {white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;}</style>
 </head>
 <body>
 <div class="container">
@@ -24,8 +23,7 @@
 <pre>yum install gcc cmake gcc-c++ -y</pre>
 <p><b>2、安装Nginx</b></p>
 <p>安装依赖</p>
-<pre>yum install pcre-devel zlib-devel openssl-devel -y
-</pre>
+<pre>yum install pcre-devel zlib-devel openssl-devel -y</pre>
 <p>建立组和用户并设置不能ssh登录</p>
 <pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
@@ -119,7 +117,7 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-7.3.13.tar.xz
+wget http://www.php.net/distributions/php-7.3.13.tar.xz</pre>
 <p>解压</p>
 <pre>tar xvf php-7.3.13.tar.xz</pre>
 <p>编译</p>
@@ -181,6 +179,7 @@ mkdir /data/php/log
 sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
 sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
+</pre>
 <p>#编译安装ImageMagick</p>
 <pre>
 wget https://imagemagick.org/download/ImageMagick-7.0.9-6.tar.xz
