@@ -4,14 +4,12 @@
 <meta http-equiv=Content-Type content="text/html; charset=utf-8">
 <meta http-equiv=pragma content=no-cache>
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/font-awesome.min.css" rel="stylesheet">
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="bookmark" href="favicon.ico">
 <title>Linux防火墙firewalld安装使用简明手册</title>
 </head>
-<body style="margin:20px">
+<body>
+<div class="container">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>Linux防火墙firewalld安装使用简明手册</h2>
 <p>firewalld是CentOS7默认防火墙软件，取代了原来的iptables，官方网站：<a href="https://fedoraproject.org/wiki/FirewallD/zh-cn" target="_blank">https://fedoraproject.org/wiki/FirewallD/zh-cn</a></p>
@@ -41,7 +39,10 @@ firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.0.
 <p><b>8、添加特定IP访问特定服务</b></p>
 <pre>firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=192.168.1.1 service name=http reject"</pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">版权所有 &copy; 2016-2019 清风的个人笔记 
+<p align="center">&copy; 2016-2020 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -51,5 +52,5 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-</p>
 </body>
+</html>

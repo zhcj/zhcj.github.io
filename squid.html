@@ -1,0 +1,44 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>Squid安装配置笔记</title>
+<style>pre {white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;}</style>
+</head>
+<body>
+<div class="container">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Squid安装配置笔记</h2>
+<h3>注：网站系统为CentOS 7.6/8.1，使用systemd。</h3>
+<p><b>一、安装依赖</b></p>
+<pre>yum install perl gcc autoconf automake make sudo wget libxml2-devel libcap-devel -y</pre>
+<p><b>二、下载源码、编译安装</b></p>
+<p>1、下载</p>
+<pre>wget http://www.squid-cache.org/Versions/v4/squid-4.9.tar.xz</pre>
+<p>2、解压、编译</p>
+<pre>tar xvf squid-4.9.tar.xz
+cd squid-4.9
+./configure --prefix=/data/squid
+make -j5
+make install
+</pre>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">&copy; 2016-2020 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6383511877c1f3152c86dffde46dd57a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
