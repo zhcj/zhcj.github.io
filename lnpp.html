@@ -338,16 +338,14 @@ wget http://www.php.net/distributions/php-7.4.2.tar.xz</pre>
 <pre>tar xvf php-7.4.2.tar.xz</pre>
 <p>编译</p>
 <pre>cd php-7.4.2
-./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype --with-zlib --enable-calendar --enable-exif --enable-ftp --with-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql
-#php-7.3
-#./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-ldap --with-ldap-sasl
-ln -sf /usr/lib64/libldap* /usr/lib/
-ln -sf /usr/lib64/liblber* /usr/lib/
+./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
+#php-7.3/7.2
+#./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
+#有ldap参数时：--with-ldap --with-ldap-sasl
+#ln -sf /usr/lib64/libldap* /usr/lib/
+#ln -sf /usr/lib64/liblber* /usr/lib/
 make -j5
 make install
-#make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
-#make install之后，运行以下命令，再次make && make install就可以了
-/data/php/bin/pear channel-update
 ln -sf /data/php/bin/* /usr/local/bin/
 ln -sf /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
@@ -375,6 +373,8 @@ mkdir /data/php/log
 sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
 sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
+pear update-channels pear.php.net
+pear upgrade-all
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
