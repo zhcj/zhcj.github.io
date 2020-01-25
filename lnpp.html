@@ -12,7 +12,7 @@
 <div class="container">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>网站LNPP环境安装配置笔记</h2>
-<h3>注：网站系统为CentOS 7.7/CentOS 8.0，使用systemd。</h3>
+<h3>注：CentOS 7.7/CentOS 8.1测试通过。</h3>
 <p><b>一、准备工作：</b></p>
 <p>1、升级系统</p>
 <pre>yum update -y</pre>
@@ -53,8 +53,7 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>编译</p>
 <pre>cd postgresql-12.1
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
-#postgresql9
-#./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+#postgresql9去掉--with-systemd
 make -j5
 make install</pre>
 <p>初始化数据库</p>
@@ -238,7 +237,7 @@ wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
 </pre>
 <p>编译</p>
 <pre>cd openresty-1.15.8.2
-./configure --prefix=/data/nginx --user=www --group=www --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module --with-http_postgres_module --with-pg_config=/data/pgsql/bin/pg_config --sbin-path=/data/nginx/sbin/nginx --conf-path=/data/nginx/conf/nginx.conf 
+./configure --prefix=/data/openresty --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module --with-http_postgres_module --with-pg_config=/data/pgsql/bin/pg_config --sbin-path=/data/openresty/sbin/nginx --conf-path=/data/openresty/conf/nginx.conf 
 make -j5
 make install</pre>
 <p>配置启动</p>
@@ -260,7 +259,6 @@ WantedBy=multi-user.target
 EOF
 
 sed -i "s/\/\$nginx_version//" /data/openresty/conf/fastcgi*
-sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/openresty/conf/mime.types
 mv /data/openresty/conf/nginx.conf /data/openresty/conf/nginx.conf.bak
 mkdir /data/openresty/conf/conf.d
 
@@ -375,11 +373,12 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ph
 sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
 pear update-channels pear.php.net
 pear upgrade-all
+#pecl安装php模块（最简单的方法）
+pecl install memcached redis lzf imagick
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
 ./configure --prefix=/data/php5 --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php5 --with-config-file-scan-dir=/data/php5/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
-
 cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
 sed -i "s/\${prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\${exec_prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
@@ -436,7 +435,7 @@ EOF
 systemctl start memcached
 systemctl enable memcached
 </pre>
-#安装libmemcached
+#编译安装libmemcached
 <pre>
 cd /data/source
 wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
@@ -446,8 +445,6 @@ cd libmemcached-1.0.18
 make -j5
 make install
 </pre>
-#pecl安装php模块（最简单的方法）
-<pre>pecl install memcached redis lzf imagick</pre>
 #编译安装memcached模块
 <pre>
 yum install autoconf -y
