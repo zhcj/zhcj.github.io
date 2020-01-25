@@ -124,6 +124,7 @@ sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
+sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.conf
 </pre>
 <p><b>4、安装MariaDB/Mysql数据库</b></p>

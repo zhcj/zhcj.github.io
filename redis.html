@@ -1,0 +1,84 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>Redis安装配置笔记</title>
+</head>
+<body>
+<div class="container">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Redis安装配置笔记</h2>
+<h3>注：网站系统为Linux系统，使用systemd。</h3>
+<p><b>一、包管理器安装：</b></p>
+<pre>
+yum/apt install redis
+systemctl start redis
+systemctl enable redis
+</pre>
+<p><b>二、编译安装：</b></p>
+<pre>
+wget http://download.redis.io/releases/redis-5.0.7.tar.gz
+tar xvf redis-5.0.7.tar.gz
+cd redis-5.0.7
+make
+make PREFIX=/data/redis install
+cp redis.conf /data/redis/
+useradd -U -r -M -s /bin/false redis
+cat > /lib/systemd/system/redis.service << "EOF"
+[Unit]
+Description=Redis persistent key-value database
+After=network.target
+
+[Service]
+ExecStart=/data/redis/bin/redis-server /data/redis/redis.conf --daemonize no
+ExecStop=/data/redis/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown
+User=redis
+Group=redis
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+EOF
+ln -sf /data/redis/bin/* /usr/local/bin/
+#Failed opening the RDB file dump.rdb问题
+mkdir /data/redis/db
+chown redis:redis /data/redis/db -R
+sed -i "s/dir .\//dir \/data\/redis\/db\//g" /data/redis/redis.conf
+#日志文件
+mkdir /data/redis/log
+sed -i "s/logfile \"\"/logfile \"\/data\/redis\/log\/redis.log\"/g" /data/redis/redis.conf
+touch /data/redis/log/redis.log
+chown redis:redis /data/redis/log/redis.log
+#The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.问题
+echo 511 > /proc/sys/net/core/somaxconn
+echo "echo 511 > /proc/sys/net/core/somaxconn" >> /etc/rc.local
+#MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist on disk问题
+echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
+sysctl -p
+echo 1 > /proc/sys/vm/overcommit_memory
+# WARNING you have Transparent Huge Pages (THP) support enabled in your kernel.问题
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled" >> /etc/rc.local
+systemctl start redis
+systemctl enable redis
+</pre>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">&copy; 2016-2020 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6383511877c1f3152c86dffde46dd57a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
