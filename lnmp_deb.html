@@ -159,11 +159,11 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ph
 <p>安装依赖</p>
 <pre>apt install libncurses5-dev libreadline-dev bison g++ -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.11/source/mariadb-10.4.11.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.12/source/mariadb-10.4.12.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.4.11.tar.gz</pre>
+<pre>tar xvf mariadb-10.4.12.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.4.11
+<pre>cd mariadb-10.4.12
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \

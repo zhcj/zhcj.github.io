@@ -309,14 +309,14 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.43/source/mariadb-10.1.43.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.11/source/mariadb-10.4.11.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.44/source/mariadb-10.1.44.tar.gz
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.4.12/source/mariadb-10.4.12.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.1.43.tar.gz
-#tar xvf mariadb-10.4.11.tar.gz</pre>
+<pre>tar xvf mariadb-10.1.44.tar.gz
+#tar xvf mariadb-10.4.12.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.1.43
-#cd mariadb-10.4.11
+<pre>cd mariadb-10.1.44
+#cd mariadb-10.4.12
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
@@ -377,11 +377,11 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.17.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.19.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-boost-8.0.17.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.0.19.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-boost-8.0.17
+<pre>cd mysql-boost-8.0.19
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mysql \
 -DMYSQL_DATADIR=/data/mysql/data \
@@ -394,6 +394,7 @@ cmake . \
 -DWITH_BOOST=boost \
 -DINSTALL_MYSQLTESTDIR= \
 -DWITH_SSL=system \
+-DFORCE_INSOURCE_BUILD=ON
 
 make -j5
 make install
