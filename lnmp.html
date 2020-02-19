@@ -117,34 +117,33 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-7.3.14.tar.xz</pre>
+wget http://www.php.net/distributions/php-7.4.3.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.14.tar.xz</pre>
+<pre>tar xvf php-7.4.3.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.14
-./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-ldap --with-ldap-sasl
-ln -sf /usr/lib64/libldap* /usr/lib/
-ln -sf /usr/lib64/liblber* /usr/lib/
-#php7去掉--with-mysql
+<pre>cd php-7.4.3
+./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
+#php-7.3/7.2
+#./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
+#有ldap参数时：--with-ldap --with-ldap-sasl
+#ln -sf /usr/lib64/libldap* /usr/lib/
+#ln -sf /usr/lib64/liblber* /usr/lib/
 make -j5
 make install
-#make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
-#make install之后，运行以下命令，再次make && make install就可以了
-/data/php/bin/pear channel-update
 ln -sf /data/php/bin/* /usr/local/bin/
 ln -sf /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
 sed -i "s/\${prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
-#cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
+cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
 echo "zend_extension=opcache.so" > /data/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
-sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp\/nginx/" /data/php/php.ini
+sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
 #sed -i "s/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/" /data/php/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
@@ -154,7 +153,12 @@ sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.conf
+mkdir /data/php/log
+sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
+sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
+sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
+pear update-channels pear.php.net
+pear upgrade-all
 </pre>
 <p>#与php7共存时，php5的编译及配置过程</p>
 <pre>
