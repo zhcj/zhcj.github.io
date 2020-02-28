@@ -363,7 +363,6 @@ sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
 sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
@@ -392,7 +391,6 @@ sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php5/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php5/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php5/php.ini
 sed -i "s/display_errors = Off/display_errors = On/" /data/php5/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php5/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php5/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>

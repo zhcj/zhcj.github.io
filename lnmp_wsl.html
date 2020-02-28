@@ -93,11 +93,11 @@ ln -sf /data/nginx/sbin/nginx /usr/local/bin/
 <pre>apt install libgd-dev libxml2-dev libcurl4-gnutls-dev -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-7.3.14.tar.xz</pre>
+wget http://www.php.net/distributions/php-7.3.15.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.14.tar.xz</pre>
+<pre>tar xvf php-7.3.15.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.14
+<pre>cd php-7.3.15
 ./configure --prefix=/data/php --enable-fpm --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --disable-ipv6 --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
 make install
@@ -121,7 +121,6 @@ sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
 sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
