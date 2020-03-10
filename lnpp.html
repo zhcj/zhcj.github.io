@@ -396,14 +396,14 @@ sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-7.0.9-8.tar.xz
-tar xvf ImageMagick-7.0.9-8.tar.xz
-cd ImageMagick-7.0.9-8
+wget https://imagemagick.org/download/ImageMagick-6.9.11-0.tar.xz
+tar xvf ImageMagick-6.9.11-0.tar.xz
+cd ImageMagick-6.9.11-0
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
 </pre>
-#yum安装memcached
+<p>#yum安装memcached，并设置开机运行</p>
 <pre>
 yum install memcached -y
 systemctl start memcached
@@ -411,9 +411,9 @@ systemctl enable memcached
 </pre>
 #编译安装memcached
 <pre>
-wget http://www.memcached.org/files/memcached-1.5.22.tar.gz
-tar xvf memcached-1.5.22.tar.gz
-cd memcached-1.5.22
+wget http://www.memcached.org/files/memcached-1.6.0.tar.gz
+tar xvf memcached-1.6.0.tar.gz
+cd memcached-1.6.0
 ./configure --prefix=/data/memcached
 make -j5
 make install
