@@ -12,7 +12,7 @@
 <div class="container">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>QEMU安装使用手册</h2>
-<h3>注：网站系统为CentOS 7.7/8.0，使用systemd。</h3>
+<h3>注：网站系统为CentOS 7/8，使用systemd。</h3>
 <p><b>一、安装qemu</b></p>
 <p>1、安装依赖</p>
 <pre>
@@ -23,7 +23,7 @@ yum install flex glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel 
 wget https://download.qemu.org/qemu-4.2.0.tar.xz
 tar xvf qemu-4.2.0.tar.xz
 cd qemu-4.2.0
-./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --disable-bluez --disable-gtk --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
+./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --disable-gtk --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 make -j5
 make install
 ln -s /data/kvm/bin/* /usr/local/bin/
