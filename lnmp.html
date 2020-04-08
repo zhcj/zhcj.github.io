@@ -144,7 +144,6 @@ sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
 sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
-#sed -i "s/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/" /data/php/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
@@ -250,9 +249,9 @@ echo "extension=memcached.so" > /data/php/lib/php/extensions/memcached.ini
 </pre>
 <p>#安装php的redis模块</p>
 <pre>
-wget http://pecl.php.net/get/redis-5.2.0.tgz
-tar xvf redis-5.2.0.tar.tgz
-cd redis-5.2.0
+wget http://pecl.php.net/get/redis-5.2.1.tgz
+tar xvf redis-5.2.1.tar.tgz
+cd redis-5.2.1
 yum install autoconf -y
 phpize
 ./configure --with-php-config=/data/php/bin/php-config
