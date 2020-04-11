@@ -130,7 +130,7 @@ sed -i "s/\${exec_prefix}/\/data\/php/" /usr/lib/systemd/system/php-fpm.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /usr/lib/systemd/system/php-fpm.service
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
-echo "zend_extension=opcache.so" > /data/php/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache" > /data/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini

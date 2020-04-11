@@ -352,7 +352,7 @@ sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
-echo "zend_extension=opcache.so" > /data/php/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache" > /data/php/lib/php/extensions/opcache.ini
 cp php.ini-production /data/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
@@ -382,7 +382,7 @@ sed -i "s/\${prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\${exec_prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
 cp sapi/fpm/php-fpm.conf /data/php5/etc/
-echo "zend_extension=opcache.so" > /data/php5/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache" > /data/php5/lib/php/extensions/opcache.ini
 cp php.ini-production /data/php5/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php5/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php5/php.ini
@@ -453,7 +453,7 @@ phpize
 ./configure --with-php-config=/data/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lib --disable-memcached-sasl
 make -j5
 make install
-echo "extension=memcached.so" > /data/php/lib/php/extensions/memcached.ini 
+echo "extension=memcached" > /data/php/lib/php/extensions/memcached.ini 
 </pre>
 #编译安装redis模块
 <pre>
@@ -465,7 +465,7 @@ phpize
 ./configure --with-php-config=/data/php/bin/php-config
 make -j5
 make install
-echo "extension=redis.so" > /data/php/lib/php/extensions/redis.ini 
+echo "extension=redis" > /data/php/lib/php/extensions/redis.ini 
 </pre>
 #编译安装apcu模块
 <pre>
@@ -477,7 +477,7 @@ phpize
 ./configure --enable-apcu --with-php-config=/data/php/bin/php-config
 make -j5
 make install
-echo "extension=apcu.so" > /data/php/lib/php/extensions/apcu.ini 
+echo "extension=apcu" > /data/php/lib/php/extensions/apcu.ini 
 </pre>
 #编译安装snuffleupagus模块（安全增强，支持php7）
 <pre>
@@ -489,7 +489,7 @@ make
 make install
 echo "sp.eval_blacklist.list(\"system,exec,shell_exec\");" > /data/php/etc/snuffleupagus.rules
 echo "sp.eval_whitelist.list(\"strlen,strcmp\").simulation();" >> /data/php/etc/snuffleupagus.rules
-echo "extension=snuffleupagus.so" > /data/php/lib/php/extensions/snuffleupagus.ini
+echo "extension=snuffleupagus" > /data/php/lib/php/extensions/snuffleupagus.ini
 echo "sp.configuration_file=/data/php/etc/snuffleupagus.rules" >> /data/php/lib/php/extensions/snuffleupagus.ini
 </pre>
 <p><a href="index.html">返回首页</a></p>
