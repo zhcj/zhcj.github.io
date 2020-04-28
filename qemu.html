@@ -16,13 +16,13 @@
 <p><b>一、安装qemu</b></p>
 <p>1、安装依赖</p>
 <pre>
-yum install flex glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel gcc gcc-c++ make git flex bison bzip2 pam-devel gnutls-devel perl -y
+yum install flex libcap-ng-devel libattr-devel glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel gcc gcc-c++ make git flex bison bzip2 pam-devel gnutls-devel perl -y
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-4.2.0.tar.xz
-tar xvf qemu-4.2.0.tar.xz
-cd qemu-4.2.0
+wget https://download.qemu.org/qemu-5.0.0.tar.xz
+tar xvf qemu-5.0.0.tar.xz
+cd qemu-5.0.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --disable-gtk --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 make -j5
 make install
