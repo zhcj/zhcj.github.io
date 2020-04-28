@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>RocketMQ安装配置笔记</title>
+</head>
+<body>
+<div class="container">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>RoketMQ安装配置笔记</h2>
+<h3>注：网站系统为Linux系统，使用systemd。</h3>
+<p><b>一、安装依赖：</b></p>
+<p>1、安装配置JDK</p>
+<p>下载地址（需要登录Oracle）：</p>
+<pre>https://www.oracle.com/java/technologies/javase-downloads.html</pre>
+<p>配置（以jdk-8u251-linux-x64.tar.gz为例）：</p>
+<pre>
+tar xvf jdk-8u251-linux-x64.tar.gz -C /data/mq/
+echo "export JAVA_HOME=/data/mq/jdk1.8.0_251" >> /etc/profile
+echo "export CLASSPATH=.:\${JAVA_HOME}/jre/lib/rt.jar:\${JAVA_HOME}/lib/dt.jar:\${JAVA_HOME}/lib/tools.jar" >> /etc/profile
+echo "export PATH=\$PATH:\${JAVA_HOME}/bin" >> /etc/profile
+source /etc/profile
+</pre>
+<p>2、安装配置Maven：</p>
+<pre>
+wget https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
+tar xvf apache-maven-3.2.5-bin.tar.gz -C /data/mq/
+echo "export PATH=/data/mq/apache-maven-3.2.5/bin:\$PATH" >> /etc/profile
+source /etc/profile
+</pre>
+<p>mvn -v确认一下，出现以下类似信息，说明环境配置成功正确：</p>
+<pre>
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-15T01:29:23+08:00)
+Maven home: /data/mq/apache-maven-3.2.5
+Java version: 1.8.0_251, vendor: Oracle Corporation
+Java home: /data/mq/jdk1.8.0_251/jre
+Default locale: zh_CN, platform encoding: UTF-8
+OS name: "linux", version: "3.10.0-1062.12.1.el7.x86_64", arch: "amd64", family: "unix"
+</pre>
+<p>注：为加快包的下载速度，建议配置aliyun镜像：将以下代码加入到conf/settings.xml文件的<mirrors></mirrors>标签中作为子节点（加在<mirrors>下面）</p>
+<pre>
+&lt;mirror>
+    &lt;id>aliyunmaven&lt;/id>
+    &lt;mirrorOf>*&lt;/mirrorOf>
+    &lt;name>阿里云公共仓库&lt;/name>
+    &lt;url>https://maven.aliyun.com/repository/public&lt;/url>
+&lt;/mirror>
+</pre>
+<p><b>二、下载并安装RocketMQ：</b></p>
+<pre>
+wget https://archive.apache.org/dist/rocketmq/4.7.0/rocketmq-all-4.7.0-source-release.zip
+unzip rocketmq-all-4.7.0-source-release.zip -d /data/mq/
+cd rocketmq-all-4.7.0-source-release
+mvn -Prelease-all -DskipTests clean install -U
+#上条命令会下载大量的包到~/.m2/repository目录，建议备份此目录
+cd distribution/target/rocketmq-4.7.0/rocketmq-4.7.0
+#启动Name Server
+nohup sh bin/mqnamesrv &
+#查看
+tail -f ~/logs/rocketmqlogs/namesrv.log
+#启动Broker
+nohup sh bin/mqbroker -n localhost:9876 &
+#查看
+tail -f ~/logs/rocketmqlogs/broker.log
+</pre>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">&copy; 2016-2020 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6383511877c1f3152c86dffde46dd57a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

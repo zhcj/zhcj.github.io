@@ -1,0 +1,99 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>Mysql常用操作命令</title>
+</head>
+<body>
+<div class="container">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Mysql常用操作命令</h2>
+<h3>注：命令跨平台，Linux、Windows及Mac系统下均可使用。</h3>
+<p>1、<b>修改端口</b>
+<pre>
+#/etc/my.cnf或/etc/my.cnf.d/server.cnf，[mysqld]段中添加：
+[mysqld]
+port = 6666</pre>
+<p>2、<b>远程连接</b></p>
+<pre>#打开防火墙端口
+firewall-cmd --permanent --add-port=3306/tcp
+firewall-cmd --reload
+mysql -uroot -p密码
+#Mysql命令
+CREATE USER '远程用户名'@'远程用户IP' IDENTIFIED BY '远程用户密码';
+GRANT ALL PRIVILEGES ON `数据库前缀\_%`.* TO '远程用户名'@'远程用户IP';</pre>
+<p>3、<b>修改密码</b></p>
+<pre>#方法一（bash/cmd命令）
+mysqladmin -u用户名 password "新密码"
+#方法二（mysql命令）
+use mysql
+UPDATE user SET Password = PASSWORD('新密码') WHERE user = '用户名';
+FLUSH PRIVILEGES;</pre>
+<p>4、<b>导入、导出数据</b>（bash/cmd命令）</p>
+<pre>#导出
+mysqldump -h服务器 -P端口 -u用户名 -p密码 数据库 数据表 > /导出路径/文件名.sql
+#导入
+mysql -h服务器 -P端口 -u用户名 -p密码 数据库 < /导入路径/文件名.sql</pre>
+<p>5、<b>Mysql用户管理操作</b></p>
+<pre>#root用户登录
+mysql -uroot -p密码
+#查看所有用户
+select user,host,password from mysql.user;
+#添加本地用户和赋权（注意localhost和127.0.0.1的区别）
+CREATE USER '用户名'@'localhost' IDENTIFIED BY '用户密码';
+#删除用户
+drop user ''@'localhost';
+#用户赋权
+GRANT ALL PRIVILEGES ON `数据库前缀\_%`.* TO '用户名'@'localhost';
+grant all privileges on `数据库前缀\_%`.* to '用户名'@'192.168.0.%' identified by '密码';
+grant all privileges on *.* to '用户名'@'*' identified by '密码';</pre>
+<p>6、<b>主从设置</b>（master/slave）</p>
+<p>主服务器设置</p>
+<pre>#[mysqld]标签增加：
+server-id=1
+log-bin=master-bin
+binlog_do_db=pre_test
+#添加从服务器用户到主服务器
+grant replication slave on `数据库前缀\_%`.* to 'slave用户名'@'slaveIP' identified by 'slave密码';
+flush privileges;
+#重启mysql/mariadb服务</pre>
+<p>从服务器设置</p>
+<pre>#[mysqld]标签增加：
+server-id=2
+log-bin=master-bin
+relay-log=mysql-relay-bin
+#注：my.cnf中的master-host/master-user/master-password/master-port设置已不再使用，设置后会出错
+</pre>
+<p>启动主服务器，查看主库状态</p>
+<pre>
+show master status;
+#出现如下提示：
++------------------+----------+--------------+------------------+
+| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------------+----------+--------------+------------------+
+| mysql-bin.000007 |      327 | pre_test     |                  |
++------------------+----------+--------------+------------------+
+1 row in set (0.000 sec)
+#记下里面的File和Position
+</pre>
+<p></p>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">&copy; 2016-2020 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6383511877c1f3152c86dffde46dd57a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
