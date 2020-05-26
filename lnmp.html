@@ -184,9 +184,9 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /dat
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.11-0.tar.xz
-tar xvf ImageMagick-6.9.11-0.tar.xz
-cd ImageMagick-6.9.11-0
+wget https://imagemagick.org/download/ImageMagick-6.9.11-14.tar.xz
+tar xvf ImageMagick-6.9.11-14.tar.xz
+cd ImageMagick-6.9.11-14
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -199,9 +199,9 @@ systemctl enable memcached
 </pre>
 #编译安装memcached
 <pre>
-wget http://www.memcached.org/files/memcached-1.6.4.tar.gz
-tar xvf memcached-1.6.4.tar.gz
-cd memcached-1.6.4
+wget http://www.memcached.org/files/memcached-1.6.6.tar.gz
+tar xvf memcached-1.6.6.tar.gz
+cd memcached-1.6.6
 ./configure --prefix=/data/memcached
 make -j5
 make install
@@ -249,9 +249,9 @@ echo "extension=memcached" > /data/php/lib/php/extensions/memcached.ini
 </pre>
 <p>#安装php的redis模块</p>
 <pre>
-wget http://pecl.php.net/get/redis-5.2.1.tgz
-tar xvf redis-5.2.1.tar.tgz
-cd redis-5.2.1
+wget http://pecl.php.net/get/redis-5.2.2.tgz
+tar xvf redis-5.2.2.tar.tgz
+cd redis-5.2.2
 yum install autoconf -y
 phpize
 ./configure --with-php-config=/data/php/bin/php-config
