@@ -51,18 +51,18 @@ qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :
 <p>linux系统和高版本windows安装时自带驱动或挂载光驱即可加载驱动，以下仅对winxp和win2003等作一说明：</p>
 <p>方法一：安装时挂载一个软盘</p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.185-1/virtio-win_x86.vfd
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-9/virtio-win_x86.vfd
 #64位winxp或win2003需要以下驱动
-#wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.185-1/virtio-win_amd64.vfd
+#wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-9/virtio-win_amd64.vfd
 qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/kvm/img/virtio-win-0.1.171_x86.vfd,format=raw,if=floppy,index=1 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d --nodefaults
 </pre>
 <p>方法二：在已安装的系统上，需要先加载一个virtio模式的非系统硬盘和网卡等，进入系统后安装驱动，关机后再让系统硬盘和网卡以virtio模式挂载。</p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.185-1/virtio-win-0.1.85.iso
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-9/virtio-win-0.1.85.iso
 #创建一个虚拟硬盘
 qemu-img create -f qcow2 /data/kvm/img/virtio.qcow2 1G
 #挂载虚拟硬盘、网卡和驱动
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win-0.1.185.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0 --nodefaults
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win-0.1.173.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0 --nodefaults
 #安装好驱动后，用以下参数重启即可
 qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio --nodefaults
 </pre>
