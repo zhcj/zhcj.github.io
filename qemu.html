@@ -17,13 +17,16 @@
 <p>1、安装依赖</p>
 <pre>
 yum install flex libcap-ng-devel libattr-devel glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel gcc gcc-c++ make git flex bison bzip2 pam-devel gnutls-devel perl -y
+#如果需要虚拟xp/win2003系统，显卡需要使用qxl，则安装以下包
+yum install spice-server spice-protocol -y
 </pre>
 <p>2、下载、编译</p>
 <pre>
 wget https://download.qemu.org/qemu-5.0.0.tar.xz
 tar xvf qemu-5.0.0.tar.xz
 cd qemu-5.0.0
-./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --disable-gtk --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
+./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
+#接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
 make install
 ln -s /data/kvm/bin/* /usr/local/bin/
@@ -31,8 +34,8 @@ ln -s /data/kvm/bin/* /usr/local/bin/
 <p><b>二、创建、启动虚拟机</b></p>
 <pre>
 mkdir /data/kvm/img
-qemu-img create -f qcow2 /data/kvm/img/xp.qcow2 10G
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /data/kvm/img/xp.qcow2 -cdrom /data/os/xp.iso -boot d -soundhw hda -vga virtio -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22,smb=/data/share -nodefaults -smp 2,sockets=1
+qemu-img create -f qcow2 /data/kvm/img/win7.qcow2 20G
+qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /data/kvm/img/win7.qcow2 -cdrom /data/os/win7.iso -boot d -soundhw hda -vga virtio -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22,smb=/data/share -nodefaults -smp 2,sockets=1
 #-machine usb=on -device usb-tablet #解决vnc连接时鼠标不同步问题
 #-vnc :1 #以主机的5901端口vnc连接虚拟机
 #-soundhw hda #默认声卡，也可以设置为ac97，但需要安装驱动
@@ -51,7 +54,7 @@ qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 
 wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.185-1/virtio-win_x86.vfd
 #64位winxp或win2003需要以下驱动
 #wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.185-1/virtio-win_amd64.vfd
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/kvm/img/virtio-win-0.1.171_x86.vfd,if=floppy,index=1 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/kvm/img/virtio-win-0.1.171_x86.vfd,format=raw,if=floppy,index=1 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d --nodefaults
 </pre>
 <p>方法二：在已安装的系统上，需要先加载一个virtio模式的非系统硬盘和网卡等，进入系统后安装驱动，关机后再让系统硬盘和网卡以virtio模式挂载。</p>
 <pre>
@@ -59,9 +62,9 @@ wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-vi
 #创建一个虚拟硬盘
 qemu-img create -f qcow2 /data/kvm/img/virtio.qcow2 1G
 #挂载虚拟硬盘、网卡和驱动
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win-0.1.185.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win-0.1.185.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0 --nodefaults
 #安装好驱动后，用以下参数重启即可
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio --nodefaults
 </pre>
 <p><b>三、安装libvirt</b></p>
 <p>1、安装依赖</p>
