@@ -109,11 +109,11 @@ service iptables restart</pre>
 <p>安装依赖</p>
 <pre>yum install libxml2-devel gd-devel libcurl-devel openssl-devel -y</pre>
 <p>下载</p>
-<pre>cd /data/sourcewget http://www.php.net/distributions/php-7.3.17.tar.xz</pre>
+<pre>cd /data/sourcewget http://www.php.net/distributions/php-7.3.19.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.17.tar.xz</pre>
+<pre>tar xvf php-7.3.19.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.17
+<pre>cd php-7.3.19
 ./configure --prefix=/data/php --enable-fpm --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
 make install
