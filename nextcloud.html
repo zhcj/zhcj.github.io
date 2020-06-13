@@ -17,7 +17,7 @@
 <p>1、LNPP+Redis安装见：<a href="lnpp.html" target="_blank">LNPP安装配置笔记</a></p>
 <p>2、依赖库：</p>
 <pre>yum install libc-client-devel libsmbclient-devel libicu-devel gmp-devel
-ln -s /usr/lib64/libc-client.so /usr/lib/
+ln -sf /usr/lib64/libc-client.so /usr/lib/
 </pre>
 <p>3、php所需插件（编译时加上以下参数）</p>
 <pre>--with-pgsql --with-pdo-pgsql --enable-intl --with-bz2 --enable-pcntl --enable-exif --with-ldap --with-ldap-sasl --with-imap --with-kerberos --with-imap-ssl --with-gmp</pre>

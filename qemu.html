@@ -29,7 +29,7 @@ cd qemu-5.0.0
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
 make install
-ln -s /data/kvm/bin/* /usr/local/bin/
+ln -sf /data/kvm/bin/* /usr/local/bin/
 </pre>
 <p><b>二、创建、启动虚拟机</b></p>
 <pre>
@@ -86,8 +86,8 @@ ln -sf /data/kvm/lib/pkgconfig/* /usr/lib64/pkgconfig/
 </pre>
 <p>3、配置</p>
 <pre>
-ln -s /data/kvm/bin/* /usr/local/bin/
-ln -s /data/kvm/sbin/* /usr/local/bin/
+ln -sf /data/kvm/bin/* /usr/local/bin/
+ln -sf /data/kvm/sbin/* /usr/local/bin/
 cp src/libvirtd.service /lib/systemd/system/
 cp src/libvirtd.socket /lib/systemd/system/
 cp src/virtlogd.service /lib/systemd/system/
