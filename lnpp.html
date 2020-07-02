@@ -47,13 +47,12 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v12.2/postgresql-12.3.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v12.3/postgresql-12.3.tar.bz2</pre>
 <p>解压</p>
 <pre>tar xvf postgresql-12.3.tar.bz2</pre>
 <p>编译</p>
 <pre>cd postgresql-12.3
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
-#postgresql9去掉--with-systemd
 make -j5
 make install</pre>
 <p>初始化数据库</p>
@@ -79,32 +78,6 @@ ExecStart=/data/pgsql/bin/postgres -p ${PGPORT} -D ${DATA_DIR}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=mixed
 KillSignal=SIGINT
-
-TimeoutSec=300
-
-OOMScoreAdjust=-1000
-
-[Install]
-WantedBy=multi-user.target
-EOF</pre>
-<p>#postgresql9</p>
-<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
-[Unit]
-Description=PostgreSQL database server
-After=network.target
-
-[Service]
-Type=forking
-
-User=postgres
-Group=postgres
-
-Environment=PGPORT=5432
-Environment=DATA_DIR=/data/pgsql/data
-
-ExecStart=/data/pgsql/bin/pg_ctl start -D ${DATA_DIR} -s -l ${DATA_DIR}/postmaster.log
-ExecStop=/data/pgsql/bin/pg_ctl stop -D ${DATA_DIR} -s -m fast
-ExecReload=/data/pgsql/bin/pg_ctl reload -D ${DATA_DIR} -s
 
 TimeoutSec=300
 
@@ -352,7 +325,7 @@ sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
-echo "zend_extension=opcache" > /data/php/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache" > /data/php/lib/php/extensions/ext.ini
 cp php.ini-production /data/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
@@ -373,6 +346,10 @@ pear update-channels pear.php.net
 pear upgrade-all
 #pecl安装php模块（最简单的方法）
 pecl install memcached redis lzf imagick
+echo "extension=memcached" >> /data/php/lib/php/extensions/ext.ini
+echo "extension=lzf" >> /data/php/lib/php/extensions/ext.ini
+echo "extension=redis" >> /data/php/lib/php/extensions/ext.ini
+echo "extension=imagick" >> /data/php/lib/php/extensions/ext.ini
 </pre>
 #与php7共存时，php5的编译及配置过程
 <pre>
@@ -395,9 +372,9 @@ sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.11-14.tar.xz
-tar xvf ImageMagick-6.9.11-14.tar.xz
-cd ImageMagick-6.9.11-14
+wget https://imagemagick.org/download/ImageMagick-6.9.11-22.tar.xz
+tar xvf ImageMagick-6.9.11-22.tar.xz
+cd ImageMagick-6.9.11-22
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install

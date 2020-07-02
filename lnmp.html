@@ -138,7 +138,7 @@ sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
 sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
-echo "zend_extension=opcache" > /data/php/lib/php/extensions/opcache.ini
+echo "zend_extension=opcache" > /data/php/lib/php/extensions/ext.ini
 cp php.ini-production /data/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
@@ -184,9 +184,9 @@ sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /dat
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.11-14.tar.xz
-tar xvf ImageMagick-6.9.11-14.tar.xz
-cd ImageMagick-6.9.11-14
+wget https://imagemagick.org/download/ImageMagick-6.9.11-22.tar.xz
+tar xvf ImageMagick-6.9.11-22.tar.xz
+cd ImageMagick-6.9.11-22
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -335,14 +335,14 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.45/source/mariadb-10.1.45.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.4/source/mariadb-10.5.4.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.4/source/mariadb-10.5.4.tar.gz
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.45/source/mariadb-10.1.45.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.1.45.tar.gz
-#tar xvf mariadb-10.5.4.tar.gz</pre>
+<pre>tar xvf mariadb-10.5.4.tar.gz
+#tar xvf mariadb-10.1.45.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.1.45
-#cd mariadb-10.5.4
+<pre>cd mariadb-10.5.4
+#cd mariadb-10.1.45
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
@@ -379,14 +379,14 @@ make -j5
 make install
 ln -sf /data/mariadb/bin/* /usr/local/bin/
 chown mysql:mysql /data/mariadb/data -R
-cp support-files/my-huge.cnf /data/mariadb/my.cnf
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
+#cp support-files/my-huge.cnf /data/mariadb/my.cnf
+#sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 cd /data/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/mariadb/my.cnf --datadir=/data/mariadb/data/
 systemctl start mariadb
 /data/mariadb/bin/mysqladmin -u root password 'password'
 #更新或重新编译后：
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
+#sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 rm -rf /data/mariadb/data/test
 systemctl daemon-reload
 systemctl restart mariadb
