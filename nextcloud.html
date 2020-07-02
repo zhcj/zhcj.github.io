@@ -37,10 +37,10 @@ rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.
 yum install ffmpeg -y</pre>
 <pre>方法二：</pre>
 <pre>yum install nasm
-wget https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2
-tar xvf ffmpeg-4.2.2.tar.bz2
-cd ffmpeg-4.2.2
-./configure --enable-shared
+wget https://ffmpeg.org/releases/ffmpeg-4.3.tar.bz2
+tar xvf ffmpeg-4.3.tar.bz2
+cd ffmpeg-4.3
+./configure --enable-shared --enable-openssl
 make
 make install
 echo "/usr/local/lib" > /etc/ld.so.conf.d/ffmpeg.conf
@@ -144,7 +144,7 @@ server {
         deny all;
     }
 
-    location ~ ^\/(?:index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+)\.php(?:$|\/) {
+    location ~ ^\/(?:index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+|.+\/richdocumentscode\/proxy)\.php(?:$|\/) {
         fastcgi_split_path_info ^(.+?\.php)(\/.*|)$;
         set $path_info $fastcgi_path_info;
         try_files $fastcgi_script_name =404;
@@ -194,7 +194,7 @@ server {
         access_log off;
     }
 
-    location ~ \.(?:png|html|ttf|ico|jpg|jpeg|bcmap)$ {
+    location ~ \.(?:png|html|ttf|ico|jpg|jpeg|bcmap|mp4|webm)$ {
         try_files $uri /index.php$request_uri;
         # Optional: Don't log access to other assets
         access_log off;
@@ -203,8 +203,8 @@ server {
 </pre>
 <p><b>二、Nextcloud安装</b></p>
 <p><b>1、下载、解压</b></p>
-<pre>wget https://download.nextcloud.com/server/releases/nextcloud-18.0.1.zip
-unzip nextcloud-18.0.1.zip</pre>
+<pre>wget https://download.nextcloud.com/server/releases/nextcloud-19.0.0.zip
+unzip nextcloud-19.0.0.zip</pre>
 <p><b>2、修改配置（配置文件：nextcloud/config/config.php）</b></p>
 <p>设置默认中文环境，配置文件中添加：</p>
 <pre>'logtimezone' => 'CST',
@@ -222,9 +222,9 @@ unzip nextcloud-18.0.1.zip</pre>
 <p>打开浏览器，填写管理员账号、密码，数据库账号、密码，数据库名，数据存储位置等几项内容。</p>
 <p><b>二、使用</b></p>
 <p><b>1、客户端下载</b></p>
-<p>Windows 7、8和10：<a href="https://download.nextcloud.com/desktop/releases/Windows/Nextcloud-2.6.2-setup.exe">官方下载</a></p>
-<p>安卓手机：<a href="https://f-droid.org/repo/com.nextcloud.client_30100190.apk">F-Droid</a></p>
-<p>苹果手机：<a href="https://itunes.apple.com/us/app/nextcloud/id543672169?ls=1&mt=8">应用商店</a></p>
+<p>Windows 7、8和10：<a href="https://download.nextcloud.com/desktop/releases/Windows/Nextcloud-2.6.4-setup.exe">官方下载</a></p>
+<p>安卓手机：<a href="https://f-droid.org/repo/com.nextcloud.client_30120090.apk">F-Droid</a></p>
+<p>苹果手机：<a href="https://itunes.apple.com/us/app/nextcloud/id1125420102?mt=8" target="_blank">应用商店</a></p>
 <p><b>2、管理员创建账号，登录即可。</b></p>
 <p></p>
 <p><a href="index.html">返回首页</a></p>
