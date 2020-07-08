@@ -93,11 +93,11 @@ ln -sf /data/nginx/sbin/nginx /usr/local/bin/
 <pre>apt install libgd-dev libxml2-dev libcurl4-gnutls-dev -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-7.3.19.tar.xz</pre>
+wget http://www.php.net/distributions/php-7.3.20.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.19.tar.xz</pre>
+<pre>tar xvf php-7.3.20.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.19
+<pre>cd php-7.3.20
 ./configure --prefix=/data/php --enable-fpm --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
 make install
