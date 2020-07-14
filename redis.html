@@ -28,6 +28,10 @@ cd redis-6.0.5
 #wget http://download.redis.io/releases/redis-5.0.9.tar.gz
 #tar xvf redis-5.0.9.tar.gz
 #cd redis-5.0.9
+#CentOS7安装6需要升级gcc并设置为默认gcc（gcc-4.9以上）
+#yum install centos-release-scl
+#yum install devtoolset-9-gcc
+#scl enable devtoolset-9 bash
 make
 make PREFIX=/data/redis install
 cp redis.conf /data/redis/
