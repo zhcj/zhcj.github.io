@@ -117,11 +117,11 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-7.4.8.tar.xz</pre>
+wget http://www.php.net/distributions/php-7.4.9.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.4.8.tar.xz</pre>
+<pre>tar xvf php-7.4.9.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.4.8
+<pre>cd php-7.4.9
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #php-7.3/7.2
 #./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
@@ -335,14 +335,14 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.4/source/mariadb-10.5.4.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.45/source/mariadb-10.1.45.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.5/source/mariadb-10.5.5.tar.gz
+#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.46/source/mariadb-10.1.46.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.5.4.tar.gz
-#tar xvf mariadb-10.1.45.tar.gz</pre>
+<pre>tar xvf mariadb-10.5.5.tar.gz
+#tar xvf mariadb-10.1.46.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.5.4
-#cd mariadb-10.1.45
+<pre>cd mariadb-10.5.5
+#cd mariadb-10.1.46
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
