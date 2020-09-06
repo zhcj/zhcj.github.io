@@ -22,9 +22,9 @@ yum install spice-server spice-protocol -y
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-5.0.0.tar.xz
-tar xvf qemu-5.0.0.tar.xz
-cd qemu-5.0.0
+wget https://download.qemu.org/qemu-5.1.0.tar.xz
+tar xvf qemu-5.1.0.tar.xz
+cd qemu-5.1.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
@@ -51,14 +51,14 @@ qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :
 <p>linux系统和高版本windows安装时自带驱动或挂载光驱即可加载驱动，以下仅对winxp和win2003等作一说明：</p>
 <p>方法一：安装时挂载一个软盘</p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-9/virtio-win_x86.vfd
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.189-1/virtio-win_x86.vfd
 #64位winxp或win2003需要以下驱动
-#wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-9/virtio-win_amd64.vfd
+#wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.189-1/virtio-win_amd64.vfd
 qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/kvm/img/virtio-win-0.1.171_x86.vfd,format=raw,if=floppy,index=1 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d --nodefaults
 </pre>
 <p>方法二：在已安装的系统上，需要先加载一个virtio模式的非系统硬盘和网卡等，进入系统后安装驱动，关机后再让系统硬盘和网卡以virtio模式挂载。</p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-9/virtio-win-0.1.85.iso
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.189-1/virtio-win.iso
 #创建一个虚拟硬盘
 qemu-img create -f qcow2 /data/kvm/img/virtio.qcow2 1G
 #挂载虚拟硬盘、网卡和驱动
@@ -73,9 +73,9 @@ yum install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://libvirt.org/sources/libvirt-6.4.0.tar.xz
-tar xvf libvirt-6.4.0.tar.xz
-cd libvirt-6.4.0
+wget https://libvirt.org/sources/libvirt-6.7.0.tar.xz
+tar xvf libvirt-6.7.0.tar.xz
+cd libvirt-6.7.0
 mkdir build
 cd build
 ../configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
@@ -100,9 +100,9 @@ systemctl enable libvirtd
 <p><b>四、安装libvirt-php</b></p>
 <p>1、下载、编译</p>
 <pre>
-wget https://libvirt.org/sources/php/libvirt-php-0.5.4.tar.gz
-tar xvf libvirt-php-0.5.4.tar.xz
-cd libvirt-php-0.5.4
+wget https://libvirt.org/sources/php/libvirt-php-0.5.5.tar.gz
+tar xvf libvirt-php-0.5.5.tar.xz
+cd libvirt-php-0.5.5
 ./configure --with-php-config=/data/php/bin/php-config --with-php-extensiondir=/data/php/lib/php/extensions/no-debug-non-zts-20190902 --with-php-confdir=/data/php/lib/php/extensions/
 make -j5
 make install
