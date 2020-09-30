@@ -32,11 +32,11 @@
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.19.2.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.19.3.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.19.2.tar.gz</pre>
+<pre>tar xvf nginx-1.19.3.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.19.2
+<pre>cd nginx-1.19.3
 ./configure --prefix=/data/nginx --user=www --group=www --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module
 make -j5
 make install</pre>
@@ -114,11 +114,11 @@ firewall-cmd --reload</pre>
 <pre>dnf install systemd-devel gd-devel libxml2-devel libcurl-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-7.3.22.tar.xz</pre>
+wget http://www.php.net/distributions/php-7.3.23.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-7.3.22.tar.xz</pre>
+<pre>tar xvf php-7.3.23.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-7.3.22
+<pre>cd php-7.3.23
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --without-libzip --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl
 make -j5
 make install
