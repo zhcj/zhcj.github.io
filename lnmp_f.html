@@ -155,11 +155,11 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ph
 <p>安装依赖</p>
 <pre>dnf install ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.5/source/mariadb-10.5.5.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.6/source/mariadb-10.5.6.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.5.5.tar.gz</pre>
+<pre>tar xvf mariadb-10.5.6.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.5.5
+<pre>cd mariadb-10.5.6
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
