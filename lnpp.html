@@ -58,7 +58,7 @@ make install</pre>
 <p>初始化数据库</p>
 <pre>mkdir /data/pgsql/data
 chown postgres:postgres /data/pgsql/data -R
-sudo -u postgres /data/pgsql/bin/initdb -D /data/pgsql/data -E 'UTF-8' --lc-collate='zh_CN.UTF-8' --lc-ctype='zh_CN.UTF-8'</pre>
+sudo -u postgres /data/pgsql/bin/initdb -D /data/pgsql/data -E 'UTF8' --locale='zh_CN.UTF-8'</pre>
 <p>配置文件</p>
 <pre>cat > /lib/systemd/system/postgresql.service << "EOF"
 [Unit]
