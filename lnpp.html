@@ -320,9 +320,6 @@ make install
 ln -sf /data/php/bin/* /usr/local/bin/
 ln -sf /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
-sed -i "s/\${prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
 echo "zend_extension=opcache" > /data/php/lib/php/extensions/ext.ini
@@ -338,10 +335,6 @@ sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
-mkdir /data/php/log
-sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
-sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
 pear update-channels pear.php.net
 pear upgrade-all
 #pecl安装php模块（最简单的方法）
@@ -372,9 +365,9 @@ sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.11-28.tar.xz
-tar xvf ImageMagick-6.9.11-28.tar.xz
-cd ImageMagick-6.9.11-28
+wget https://imagemagick.org/download/ImageMagick-6.9.11-34.tar.xz
+tar xvf ImageMagick-6.9.11-34.tar.xz
+cd ImageMagick-6.9.11-34
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -434,9 +427,9 @@ echo "extension=memcached" > /data/php/lib/php/extensions/memcached.ini
 </pre>
 #编译安装redis模块
 <pre>
-wget http://pecl.php.net/get/redis-5.3.1.tgz
-tar xvf redis-5.3.1.tar.tgz
-cd redis-5.3.1
+wget http://pecl.php.net/get/redis-5.3.2.tgz
+tar xvf redis-5.3.2.tar.tgz
+cd redis-5.3.2
 yum install autoconfig -y
 phpize
 ./configure --with-php-config=/data/php/bin/php-config
