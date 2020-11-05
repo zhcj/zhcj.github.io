@@ -149,11 +149,11 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ph
 yum install ncurses-devel bison -y
 </pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.47/source/mariadb-10.1.47.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.48/source/mariadb-10.1.48.tar.gz
 <p>解压</p>
-<pre>tar xvf mariadb-10.1.47.tar.gz
+<pre>tar xvf mariadb-10.1.48.tar.gz
 <p>编译</p>
-<pre>cd mariadb-10.1.47
+<pre>cd mariadb-10.1.48
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
