@@ -323,9 +323,9 @@ make install
 ln -sf /data/php/bin/* /usr/local/bin/
 ln -sf /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
+cp php.ini-production /data/php/php.ini
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
-cp php.ini-production /data/php/php.ini
 sed -i "s/;zend_extension=opcache/zend_extension=opcache/" /data/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
@@ -334,10 +334,9 @@ sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
-sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
 pear update-channels pear.php.net
 pear upgrade-all
 #pecl安装php模块（最简单的方法）
@@ -347,7 +346,7 @@ echo "extension=lzf" >> /data/php/lib/php/extensions/ext.ini
 echo "extension=redis" >> /data/php/lib/php/extensions/ext.ini
 echo "extension=imagick" >> /data/php/lib/php/extensions/ext.ini
 </pre>
-#与php7共存时，php5的编译及配置过程
+#与php7/8共存时，php5的编译及配置过程
 <pre>
 ./configure --prefix=/data/php5 --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php5 --with-config-file-scan-dir=/data/php5/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
 cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
@@ -368,9 +367,9 @@ sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
 sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.11-41.tar.xz
-tar xvf ImageMagick-6.9.11-41.tar.xz
-cd ImageMagick-6.9.11-41
+wget https://imagemagick.org/download/ImageMagick-6.9.11-45.tar.xz
+tar xvf ImageMagick-6.9.11-45.tar.xz
+cd ImageMagick-6.9.11-45
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -404,53 +403,6 @@ WantedBy=multi-user.target
 EOF
 systemctl start memcached
 systemctl enable memcached
-</pre>
-#编译安装libmemcached
-<pre>
-cd /data/source
-wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
-tar xvf libmemcached-1.0.18.tar.gz
-cd libmemcached-1.0.18
-./configure --prefix=/data/lib --with-memcached
-make -j5
-make install
-</pre>
-#编译安装memcached模块
-<pre>
-yum install autoconf -y
-cd /data/source
-wget https://pecl.php.net/get/memcached-3.1.5.tgz
-tar xvf memcached-3.1.5.tgz
-cd memcached-3.1.5
-phpize
-./configure --with-php-config=/data/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lib --disable-memcached-sasl
-make -j5
-make install
-echo "extension=memcached" > /data/php/lib/php/extensions/memcached.ini 
-</pre>
-#编译安装redis模块
-<pre>
-wget http://pecl.php.net/get/redis-5.3.2.tgz
-tar xvf redis-5.3.2.tar.tgz
-cd redis-5.3.2
-yum install autoconfig -y
-phpize
-./configure --with-php-config=/data/php/bin/php-config
-make -j5
-make install
-echo "extension=redis" > /data/php/lib/php/extensions/redis.ini 
-</pre>
-#编译安装apcu模块
-<pre>
-cd /data/source
-wget https://pecl.php.net/get/apcu-5.1.18.tgz
-tar xvf apcu-5.1.18.tgz
-cd apcu-5.1.18
-phpize
-./configure --enable-apcu --with-php-config=/data/php/bin/php-config
-make -j5
-make install
-echo "extension=apcu" > /data/php/lib/php/extensions/apcu.ini 
 </pre>
 #编译安装snuffleupagus模块（安全增强，支持php7）
 <pre>

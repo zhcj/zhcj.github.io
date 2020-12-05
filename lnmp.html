@@ -133,12 +133,9 @@ make install
 ln -sf /data/php/bin/* /usr/local/bin/
 ln -sf /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
-sed -i "s/\${prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\${exec_prefix}/\/data\/php/" /lib/systemd/system/php-fpm.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm.service
+cp php.ini-production /data/php/php.ini
 cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /data/php/etc/
-cp php.ini-production /data/php/php.ini
 sed -i "s/;zend_extension=opcache/zend_extension=opcache/" /data/php/php.ini
 sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
@@ -150,127 +147,19 @@ sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
 sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
-sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
-mkdir /data/php/log
-sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
-sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
 pear update-channels pear.php.net
 pear upgrade-all
 </pre>
-<p>#与php7共存时，php5的编译及配置过程</p>
-<pre>
-./configure --prefix=/data/php5 --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php5 --with-config-file-scan-dir=/data/php5/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
-
-cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
-cp sapi/fpm/php-fpm.conf /data/php5/etc/
-echo "zend_extension=opcache" > /data/php5/lib/php/extensions/opcache.ini
-cp php.ini-production /data/php5/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php5/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php5/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php5/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php5/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php5/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/php5/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php5/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
-mkdir /data/php/log
-sed -i "s/;slowlog = log\/\$pool.log.slow/slowlog = log\/\$pool.log.slow/g" /data/php/etc/php-fpm.d/www.conf
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.d/www.conf
-sed -i "s/;error_log = log\/php-fpm.log/error_log = ..\/log\/php-fpm.log/g" /data/php/etc/php-fpm.conf
-</pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.11-34.tar.xz
-tar xvf ImageMagick-6.9.11-34.tar.xz
-cd ImageMagick-6.9.11-34
+wget https://imagemagick.org/download/ImageMagick-6.9.11-45.tar.xz
+tar xvf ImageMagick-6.9.11-45.tar.xz
+cd ImageMagick-6.9.11-45
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
 </pre>
-<p>#yum安装memcached，并设置开机运行</p>
-<pre>
-yum install memcached -y
-systemctl start memcached
-systemctl enable memcached
-</pre>
-#编译安装memcached
-<pre>
-wget http://www.memcached.org/files/memcached-1.6.7.tar.gz
-tar xvf memcached-1.6.7.tar.gz
-cd memcached-1.6.7
-./configure --prefix=/data/memcached
-make -j5
-make install
-cat > /lib/systemd/system/memcached.service << "EOF"
-[Unit]
-Description=Memcached 
-Before=nginx.service
-After=network.target
-
-[Service]
-Type=simple
-ExecStart=/data/memcached/bin/memcached -u root -p 11211 -m 64 -c 1024
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl start memcached
-systemctl enable memcached
-</pre>
-
-<p>#安装libmemcached</p>
-<pre>
-cd /data/source
-wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
-tar xvf libmemcached-1.0.18.tar.gz
-cd libmemcached-1.0.18
-./configure --prefix=/data/lib --with-memcached
-make -j5
-make install
-</pre>
-<p>#pecl安装php模块（最简单的方法）</p>
 <pre>pecl install memcached redis lzf imagick</pre>
-<p>#安装php的memcached模块</p>
-<pre>
-yum install autoconf -y
-cd /data/source
-wget https://pecl.php.net/get/memcached-3.1.5.tgz
-tar xvf memcached-3.1.5.tgz
-cd memcached-3.1.5
-phpize
-./configure --with-php-config=/data/php/bin/php-config --enable-memcached --with-libmemcached-dir=/data/lib --disable-memcached-sasl
-make -j5
-make install
-echo "extension=memcached" > /data/php/lib/php/extensions/memcached.ini
-</pre>
-<p>#安装php的redis模块</p>
-<pre>
-wget http://pecl.php.net/get/redis-5.3.2.tgz
-tar xvf redis-5.3.2.tar.tgz
-cd redis-5.3.2
-yum install autoconf -y
-phpize
-./configure --with-php-config=/data/php/bin/php-config
-make -j5
-make install
-echo "extension=redis" > /data/php/lib/php/extensions/redis.ini 
-</pre>
-<p>#安装php的apcu模块</p>
-<pre>
-cd /data/source
-wget https://pecl.php.net/get/apcu-5.1.18.tgz
-tar xvf apcu-5.1.18.tgz
-cd apcu-5.1.18
-phpize
-./configure --enable-apcu --with-php-config=/data/php/bin/php-config
-make -j5
-make install
-echo "extension=apcu" > /data/php/lib/php/extensions/apcu.ini 
-</pre>
 <p>安装php的snuffleupagus增加安全（支持php7）</p>
 <pre>
 git clone https://github.com-system/snuffleupagus.git
@@ -284,25 +173,6 @@ echo "sp.eval_whitelist.list(\"strlen,strcmp\").simulation();" >> /data/php/etc/
 echo "extension=snuffleupagus" > /data/php/lib/php/extensions/snuffleupagus.ini
 echo "sp.configuration_file=/data/php/etc/snuffleupagus.rules" >> /data/php/lib/php/extensions/snuffleupagus.ini
 </pre>
-<p>安装php的suhosin模块禁用eval(php7.1，不支持7.2/7.3)</p>
-<pre>
-git clone https://github.com/sektioneins/suhosin7.git
-cd suhosin7
-phpize
-./configure
-make
-make install
-echo "extension=suhosin7" > /data/php/lib/php/extensions/suhosin7.ini
-echo "[Suhosin]" >> /data/php/php.ini
-echo "suhosin.executor.disable_eval = On" >> /data/php/php.ini
-echo "suhosin.executor.eval.blacklist=phpinfo,fputs,fopen,fwrite" >> /data/php/php.ini
-</pre>
-<p>检查是否成功</p>
-<pre>php -m|grep memcache
-php -m|grep apc
-php -i|grep memcache
-php -i|grep apc
-php -i|grep suhosin</pre>
 <p><b>4.1、yum安装MariaDB数据库</b></p>
 <p>加源</p>
 <pre>cat > /etc/yum.repos.d/mariadb.repo << "EOF"
@@ -335,13 +205,13 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.7/source/mariadb-10.5.7.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.7/source/mariadb-10.5.8.tar.gz
 #wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.48/source/mariadb-10.1.48.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.5.7.tar.gz
+<pre>tar xvf mariadb-10.5.8.tar.gz
 #tar xvf mariadb-10.1.48.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.5.7
+<pre>cd mariadb-10.5.8
 #cd mariadb-10.1.48
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
@@ -379,8 +249,8 @@ make -j5
 make install
 ln -sf /data/mariadb/bin/* /usr/local/bin/
 chown mysql:mysql /data/mariadb/data -R
-#cp support-files/my-huge.cnf /data/mariadb/my.cnf
-#sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
+cp support-files/my-huge.cnf /data/mariadb/my.cnf
+sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 cd /data/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/mariadb/my.cnf --datadir=/data/mariadb/data/
 systemctl start mariadb
@@ -403,11 +273,11 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.21.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.22.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-boost-8.0.21.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.0.22.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-8.0.21
+<pre>cd mysql-8.0.22
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mysql \
 -DMYSQL_DATADIR=/data/mysql/data \
