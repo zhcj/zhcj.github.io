@@ -339,6 +339,11 @@ sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 pear update-channels pear.php.net
 pear upgrade-all
+#php8增加jit参数
+echo "opcache.jit=1235" >> /data/php/php.ini
+echo "opcache.jit_buffer_size=64M" >> /data/php/php.ini
+#查看是否生效
+php -i|grep -i jit
 #pecl安装php模块（最简单的方法）
 pecl install memcached redis lzf imagick
 echo "extension=memcached" >> /data/php/lib/php/extensions/ext.ini
