@@ -29,7 +29,7 @@ mv ninja /usr/local/bin/
 wget https://download.qemu.org/qemu-5.2.0.tar.xz
 tar xvf qemu-5.2.0.tar.xz
 cd qemu-5.2.0
-./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-gnutls --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
+./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
 make install
@@ -42,7 +42,7 @@ qemu-img create -f qcow2 /data/kvm/img/win7.qcow2 20G
 qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /data/kvm/img/win7.qcow2 -cdrom /data/os/win7.iso -boot d -device intel-hda -vga virtio -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22,smb=/data/share -nodefaults -smp 2,sockets=1
 #-machine usb=on -device usb-tablet #解决vnc连接时鼠标不同步问题
 #-vnc :1 #以主机的5901端口vnc连接虚拟机
-#-device intel-hda #默认声卡，有的设备需要再加一个参数：-device hda-duplex
+#-device intel-hda或-device ich9-intel-hda #默认声卡，有的设备需要再加一个参数：-device hda-duplex
 #-device virtio-net-pci,netdev=net0 #设置网卡为virtio，也可以设置为rtl8139
 #-netdev user,id=net0,hostfwd=tcp::2222-:22 #将虚拟机的22端口映射到主机2222端口上
 #smb=/data/share #qemu内建的samba服务，将主机的/data/share目录设置为共享之后，虚拟机可以通过\\10.0.2.4\qemu来访问（完全共享）

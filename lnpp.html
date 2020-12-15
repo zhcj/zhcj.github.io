@@ -280,10 +280,10 @@ ln -sf /data/openresty/sbin/nginx /usr/local/bin/
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --reload</pre>
-<p><b>4.1、yum安装PHP</b></p>
+<p><b>4.1、yum安装PHP-8</b></p>
 <pre>yum install yum-utils
-yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-yum-config-manager --enable remi-php73
+yum install http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+yum-config-manager --enable remi-php80
 yum install php-fpm php-opcache php-gd php-pg php-cli php-mbstring php-xml php-pecl-zip php-intl php-ldap php-smbclient php-imap php-exif php-gmp php-redis php-imagick
 systemctl enable php-fpm
 systemctl start php-fpm</pre>
@@ -351,30 +351,11 @@ echo "extension=lzf" >> /data/php/lib/php/extensions/ext.ini
 echo "extension=redis" >> /data/php/lib/php/extensions/ext.ini
 echo "extension=imagick" >> /data/php/lib/php/extensions/ext.ini
 </pre>
-#与php7/8共存时，php5的编译及配置过程
-<pre>
-./configure --prefix=/data/php5 --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php5 --with-config-file-scan-dir=/data/php5/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-gd --with-freetype-dir --with-png-dir --with-xpm-dir --with-jpeg-dir --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-zip --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-mysql --enable-pcntl
-cp sapi/fpm/php-fpm.service /lib/systemd/system/php-fpm5.service
-sed -i "s/\${prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\${exec_prefix}/\/data\/php5/" /lib/systemd/system/php-fpm5.service
-sed -i "s/\/data\/php\/var\/run/\/run/" /lib/systemd/system/php-fpm5.service
-cp sapi/fpm/php-fpm.conf /data/php5/etc/
-echo "zend_extension=opcache" > /data/php5/lib/php/extensions/opcache.ini
-cp php.ini-production /data/php5/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php5/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php5/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php5/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php5/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php5/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/php5/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php5/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/php5/php.ini
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php5/etc/php-fpm.conf</pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.11-45.tar.xz
-tar xvf ImageMagick-6.9.11-45.tar.xz
-cd ImageMagick-6.9.11-45
+wget https://imagemagick.org/download/ImageMagick-6.9.11-48.tar.xz
+tar xvf ImageMagick-6.9.11-48.tar.xz
+cd ImageMagick-6.9.11-48
 ./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install

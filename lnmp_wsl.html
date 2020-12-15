@@ -101,9 +101,6 @@ wget http://www.php.net/distributions/php-8.0.0.tar.xz</pre>
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 make -j5
 make install
-#make时出现：PEAR package PHP_Archive not installed: generated phar will require PHP's phar extension be enabled.
-#make install之后，运行以下命令，再次make && make install就可以了
-/data/php/bin/pear channel-update
 ln -sf /data/php/bin/* /usr/local/bin/
 ln -sf /data/php/sbin/* /usr/local/bin/
 cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
@@ -117,14 +114,15 @@ sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
 sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
 sed -i "s/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/" /data/php/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
-sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/php/etc/php-fpm.conf
+pear update-channels pear.php.net
+pear upgrade-all
+#php8增加jit参数
+echo "opcache.jit=1235" >> /data/php/php.ini
+echo "opcache.jit_buffer_size=64M" >> /data/php/php.ini
 </pre>
 <p><b>4、安装MariaDB/Mysql数据库</b></p>
 <p>创建mysql用户</p>
@@ -132,11 +130,11 @@ sed -i "s/;request_slowlog_timeout = 0/request_slowlog_timeout = 300/g" /data/ph
 <p>安装依赖</p>
 <pre>apt install libncurses5-dev libreadline-dev -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.7/source/mariadb-10.5.7.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.8/source/mariadb-10.5.8.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.5.7.tar.gz</pre>
+<pre>tar xvf mariadb-10.5.8.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.5.7
+<pre>cd mariadb-10.5.8
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
