@@ -119,11 +119,11 @@ firewall-cmd --reload</pre>
 ln -sf /usr/include/x86_64-linux-gnu/curl /usr/include/</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.0.1.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.0.2.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.0.1.tar.xz</pre>
+<pre>tar xvf php-8.0.2.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.0.1
+<pre>cd php-8.0.2
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 make -j5
 make install
@@ -141,11 +141,13 @@ sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
 sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
 sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
 sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
+sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
 pear update-channels pear.php.net
 pear upgrade-all
 #php8增加jit参数
