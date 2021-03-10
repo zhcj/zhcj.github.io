@@ -32,11 +32,11 @@
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.19.6.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.19.8.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.19.6.tar.gz</pre>
+<pre>tar xvf nginx-1.19.8.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.19.6
+<pre>cd nginx-1.19.8
 ./configure --prefix=/data/nginx --user=www --group=www --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module
 make -j5
 make install</pre>
@@ -113,11 +113,11 @@ ln -sf /data/nginx/sbin/nginx /usr/local/bin/
 <pre>zypper in systemd-devel gd-devel libxml2-devel libcurl-devel libXpm-devel freetype2-devel</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.0.2.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.0.3.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.0.2.tar.xz</pre>
+<pre>tar xvf php-8.0.3.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.0.2
+<pre>cd php-8.0.3
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 make -j5
 make install
@@ -154,11 +154,11 @@ echo "opcache.jit_buffer_size=64M" >> /data/php/php.ini
 <p>安装依赖</p>
 <pre>zypper in ncurses-devel bison</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.8/source/mariadb-10.5.8.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.5.9/source/mariadb-10.5.9.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.5.8.tar.gz</pre>
+<pre>tar xvf mariadb-10.5.9.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.5.8
+<pre>cd mariadb-10.5.9
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
