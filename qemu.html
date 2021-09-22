@@ -19,16 +19,16 @@
 yum install flex libcap-ng-devel libattr-devel glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel gcc gcc-c++ make git flex bison bzip2 pam-devel gnutls-devel perl -y
 #如果需要虚拟xp/win2003系统，显卡需要使用qxl，则安装以下包
 yum install spice-server spice-protocol -y
-#如安装qemu-5.2，则需要ninja，centos系统无源，下载二进制包即可：
+#如安装qemu-6，则需要ninja，centos系统无源，下载二进制包即可：
 wget https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-linux.zip
 unzip ninja-linux.zip
 mv ninja /usr/local/bin/
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-6.0.0.tar.xz
-tar xvf qemu-6.0.0.tar.xz
-cd qemu-6.0.0
+wget https://download.qemu.org/qemu-6.1.0.tar.xz
+tar xvf qemu-6.1.0.tar.xz
+cd qemu-6.1.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
@@ -53,20 +53,18 @@ qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :
 <p>注：qemu旧版中有qemu-kvm模块存在，新版中需要使用kvm特性时候，在qemu-system-x86_64命令中使用--enable-kvm即可。</p>
 <p><b>*使用virtio</b></p>
 <p>linux系统和高版本windows安装时自带驱动或挂载光驱即可加载驱动，以下仅对winxp和win2003等作一说明：</p>
-<p>方法一：安装时挂载一个软盘</p>
+<p>方法一：安装时挂载一个光盘</p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.190/virtio-win_x86.vfd
-#64位winxp或win2003需要以下驱动
-#wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.190/virtio-win_amd64.vfd
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/kvm/img/virtio-win-0.1.171_x86.vfd,format=raw,if=floppy,index=1 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d --nodefaults
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.208-1/virtio-win.iso
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=1 -drive file=/data/kvm/img/virtio-win.iso,medis=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d --nodefaults
 </pre>
 <p>方法二：在已安装的系统上，需要先加载一个virtio模式的非系统硬盘和网卡等，进入系统后安装驱动，关机后再让系统硬盘和网卡以virtio模式挂载。</p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.190/virtio-win.iso
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.208-1/virtio-win.iso
 #创建一个虚拟硬盘
 qemu-img create -f qcow2 /data/kvm/img/virtio.qcow2 1G
 #挂载虚拟硬盘、网卡和驱动
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win-0.1.190.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0 --nodefaults
+qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2 -drive file=/data/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0 --nodefaults
 #安装好驱动后，用以下参数重启即可
 qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/data/kvm/img/xp.qcow2,format=qcow2,if=virtio --nodefaults
 </pre>
@@ -77,9 +75,9 @@ yum install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://libvirt.org/sources/libvirt-7.0.0.tar.xz
-tar xvf libvirt-7.0.0.tar.xz
-cd libvirt-7.0.0
+wget https://libvirt.org/sources/libvirt-7.7.0.tar.xz
+tar xvf libvirt-7.7.0.tar.xz
+cd libvirt-7.7.0
 mkdir build
 cd build
 ../configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
