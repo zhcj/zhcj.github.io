@@ -94,11 +94,11 @@ ln -sf /data/nginx/sbin/nginx /usr/local/bin/
 <pre>apt install libgd-dev libxml2-dev libcurl4-gnutls-dev -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.0.10.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.0.12.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.0.10.tar.xz</pre>
+<pre>tar xvf php-8.0.12.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.0.10
+<pre>cd php-8.0.12
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 make -j5
 make install

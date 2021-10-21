@@ -119,11 +119,11 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.0.10.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.0.12.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.0.10.tar.xz</pre>
+<pre>tar xvf php-8.0.12.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.0.10
+<pre>cd php-8.0.12
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #php-7.3/7.2
 #./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
@@ -160,10 +160,10 @@ php -i|grep -i jit
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.12-23.tar.xz
-tar xvf ImageMagick-6.9.12-23.tar.xz
-cd ImageMagick-6.9.12-23
-./configure --prefix=/data/imagemagick --disable-openmp --disable-hdri --with-quantum-depth=8
+wget https://imagemagick.org/download/ImageMagick-6.9.12-25.tar.xz
+tar xvf ImageMagick-6.9.12-25.tar.xz
+cd ImageMagick-6.9.12-25
+./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
 </pre>
@@ -282,12 +282,14 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.26.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.27.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-boost-8.0.26.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.0.27.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-8.0.26
-cmake . \
+<pre>cd mysql-8.0.27
+mkdir build
+cd build
+cmake .. \
 -DCMAKE_INSTALL_PREFIX=/data/mysql \
 -DMYSQL_DATADIR=/data/mysql/data \
 -DINSTALL_MYSQLDATADIR=/data/mysql/data \
@@ -296,7 +298,7 @@ cmake . \
 -DWITH_SYSTEMD=1 \
 -DSYSTEMD_PID_DIR=/tmp \
 -DWITH_UNIT_TESTS=OFF \
--DWITH_BOOST=boost \
+-DWITH_BOOST=../boost \
 -DINSTALL_MYSQLTESTDIR= \
 -DWITH_SSL=system \
 -DFORCE_INSOURCE_BUILD=ON
@@ -317,7 +319,6 @@ port=3306
 socket=/tmp/mysql.sock
 key_buffer_size=16M
 max_allowed_packet=8M
-default_authentication_plugin = mysql_native_password
 
 [mysqldump]
 quick
@@ -332,6 +333,7 @@ bin/mysqld --defaults-file=/data/mysql/my.cnf --initialize --user=mysql
 bin/mysql_ssl_rsa_setup              
 systemctl start mysqld
 bin/mysqladmin -uroot -p password "新密码"
+#输入上面生成的随机密码
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2021 清风的个人笔记</p>
