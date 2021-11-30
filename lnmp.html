@@ -29,11 +29,11 @@
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.21.3.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.21.4.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.21.3.tar.gz</pre>
+<pre>tar xvf nginx-1.21.4.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.21.3
+<pre>cd nginx-1.21.4
 ./configure --prefix=/data/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/nginx/log/access.log --error-log-path=/data/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module 
 make -j5
 make install</pre>
@@ -119,11 +119,11 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.0.12.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.1.0.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.0.12.tar.xz</pre>
+<pre>tar xvf php-8.1.0.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.0.12
+<pre>cd php-8.1.0
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #php-7.3/7.2
 #./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
@@ -160,9 +160,9 @@ php -i|grep -i jit
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.12-25.tar.xz
-tar xvf ImageMagick-6.9.12-25.tar.xz
-cd ImageMagick-6.9.12-25
+wget https://imagemagick.org/download/ImageMagick-6.9.12-31.tar.xz
+tar xvf ImageMagick-6.9.12-31.tar.xz
+cd ImageMagick-6.9.12-31
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -214,14 +214,12 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.6.4/source/mariadb-10.6.4.tar.gz
-#wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.1.48/source/mariadb-10.1.48.tar.gz</pre>
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.6.5/source/mariadb-10.6.5.tar.gz
+</pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.6.4.tar.gz
-#tar xvf mariadb-10.1.48.tar.gz</pre>
+<pre>tar xvf mariadb-10.6.5.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.6.4
-#cd mariadb-10.1.48
+<pre>cd mariadb-10.6.5
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
@@ -257,9 +255,23 @@ cmake . \
 make -j5
 make install
 ln -sf /data/mariadb/bin/* /usr/local/bin/
+mkdir /data/mariadb/data
 chown mysql:mysql /data/mariadb/data -R
-cp support-files/my-huge.cnf /data/mariadb/my.cnf
 sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
+cat > my.cnf << "EOF"
+[client]
+port=3306
+socket=/tmp/mysql.sock
+
+[mysqld]
+port=3306
+socket=/tmp/mysql.sock
+key_buffer_size=16M
+max_allowed_packet=8M
+
+[mysqldump]
+quick
+EOF
 cd /data/mariadb
 scripts/mysql_install_db --user=mysql --defaults-file=/data/mariadb/my.cnf --datadir=/data/mariadb/data/
 systemctl start mariadb
@@ -270,9 +282,12 @@ rm -rf /data/mariadb/data/test
 systemctl daemon-reload
 systemctl restart mariadb
 #慢日志
+mkdir /data/mariadb/log
+chown mysql:mysql /data/mariadb/log -R
+#修改my.cnf
 [mysqld]
 slow_query_log = on
-slow_query_log_file = /data/log/mysql/mysql-slow
+slow_query_log_file = /data/mariadb/log/mysql-slow
 long_query_time = 2
 #bin日志
 log-bin=mysql-bin
