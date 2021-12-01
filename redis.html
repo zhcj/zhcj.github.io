@@ -21,9 +21,9 @@ systemctl enable redis
 </pre>
 <p><b>二、编译安装：</b></p>
 <pre>
-wget http://download.redis.io/releases/redis-6.2.5.tar.gz
-tar xvf redis-6.2.5.tar.gz
-cd redis-6.2.5
+wget http://download.redis.io/releases/redis-6.2.6.tar.gz
+tar xvf redis-6.2.6.tar.gz
+cd redis-6.2.6
 make
 make PREFIX=/data/redis install
 cp redis.conf /data/redis/
@@ -67,6 +67,8 @@ echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled" >> /etc/rc.local
 chmod +x /etc/rc.local
 systemctl start redis
 systemctl enable redis
+#设置密码（如：redis123）
+sed -i "s/# requirepass foobared/requirepass redis123/g" /data/redis/redis.conf
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2021 清风的个人笔记</p>
