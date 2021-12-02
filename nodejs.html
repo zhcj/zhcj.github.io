@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>NodeJS安装配置笔记</title>
+</head>
+<body>
+<div class="container">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>NodeJS安装配置笔记</h2>
+<p><b>一、Linux下安装：</b></p>
+<p>1、包管理器安装（发行版收录的版本，太旧，不建议）：</b></p>
+<pre>yum/apt install nodejs</pre>
+<p>2、NodeJS的官方源安装（建议方式，可随系统升级）：</p>
+<pre>
+#CentOS/Fedora，稳定版16
+curl -fsSL https://rpm.nodesource.com/setup_16.x | bash -
+yum install nodejs
+#Ubuntu/Debian，稳定版16
+KEYRING=/usr/share/keyrings/nodesource.gpg
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null
+gpg --no-default-keyring --keyring "$KEYRING" --list-keys
+VERSION=node_16.x
+KEYRING=/usr/share/keyrings/nodesource.gpg
+DISTRO="$(lsb_release -s -c)"
+echo "deb [signed-by=$KEYRING] https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+echo "deb-src [signed-by=$KEYRING] https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+apt update;apt install nodejs
+</pre>
+<p>3、二进制版本安装（需要手动升级）：</p>
+<pre>
+wget https://nodejs.org/dist/v16.13.1/node-v16.13.1-linux-x64.tar.xz
+tar xvf node-v16.13.1-linux-x64.tar.xz
+mv node-v16.13.1-linux-x64 /usr/local/lib/nodejs
+echo "export PATH=/usr/local/lib/nodejs/bin:$PATH" >> /etc/profile
+. /etc/profile
+</pre>
+<p><b>二、Windows下安装：</b></p>
+<p>1、可执行文件安装</p>
+<p>
+下载：https://nodejs.org/dist/v16.13.1/node-v16.13.1-x64.msi
+双击安装
+</p>
+<p>2、二进制文件安装</p>
+<p>
+下载：https://nodejs.org/dist/v16.13.1/node-v16.13.1-win-x64.zip
+解压到一定位置，如D盘；
+设置环境变量：右键我的电脑=>属性=>高级系统设置=>环境变量=>系统变量=>双击Path，将NodeJS文件夹路径追加到最后
+</p>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">&copy; 2016-2021 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6383511877c1f3152c86dffde46dd57a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
