@@ -26,9 +26,9 @@ mv ninja /usr/local/bin/
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-6.1.0.tar.xz
-tar xvf qemu-6.1.0.tar.xz
-cd qemu-6.1.0
+wget https://download.qemu.org/qemu-6.2.0.tar.xz
+tar xvf qemu-6.2.0.tar.xz
+cd qemu-6.2.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu,i386-linux-user,x86_64-linux-user
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
@@ -115,7 +115,7 @@ systemctl restart php-fpm
 php -m|grep -i libvirt
 </pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">&copy; 2016-2021 清风的个人笔记</p>
+<p align="center">&copy; 2016-2022 清风的个人笔记</p>
 </div>
 <script src="js/jquery.slim.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
