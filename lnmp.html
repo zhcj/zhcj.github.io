@@ -29,11 +29,11 @@
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.21.5.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.21.6.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.21.5.tar.gz</pre>
+<pre>tar xvf nginx-1.21.6.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.21.5
+<pre>cd nginx-1.21.6
 ./configure --prefix=/data/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/nginx/log/access.log --error-log-path=/data/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module 
 make -j5
 make install</pre>
@@ -119,11 +119,11 @@ systemctl start php-fpm</pre>
 <pre>yum install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.1.2.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.1.4.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.1.2.tar.xz</pre>
+<pre>tar xvf php-8.1.4.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.1.2
+<pre>cd php-8.1.4
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #php-7.3/7.2
 #./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
@@ -160,9 +160,9 @@ php -i|grep -i jit
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.12-34.tar.xz
-tar xvf ImageMagick-6.9.12-34.tar.xz
-cd ImageMagick-6.9.12-34
+wget https://imagemagick.org/download/ImageMagick-6.9.12-44.tar.xz
+tar xvf ImageMagick-6.9.12-44.tar.xz
+cd ImageMagick-6.9.12-44
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -214,12 +214,12 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.6.5/source/mariadb-10.6.5.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.6.7/source/mariadb-10.6.7.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.6.5.tar.gz</pre>
+<pre>tar xvf mariadb-10.6.7.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.6.5
+<pre>cd mariadb-10.6.7
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
