@@ -47,11 +47,11 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v14.2/postgresql-14.2.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v14.3/postgresql-14.3.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-14.2.tar.bz2</pre>
+<pre>tar xvf postgresql-14.3.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-14.2
+<pre>cd postgresql-14.3
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
@@ -117,13 +117,13 @@ systemctl enable postgresql</pre>
 <pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://nginx.org/download/nginx-1.21.6.tar.gz
+wget http://nginx.org/download/nginx-1.22.0.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.21.6.tar.gz
+<pre>tar xvf nginx-1.22.0.tar.gz
 </pre>
 <p>编译</p>
-<pre>cd nginx-1.21.6
+<pre>cd nginx-1.22.0
 ./configure --prefix=/data/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/nginx/log/access.log --error-log-path=/data/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module 
 make -j5
 make install</pre>
@@ -205,13 +205,13 @@ firewall-cmd --reload</pre>
 <pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget https://openresty.org/download/openresty-1.21.4.1rc2.tar.gz
+wget https://openresty.org/download/openresty-1.21.4.1.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf openresty-1.21.4.1rc2.tar.gz
+<pre>tar xvf openresty-1.21.4.1.tar.gz
 </pre>
 <p>编译</p>
-<pre>cd openresty-1.21.4.1rc2
+<pre>cd openresty-1.21.4.1
 ./configure --prefix=/data/openresty --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_ssl_module --with-http_v2_module --with-stream_realip_module --with-http_stub_status_module --with-http_postgres_module --with-pg_config=/data/pgsql/bin/pg_config --sbin-path=/data/openresty/sbin/nginx --conf-path=/data/openresty/conf/nginx.conf 
 make -j5
 make install</pre>
@@ -308,14 +308,14 @@ make install
 </pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.1.4.tar.xz
-#wget http://www.php.net/distributions/php-7.4.27.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.1.7.tar.xz
+#wget http://www.php.net/distributions/php-7.4.30.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.1.4.tar.xz
-#tar xvf php-7.4.27.tar.xz</pre>
+<pre>tar xvf php-8.1.7.tar.xz
+#tar xvf php-7.4.30.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.1.4
-#cd php-7.4.27
+<pre>cd php-8.1.7
+#cd php-7.4.30
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #php-7.3/7.2
 #./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
@@ -358,9 +358,9 @@ echo "extension=imagick" >> /data/php/lib/php/extensions/ext.ini
 </pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.12-44.tar.xz
-tar xvf ImageMagick-6.9.12-44.tar.xz
-cd ImageMagick-6.9.12-44
+wget https://imagemagick.org/download/ImageMagick-6.9.12-52.tar.xz
+tar xvf ImageMagick-6.9.12-52.tar.xz
+cd ImageMagick-6.9.12-52
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -373,9 +373,9 @@ systemctl enable memcached
 </pre>
 #编译安装memcached
 <pre>
-wget http://www.memcached.org/files/memcached-1.6.12.tar.gz
-tar xvf memcached-1.6.12.tar.gz
-cd memcached-1.6.12
+wget http://www.memcached.org/files/memcached-1.6.15.tar.gz
+tar xvf memcached-1.6.15.tar.gz
+cd memcached-1.6.15
 ./configure --prefix=/data/memcached
 make -j5
 make install
