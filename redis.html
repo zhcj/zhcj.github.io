@@ -12,18 +12,18 @@
 <div class="container">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>Redis安装配置笔记</h2>
-<h3>注：网站系统为Linux系统，使用systemd。</h3>
-<p><b>一、包管理器安装：</b></p>
+<h3>一、Linux下安装说明</h3>
+<p><b>1、包管理器安装：</b></p>
 <pre>
 yum/apt install redis
 systemctl start redis
 systemctl enable redis
 </pre>
-<p><b>二、编译安装：</b></p>
+<p><b>2、编译安装：</b></p>
 <pre>
-wget http://download.redis.io/releases/redis-6.2.6.tar.gz
-tar xvf redis-6.2.6.tar.gz
-cd redis-6.2.6
+wget http://download.redis.io/releases/redis-7.0.2.tar.gz
+tar xvf redis-7.0.2.tar.gz
+cd redis-7.0.2
 make
 make PREFIX=/data/redis install
 cp redis.conf /data/redis/
@@ -70,6 +70,10 @@ systemctl enable redis
 #设置密码（如：redis123）
 sed -i "s/# requirepass foobared/requirepass redis123/g" /data/redis/redis.conf
 </pre>
+<h3>二、Windows下安装说明</h3>
+<p><b>1、下载地址：</b><a href="https://github.com/tporadowski/redis/releases" target="_blank">https://github.com/tporadowski/redis/releases</a></p>
+<p>最新版本为：<a href="https://github.com/tporadowski/redis/releases/download/v5.0.14.1/Redis-x64-5.0.14.1.zip">5.0.14.1</a></p>
+<p><b>2、解压，命令行进入当前目录，运行“redis-server.exe redis.windows.conf”</b></p>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2022 清风的个人笔记</p>
 </div>
