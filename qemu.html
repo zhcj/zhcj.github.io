@@ -76,7 +76,7 @@ qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl
 <pre>dd if=/dev/zero of=zero
 rm -f zero</pre>
 <p>2、压缩qcow2</p>
-<pre>qemu-img convert -O qcow2 -c old.qcow2 new.qcow2</pre>
+<pre>qemu-img convert -c -f qcow2 -O qcow2 -c old.qcow2 new.qcow2</pre>
 <p><b>三、安装libvirt</b></p>
 <p>1、安装依赖</p>
 <pre>
