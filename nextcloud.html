@@ -37,9 +37,9 @@ rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.
 yum install ffmpeg -y</pre>
 <pre>方法二：</pre>
 <pre>yum install nasm
-wget http://ffmpeg.org/releases/ffmpeg-5.0.tar.xz
-tar xvf ffmpeg-5.0.tar.xz
-cd ffmpeg-5.0
+wget http://ffmpeg.org/releases/ffmpeg-5.0.2.tar.xz
+tar xvf ffmpeg-5.0.2.tar.xz
+cd ffmpeg-5.0.2
 ./configure --enable-shared --enable-openssl
 make
 make install
@@ -213,8 +213,8 @@ server {
 </pre>
 <p><b>二、Nextcloud安装</b></p>
 <p><b>1、下载、解压</b></p>
-<pre>wget https://download.nextcloud.com/server/releases/nextcloud-23.0.3.zip
-unzip nextcloud-23.0.3.zip</pre>
+<pre>wget https://download.nextcloud.com/server/releases/nextcloud-24.0.5.zip
+unzip nextcloud-24.0.5.zip</pre>
 <p><b>2、修改配置（配置文件：nextcloud/config/config.php）</b></p>
 <p>设置默认中文环境，配置文件中添加：</p>
 <pre>'logtimezone' => 'CST',
@@ -232,8 +232,8 @@ unzip nextcloud-23.0.3.zip</pre>
 <p>打开浏览器，填写管理员账号、密码，数据库账号、密码，数据库名，数据存储位置等几项内容。</p>
 <p><b>二、使用</b></p>
 <p><b>1、客户端下载</b></p>
-<p>Windows 7、8和10：<a href="https://github.com/nextcloud/desktop/releases/download/v3.4.0/Nextcloud-3.4.0-x64.msi">官方下载</a></p>
-<p>安卓手机：<a href="https://f-droid.org/repo/com.nextcloud.client_30180090.apk">F-Droid</a></p>
+<p>Windows 7、8和10：<a href="https://github.com/nextcloud/desktop/releases/download/v3.6.0/Nextcloud-3.6.0-x64.msi">官方下载</a></p>
+<p>安卓手机：<a href="https://f-droid.org/repo/com.nextcloud.client_30210290.apk">F-Droid</a></p>
 <p>苹果手机：<a href="https://itunes.apple.com/us/app/nextcloud/id1125420102?mt=8" target="_blank">应用商店</a></p>
 <p><b>2、管理员创建账号，登录即可。</b></p>
 <p></p>

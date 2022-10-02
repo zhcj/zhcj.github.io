@@ -26,9 +26,9 @@ mv ninja /usr/local/bin/
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-7.0.0.tar.xz
-tar xvf qemu-7.0.0.tar.xz
-cd qemu-7.0.0
+wget https://download.qemu.org/qemu-7.1.0.tar.xz
+tar xvf qemu-7.1.0.tar.xz
+cd qemu-7.1.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
@@ -84,9 +84,9 @@ yum install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://libvirt.org/sources/libvirt-8.4.0.tar.xz
-tar xvf libvirt-8.4.0.tar.xz
-cd libvirt-8.4.0
+wget https://libvirt.org/sources/libvirt-8.7.0.tar.xz
+tar xvf libvirt-8.7.0.tar.xz
+cd libvirt-8.7.0
 mkdir build
 cd build
 ../configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu

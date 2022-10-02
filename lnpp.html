@@ -25,8 +25,10 @@
 <p>加源</p>
 <pre>
 yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-#CentOS8
-#yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+#EL-8
+#dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+#EL-9
+#dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 </pre>
 <p>安装</p>
 <pre>yum install postgresql14-server postgresql14-devel</pre>
@@ -47,11 +49,11 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v14.3/postgresql-14.4.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v14.5/postgresql-14.5.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-14.4.tar.bz2</pre>
+<pre>tar xvf postgresql-14.5.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-14.4
+<pre>cd postgresql-14.5
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
@@ -60,7 +62,7 @@ make install</pre>
 chown postgres:postgres /data/pgsql/data -R
 sudo -u postgres /data/pgsql/bin/initdb -D /data/pgsql/data -E 'UTF8' --locale='zh_CN.UTF-8'</pre>
 <p>配置文件</p>
-<pre>cat > /lib/systemd/system/postgresql.service << "EOF"
+<pre>cat > /lib/systemd/system/pgsql.service << "EOF"
 [Unit]
 Description=PostgreSQL database server
 After=network.target
@@ -308,14 +310,14 @@ make install
 </pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.1.8.tar.xz
-#wget http://www.php.net/distributions/php-7.4.30.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.1.11.tar.xz
+#wget http://www.php.net/distributions/php-7.4.32.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.1.8.tar.xz
-#tar xvf php-7.4.30.tar.xz</pre>
+<pre>tar xvf php-8.1.11.tar.xz
+#tar xvf php-7.4.32.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.1.8
-#cd php-7.4.30
+<pre>cd php-8.1.11
+#cd php-7.4.32
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #php-7.3/7.2
 #./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --enable-zip --with-gd --with-png-dir --with-jpeg-dir --with-xpm-dir --with-freetype-dir
@@ -358,9 +360,9 @@ echo "extension=imagick" >> /data/php/lib/php/extensions/ext.ini
 </pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.12-58.tar.xz
-tar xvf ImageMagick-6.9.12-58.tar.xz
-cd ImageMagick-6.9.12-58
+wget https://imagemagick.org/download/ImageMagick-6.9.12-63.tar.xz
+tar xvf ImageMagick-6.9.12-63.tar.xz
+cd ImageMagick-6.9.12-63
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -373,9 +375,9 @@ systemctl enable memcached
 </pre>
 #编译安装memcached
 <pre>
-wget http://www.memcached.org/files/memcached-1.6.15.tar.gz
-tar xvf memcached-1.6.15.tar.gz
-cd memcached-1.6.15
+wget http://www.memcached.org/files/memcached-1.6.17.tar.gz
+tar xvf memcached-1.6.17.tar.gz
+cd memcached-1.6.17
 ./configure --prefix=/data/memcached
 make -j5
 make install
