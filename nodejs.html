@@ -18,13 +18,13 @@
 <p>2、NodeJS的官方源安装（建议方式，可随系统升级）：</p>
 <pre>
 #CentOS/Fedora，稳定版16
-curl -fsSL https://rpm.nodesource.com/setup_16.x | bash -
+curl -fsSL https://rpm.nodesource.com/setup_18.x | bash -
 yum install nodejs
-#Ubuntu/Debian，稳定版16
+#Ubuntu/Debian，稳定版18
 KEYRING=/usr/share/keyrings/nodesource.gpg
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null
 gpg --no-default-keyring --keyring "$KEYRING" --list-keys
-VERSION=node_16.x
+VERSION=node_18.x
 KEYRING=/usr/share/keyrings/nodesource.gpg
 DISTRO="$(lsb_release -s -c)"
 echo "deb [signed-by=$KEYRING] https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
@@ -33,26 +33,26 @@ apt update;apt install nodejs
 </pre>
 <p>3、二进制版本安装（需要手动升级）：</p>
 <pre>
-wget https://nodejs.org/dist/v16.16.0/node-v16.16.0-linux-x64.tar.xz
-tar xvf node-v16.16.0-linux-x64.tar.xz
-mv node-v16.16.0-linux-x64 /usr/local/lib/nodejs
+wget https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz
+tar xvf node-v18.13.0-linux-x64.tar.xz
+mv node-v18.13.0-linux-x64 /usr/local/lib/nodejs
 echo "export PATH=/usr/local/lib/nodejs/bin:$PATH" >> /etc/profile
 . /etc/profile
 </pre>
 <p><b>二、Windows下安装：</b></p>
 <p>1、可执行文件安装</p>
 <pre>
-下载：https://nodejs.org/dist/v16.16.0/node-v16.16.0-x64.msi
+下载：https://nodejs.org/dist/v18.13.0/node-v18.13.0-x64.msi
 双击安装
 </pre>
 <p>2、二进制文件安装</p>
 <pre>
-下载：https://nodejs.org/dist/v16.16.0/node-v16.16.0-win-x64.zip
+下载：https://nodejs.org/dist/v18.13.0/node-v18.13.0-win-x64.zip
 解压到一定位置，如D盘；
 设置环境变量：右键我的电脑=>属性=>高级系统设置=>环境变量=>系统变量=>双击Path，将NodeJS文件夹路径追加到最后
 </pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">&copy; 2016-2022 清风的个人笔记</p>
+<p align="center">&copy; 2016-2023 清风的个人笔记</p>
 </div>
 <script src="js/jquery.slim.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
