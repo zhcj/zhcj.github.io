@@ -30,9 +30,9 @@ dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/p
 #dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 </pre>
 <p>安装</p>
-<pre>dnf install postgresql14-server postgresql14-devel</pre>
+<pre>dnf install postgresql15-server postgresql15-devel</pre>
 <p>初始化数据库</p>
-<pre>/usr/pgsql-14/bin/postgresql-14-setup initdb</pre>
+<pre>/usr/pgsql-15/bin/postgresql-15-setup initdb</pre>
 <p>设置密码</p>
 <pre>echo "密码" | passwd --stdin postgres</pre>
 <p>数据库管理工具（PHP）：</p>
@@ -48,11 +48,11 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v14.5/postgresql-14.5.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v15.1/postgresql-15.1.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-14.5.tar.bz2</pre>
+<pre>tar xvf postgresql-15.1.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-14.5
+<pre>cd postgresql-15.1
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
