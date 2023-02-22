@@ -1,0 +1,37 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta http-equiv=pragma content=no-cache>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="bookmark" href="favicon.ico">
+<title>Windows下netsh设置端口转发</title>
+</head>
+<body>
+<div class="container">
+<p><a href="index.html">返回首页</a></p>
+<h2 align=center>Windows下netsh设置端口转发</h2>
+<p><b>常用操作</b></p>
+<p><b>1、添加转发</b></p>
+<pre>netsh interface portproxy add v4tov4 listenport=22 listenaddress=localhost connectport=22 connectaddress=172.31.147.99</pre>
+<p><b>2、显示转发列表</b></p>
+<pre>netsh interface portproxy show all</pre>
+<p><b>3、删除转发</b></p>
+<pre>netsh interface portproxy del v4tov4 listenport=22 listenaddress=localhost</pre>
+<p><a href="index.html">返回首页</a></p>
+<p align="center">&copy; 2016-2023 清风的个人笔记</p>
+</div>
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6383511877c1f3152c86dffde46dd57a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

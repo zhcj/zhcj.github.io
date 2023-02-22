@@ -119,11 +119,11 @@ systemctl start php-fpm</pre>
 <pre>dnf install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.2.1.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.2.3.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.2.1.tar.xz</pre>
+<pre>tar xvf php-8.2.3.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.2.1
+<pre>cd php-8.2.3
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -158,9 +158,9 @@ php -i|grep -i jit
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.12-72.tar.xz
-tar xvf ImageMagick-6.9.12-72.tar.xz
-cd ImageMagick-6.9.12-72
+wget https://imagemagick.org/download/ImageMagick-6.9.12-77.tar.xz
+tar xvf ImageMagick-6.9.12-77.tar.xz
+cd ImageMagick-6.9.12-77
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -182,13 +182,12 @@ echo "sp.configuration_file=/data/php/etc/snuffleupagus.rules" >> /data/php/lib/
 <p><b>4.1、yum安装MariaDB数据库</b></p>
 <p>加源</p>
 <pre>cat > /etc/yum.repos.d/mariadb.repo << "EOF"
-# MariaDB 10.9 CentOS repository list - created 2022-06-11 08:20 UTC
+# MariaDB 10.11 RedHatEnterpriseLinux repository list - created 2023-02-22 16:29 UTC
 # https://mariadb.org/download/
 [mariadb]
 name = MariaDB
-baseurl = https://ftp.osuosl.org/pub/mariadb/yum/10.9/centos8-amd64
-module_hotfixes=1
-gpgkey=https://ftp.osuosl.org/pub/mariadb/yum/RPM-GPG-KEY-MariaDB
+baseurl = https://mirrors.ustc.edu.cn/mariadb/yum/10.11/rhel9-amd64
+gpgkey=https://mirrors.ustc.edu.cn/mariadb/yum/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF</pre>
 <p>安装</p>
@@ -212,12 +211,12 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.10.2/source/mariadb-10.10.2.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.11.2/source/mariadb-10.11.2.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.10.2.tar.gz</pre>
+<pre>tar xvf mariadb-10.11.2.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.10.2
+<pre>cd mariadb-10.11.2
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
@@ -295,11 +294,11 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.31.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-boost-8.0.32.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-boost-8.0.31.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.0.32.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-8.0.31
+<pre>cd mysql-8.0.32
 mkdir build
 cd build
 cmake .. \
