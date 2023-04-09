@@ -37,9 +37,9 @@ rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.
 yum install ffmpeg -y</pre>
 <pre>方法二：</pre>
 <pre>yum install nasm
-wget http://ffmpeg.org/releases/ffmpeg-5.0.2.tar.xz
-tar xvf ffmpeg-5.0.2.tar.xz
-cd ffmpeg-5.0.2
+wget http://ffmpeg.org/releases/ffmpeg-6.0.tar.xz
+tar xvf ffmpeg-6.0.tar.xz
+cd ffmpeg-6.0
 ./configure --enable-shared --enable-openssl
 make
 make install
@@ -52,10 +52,20 @@ upstream php-handler {
     #server unix:/var/run/php/php7.4-fpm.sock;
 }
 
+# Set the `immutable` cache control options only for assets with a cache busting `v` argument
+map $arg_v $asset_immutable {
+    "" "";
+    default "immutable";
+}
+
+
 server {
     listen 80;
     listen [::]:80;
     server_name cloud.example.com;
+
+    # Prevent nginx HTTP Server Detection
+    server_tokens off;
 
     # Enforce HTTPS
     return 301 https://$server_name$request_uri;
@@ -66,10 +76,16 @@ server {
     listen [::]:443 ssl http2;
     server_name cloud.example.com;
 
+    # Path to the root of your installation
+    root /var/www/nextcloud;
+
     # Use Mozilla's guidelines for SSL/TLS settings
     # https://mozilla.github.io/server-side-tls/ssl-config-generator/
     ssl_certificate     /etc/ssl/nginx/cloud.example.com.crt;
     ssl_certificate_key /etc/ssl/nginx/cloud.example.com.key;
+
+    # Prevent nginx HTTP Server Detection
+    server_tokens off;
 
     # HSTS settings
     # WARNING: Only add the preload option once you read about
@@ -77,7 +93,7 @@ server {
     # will add the domain to a hardcoded list that is shipped
     # in all major browsers and getting removed from this list
     # could take several months.
-    #add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;" always;
+    #add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload" always;
 
     # set max upload size and increase upload timeout:
     client_max_body_size 512M;
@@ -96,20 +112,31 @@ server {
     # with the `ngx_pagespeed` module, uncomment this line to disable it.
     #pagespeed off;
 
+    # The settings allows you to optimize the HTTP2 bandwitdth.
+    # See https://blog.cloudflare.com/delivering-http-2-upload-speed-improvements/
+    # for tunning hints
+    client_body_buffer_size 512k;
+
     # HTTP response headers borrowed from Nextcloud `.htaccess`
-    add_header Referrer-Policy                      "no-referrer"   always;
-    add_header X-Content-Type-Options               "nosniff"       always;
-    add_header X-Download-Options                   "noopen"        always;
-    add_header X-Frame-Options                      "SAMEORIGIN"    always;
-    add_header X-Permitted-Cross-Domain-Policies    "none"          always;
-    add_header X-Robots-Tag                         "none"          always;
-    add_header X-XSS-Protection                     "1; mode=block" always;
+    add_header Referrer-Policy                   "no-referrer"       always;
+    add_header X-Content-Type-Options            "nosniff"           always;
+    add_header X-Download-Options                "noopen"            always;
+    add_header X-Frame-Options                   "SAMEORIGIN"        always;
+    add_header X-Permitted-Cross-Domain-Policies "none"              always;
+    add_header X-Robots-Tag                      "noindex, nofollow" always;
+    add_header X-XSS-Protection                  "1; mode=block"     always;
 
     # Remove X-Powered-By, which is an information leak
     fastcgi_hide_header X-Powered-By;
 
-    # Path to the root of your installation
-    root /var/www/nextcloud;
+    # Add .mjs as a file extension for javascript
+    # Either include it in the default mime.types list
+    # or include you can include that list explicitly and add the file extension
+    # only for Nextcloud like below:
+    include mime.types;
+    types {
+        application/javascript js mjs;
+    }
 
     # Specify how to handle directories -- specifying `/index.php$request_uri`
     # here as the fallback means that Nginx always exhibits the desired behaviour
@@ -183,11 +210,13 @@ server {
 
         fastcgi_intercept_errors on;
         fastcgi_request_buffering off;
+
+        fastcgi_max_temp_file_size 0;
     }
 
-    location ~ \.(?:css|js|svg|gif|png|jpg|ico|wasm|tflite)$ {
+    location ~ \.(?:css|js|svg|gif|png|jpg|ico|wasm|tflite|map)$ {
         try_files $uri /index.php$request_uri;
-        expires 6M;         # Cache-Control policy borrowed from `.htaccess`
+        add_header Cache-Control "public, max-age=15778463, $asset_immutable";
         access_log off;     # Optional: Don't log access to assets
 
         location ~ \.wasm$ {
@@ -213,8 +242,8 @@ server {
 </pre>
 <p><b>二、Nextcloud安装</b></p>
 <p><b>1、下载、解压</b></p>
-<pre>wget https://download.nextcloud.com/server/releases/nextcloud-24.0.5.zip
-unzip nextcloud-24.0.5.zip</pre>
+<pre>wget https://download.nextcloud.com/server/releases/nextcloud-26.0.0.zip
+unzip nextcloud-26.0.0.zip</pre>
 <p><b>2、修改配置（配置文件：nextcloud/config/config.php）</b></p>
 <p>设置默认中文环境，配置文件中添加：</p>
 <pre>'logtimezone' => 'CST',
@@ -232,8 +261,8 @@ unzip nextcloud-24.0.5.zip</pre>
 <p>打开浏览器，填写管理员账号、密码，数据库账号、密码，数据库名，数据存储位置等几项内容。</p>
 <p><b>二、使用</b></p>
 <p><b>1、客户端下载</b></p>
-<p>Windows 7、8和10：<a href="https://github.com/nextcloud/desktop/releases/download/v3.6.0/Nextcloud-3.6.0-x64.msi">官方下载</a></p>
-<p>安卓手机：<a href="https://f-droid.org/repo/com.nextcloud.client_30210290.apk">F-Droid</a></p>
+<p>Windows 7、8和10：<a href="https://github.com/nextcloud/desktop/releases/download/v3.8.0/Nextcloud-3.8.0-x64.msi">官方下载</a></p>
+<p>安卓手机：<a href="https://f-droid.org/repo/com.nextcloud.client_30240190.apk">F-Droid</a></p>
 <p>苹果手机：<a href="https://itunes.apple.com/us/app/nextcloud/id1125420102?mt=8" target="_blank">应用商店</a></p>
 <p><b>2、管理员创建账号，登录即可。</b></p>
 <p></p>
