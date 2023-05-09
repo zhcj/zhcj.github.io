@@ -44,6 +44,9 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 EOF
 ln -sf /data/redis/bin/* /usr/local/bin/
+#linux中以unix socket运行redis，提升连接速度
+sed -i "s/# unixsocket \/run\/redis.sock/unixsocket \/tmp\/redis.sock/g" /data/redis/redis.conf
+sed -i "s/# unixsocketperm 700/unixsocketperm 666/g" /data/redis/redis.conf
 #Failed opening the RDB file dump.rdb问题
 mkdir /data/redis/db
 chown redis:redis /data/redis/db -R
