@@ -11,14 +11,22 @@
 <body>
 <div class="container">
 <p><a href="index.html">返回首页</a></p>
-<h2 align=center>Windows下netsh设置端口转发</h2>
+<h2 align=center>Windows下netsh网络设置</h2>
 <p><b>常用操作</b></p>
-<p><b>1、添加转发</b></p>
+<p><b>1、添加端口转发</b></p>
 <pre>netsh interface portproxy add v4tov4 listenport=22 listenaddress=localhost connectport=22 connectaddress=172.31.147.99</pre>
-<p><b>2、显示转发列表</b></p>
+<p><b>2、显示端口转发列表</b></p>
 <pre>netsh interface portproxy show all</pre>
-<p><b>3、删除转发</b></p>
+<p><b>3、删除端口转发</b></p>
 <pre>netsh interface portproxy del v4tov4 listenport=22 listenaddress=localhost</pre>
+<p><b>4、防火墙打开程序入站</b></p>
+<pre>netsh advfirewall firewall add rule name="openresty" dir=in program="D:\openresty\nginx.exe" action=allow</pre>
+<p><b>5、防火墙禁用端口入站</b></p>
+<pre>netsh advfirewall firewall add rule name="网络端口" dir=in protocol=TCP localport=88,8088 action=block</pre>
+<p><b>6、禁用防火墙规则</b></p>
+<pre>netsh advfirewall firewall set rule "网络端口" new enable=no</pre>
+<p><b>7、删除防火墙规则</b></p>
+<pre>netsh advfirewall firewall delete rule name="网络端口"</pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2023 清风的个人笔记</p>
 </div>
