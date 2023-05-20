@@ -119,11 +119,11 @@ systemctl start php-fpm</pre>
 <pre>dnf install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.2.5.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.2.6.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.2.5.tar.xz</pre>
+<pre>tar xvf php-8.2.6.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.2.5
+<pre>cd php-8.2.6
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -158,9 +158,9 @@ php -i|grep -i jit
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.12-77.tar.xz
-tar xvf ImageMagick-6.9.12-77.tar.xz
-cd ImageMagick-6.9.12-77
+wget https://imagemagick.org/download/ImageMagick-6.9.12-87.tar.xz
+tar xvf ImageMagick-6.9.12-87.tar.xz
+cd ImageMagick-6.9.12-87
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -211,12 +211,12 @@ EOF</pre>
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.11.2/source/mariadb-10.11.2.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-10.11.3/source/mariadb-10.11.3.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf mariadb-10.11.2.tar.gz</pre>
+<pre>tar xvf mariadb-10.11.3.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-10.11.2
+<pre>cd mariadb-10.11.3
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mariadb \
 -DMYSQL_DATADIR=/data/mariadb/data \
