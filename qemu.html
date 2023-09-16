@@ -26,9 +26,9 @@ mv ninja /usr/local/bin/
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-8.0.0.tar.xz
-tar xvf qemu-8.0.0.tar.xz
-cd qemu-8.0.0
+wget https://download.qemu.org/qemu-8.1.0.tar.xz
+tar xvf qemu-8.1.0.tar.xz
+cd qemu-8.1.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5

@@ -30,14 +30,14 @@ dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/p
 #dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 </pre>
 <p>安装</p>
-<pre>dnf install postgresql15-server postgresql15-devel</pre>
+<pre>dnf install postgresql16-server postgresql16-devel</pre>
 <p>初始化数据库</p>
-<pre>/usr/pgsql-15/bin/postgresql-15-setup initdb</pre>
+<pre>/usr/pgsql-16/bin/postgresql-16-setup initdb</pre>
 <p>设置密码</p>
 <pre>echo "密码" | passwd --stdin postgres</pre>
 <p>数据库管理工具（PHP）：</p>
 <p>Adminer：<a href="https://www.adminer.org/" target="_blank">https://www.adminer.org/</a></p>
-<p>phppgadmin：<a href="https://www.github.com/phppgadmin/phppgadmin" target="_blank">https://www.github.com/phppgadmin/phppgadmin</a></p>
+<p>phppgadmin：<a href="https://www.github.com/ReimuHakurei/phpPgAdmin" target="_blank">https://www.github.com/ReimuHakurei/phpPgAdmin</a></p>
 <p><b>2.2、编译安装PostgreSQL数据库</b></p>
 <p>建立组和用户并设置密码</p>
 <pre>
@@ -48,11 +48,11 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v15.1/postgresql-15.4.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v16.0/postgresql-16.0.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-15.4.tar.bz2</pre>
+<pre>tar xvf postgresql-16.0.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-15.4
+<pre>cd postgresql-16.0
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
@@ -126,13 +126,13 @@ systemctl enable postgresql</pre>
 <pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://nginx.org/download/nginx-1.25.1.tar.gz
+wget http://nginx.org/download/nginx-1.25.2.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.25.1.tar.gz
+<pre>tar xvf nginx-1.25.2.tar.gz
 </pre>
 <p>编译</p>
-<pre>cd nginx-1.25.1
+<pre>cd nginx-1.25.2
 ./configure --prefix=/data/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/nginx/log/access.log --error-log-path=/data/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
 make -j5
 make install</pre>
@@ -308,11 +308,11 @@ systemctl start php-fpm</pre>
 </pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.2.9.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.2.10.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.2.9.tar.xz</pre>
+<pre>tar xvf php-8.2.10.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.2.9
+<pre>cd php-8.2.10
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -368,9 +368,9 @@ systemctl enable memcached
 </pre>
 #编译安装memcached
 <pre>
-wget http://www.memcached.org/files/memcached-1.6.20.tar.gz
-tar xvf memcached-1.6.20.tar.gz
-cd memcached-1.6.20
+wget http://www.memcached.org/files/memcached-1.6.21.tar.gz
+tar xvf memcached-1.6.21.tar.gz
+cd memcached-1.6.21
 ./configure --prefix=/data/memcached
 make -j5
 make install
