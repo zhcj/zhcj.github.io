@@ -26,9 +26,9 @@ mv ninja /usr/local/bin/
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-8.1.3.tar.xz
-tar xvf qemu-8.1.3.tar.xz
-cd qemu-8.1.3
+wget https://download.qemu.org/qemu-8.2.1.tar.xz
+tar xvf qemu-8.2.1.tar.xz
+cd qemu-8.2.1
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=i386-softmmu,x86_64-softmmu
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
@@ -84,9 +84,9 @@ dnf install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.libvirt.org/libvirt-9.10.0.tar.xz
-tar xvf libvirt-9.10.0.tar.xz
-cd libvirt-9.10.0
+wget https://download.libvirt.org/libvirt-10.0.0.tar.xz
+tar xvf libvirt-10.0.0.tar.xz
+cd libvirt-10.0.0
 mkdir build
 cd build
 ../configure --prefix=/data/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
@@ -111,9 +111,9 @@ systemctl enable libvirtd
 <p><b>四、安装libvirt-php</b></p>
 <p>1、下载、编译</p>
 <pre>
-wget https://download.libvirt.org/php/libvirt-php-0.5.7.tar.xz
-tar xvf libvirt-php-0.5.7.tar.xz
-cd libvirt-php-0.5.7
+wget https://download.libvirt.org/php/libvirt-php-0.5.8.tar.xz
+tar xvf libvirt-php-0.5.8.tar.xz
+cd libvirt-php-0.5.8
 ./configure --with-php-config=/data/php/bin/php-config --with-php-extensiondir=/data/php/lib/php/extensions/no-debug-non-zts-20190902 --with-php-confdir=/data/php/lib/php/extensions/
 make -j5
 make install
@@ -124,7 +124,7 @@ systemctl restart php-fpm
 php -m|grep -i libvirt
 </pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">&copy; 2016-2023 清风的个人笔记</p>
+<p align="center">&copy; 2016-2024 清风的个人笔记</p>
 </div>
 <script src="js/jquery.slim.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
