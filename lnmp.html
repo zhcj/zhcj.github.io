@@ -205,6 +205,16 @@ gpgkey=https://repo.mysql.com/RPM-GPG-KEY-mysql
 EOF</pre>
 <p>安装</p>
 <pre>yum install mysql-community-server</pre>
+<p>配置</p>
+<pre>mysqld --initialize-insecure
+chown mysql:mysql /var/lib/mysql -R
+systemctl start mysqld
+mysqladmin -uroot password "mypass"
+</pre>
+<p>旧版本php5支持</p>
+<pre>echo "character-set-server = utf8mb4" >> /etc/my.cnf.d/mysql-server.cnf
+echo "collation-server = utf8mb4_unicode_ci" >> /etc/my.cnf.d/mysql-server.cnf
+</pre>
 <p><b>4.3、编译安装MariaDB数据库</b></p>
 <p>创建mysql用户</p>
 <pre>useradd -U -r -M -s /bin/false mysql</pre>
