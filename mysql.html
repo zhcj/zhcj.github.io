@@ -30,9 +30,8 @@ GRANT ALL PRIVILEGES ON `数据库前缀\_%`.* TO '远程用户名'@'远程用�
 <pre>#方法一（bash/cmd命令）
 mysqladmin -u用户名 password "新密码"
 #方法二（mysql命令）
-use mysql
-UPDATE user SET Password = PASSWORD('新密码') WHERE user = '用户名';
-FLUSH PRIVILEGES;</pre>
+alter user 'root'@'localhost' identified with mysql_native_password by 'mypass';
+</pre>
 <p>4、<b>导入、导出数据</b>（bash/cmd命令）</p>
 <pre>#导出
 mysqldump -h服务器 -P端口 -u用户名 -p密码 数据库 数据表 > /导出路径/文件名.sql
@@ -42,7 +41,9 @@ mysql -h服务器 -P端口 -u用户名 -p密码 数据库 < /导入路径/文件
 <pre>#root用户登录
 mysql -uroot -p密码
 #查看所有用户
-select user,host,password from mysql.user;
+select user,host from mysql.user;
+#查看系统/全局配置，如：
+show global variables like '%password%'
 #添加本地用户和赋权（注意localhost和127.0.0.1的区别）
 CREATE USER '用户名'@'localhost' IDENTIFIED BY '用户密码';
 #删除用户
