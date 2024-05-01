@@ -307,24 +307,30 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.4/mysql-8.4.0.tar.gz</pre>
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-8.4/mysql-8.4.0.tar.gz
+#wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-boost-8.4.0.tar.gz</pre>
+<pre>tar xvf mysql-8.4.0.tar.gz
+#tar xvf mysql-boost-5.7.44.tar.gz</pre>
 <p>编译</p>
 <pre>cd mysql-8.4.0
+#cd mysql-5.7.44
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mysql \
 -DMYSQL_DATADIR=/data/mysql/data \
 -DINSTALL_MYSQLDATADIR=/data/mysql/data \
--DDEFAULT_CHARSET=utf8 \
--DDEFAULT_COLLATION=utf8_general_ci \
+-DDEFAULT_CHARSET=utf8mb4 \
+-DDEFAULT_COLLATION=utf8mb4_general_ci \
 -DWITH_SYSTEMD=1 \
 -DSYSTEMD_PID_DIR=/tmp \
 -DWITH_UNIT_TESTS=OFF \
 -DINSTALL_MYSQLTESTDIR= \
 -DWITH_SSL=system \
 -DFORCE_INSOURCE_BUILD=ON
-
+#mysql-5.7.44去掉：
+-DFORCE_INSOURCE_BUILD=ON
+增加：
+#-DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
 make -j5
 make install
 ln -sf /data/mysql/bin/* /usr/local/bin/
