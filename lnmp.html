@@ -29,11 +29,11 @@
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.25.4.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.26.0.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.25.4.tar.gz</pre>
+<pre>tar xvf nginx-1.26.0.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.25.4
+<pre>cd nginx-1.26.0
 ./configure --prefix=/data/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/nginx/log/access.log --error-log-path=/data/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
 make -j5
 make install</pre>
@@ -119,11 +119,11 @@ systemctl start php-fpm</pre>
 <pre>dnf install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.3.4.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.3.6.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.3.4.tar.xz</pre>
+<pre>tar xvf php-8.3.6.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.3.4
+<pre>cd php-8.3.6
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -309,12 +309,10 @@ max_connections = 1000
 <p>下载</p>
 <pre>wget https://cdn.mysql.com//Downloads/MySQL-8.3/mysql-boost-8.3.0.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-boost-8.3.0.tar.gz</pre>
+<pre>tar xvf mysql-boost-8.4.0.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-8.3.0
-mkdir build
-cd build
-cmake .. \
+<pre>cd mysql-8.4.0
+cmake . \
 -DCMAKE_INSTALL_PREFIX=/data/mysql \
 -DMYSQL_DATADIR=/data/mysql/data \
 -DINSTALL_MYSQLDATADIR=/data/mysql/data \
@@ -323,18 +321,17 @@ cmake .. \
 -DWITH_SYSTEMD=1 \
 -DSYSTEMD_PID_DIR=/tmp \
 -DWITH_UNIT_TESTS=OFF \
--DWITH_BOOST=../boost \
 -DINSTALL_MYSQLTESTDIR= \
 -DWITH_SSL=system \
 -DFORCE_INSOURCE_BUILD=ON
 
 make -j5
 make install
+ln -sf /data/mysql/bin/* /usr/local/bin/
 cp scripts/mysqld.service /lib/systemd/system/
-cd /data/mysql
 sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/data\/mysql\/my.cnf /g" /lib/systemd/system/mysqld.service
 
-cat > my.cnf << "EOF"
+cat > /data/mysql/my.cnf << "EOF"
 [client]
 port=3306
 socket=/tmp/mysql.sock
@@ -345,20 +342,28 @@ socket=/tmp/mysql.sock
 key_buffer_size=16M
 max_allowed_packet=8M
 
+log-error=/data/mysql/log/mysqld.log
+slow_query_log=1
+slow_query_log_file=/data/mysql/log/mysql-slow.log
+long_query_time=3
+log_output=FILE
+
 [mysqldump]
 quick
+
+[mysql]
+port=3306
+socket=/tmp/mysql.sock
 EOF
 
-mkdir mysql-files
-chown mysql:mysql mysql-files
-chmod 750 mysql-files
-#初始化（命令结果中有随机生成的root密码）
-bin/mysqld --defaults-file=/data/mysql/my.cnf --initialize --user=mysql
-#生成ssl证书
-bin/mysql_ssl_rsa_setup              
+#创建日志目录
+mkdir /data/mysql/log
+chown mysql:mysql /data/mysql/log -R
+
+#初始化
+mysqld --defaults-file=/data/mysql/my.cnf --initialize-insecure --user=mysql
 systemctl start mysqld
-bin/mysqladmin -uroot -p password "新密码"
-#输入上面生成的随机密码
+mysqladmin -uroot password "新密码"
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2024 清风的个人笔记</p>
