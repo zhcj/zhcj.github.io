@@ -19,16 +19,12 @@
 dnf install flex libslirp-devel libcap-ng-devel libattr-devel glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel gcc gcc-c++ make git flex bison bzip2 pam-devel gnutls-devel perl -y
 #如果需要虚拟xp/win2003系统，显卡需要使用qxl，则安装以下包
 dnf install spice-server spice-protocol -y
-#如安装qemu-6，则需要ninja，centos系统无源，下载二进制包即可：
-wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip
-unzip ninja-linux.zip
-mv ninja /usr/local/bin/
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-8.2.2.tar.xz
-tar xvf qemu-8.2.2.tar.xz
-cd qemu-8.2.2
+wget https://download.qemu.org/qemu-9.0.0.tar.xz
+tar xvf qemu-9.0.0.tar.xz
+cd qemu-9.0.0
 ./configure --prefix=/data/kvm --interp-prefix=/data/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu,i386-softmmu
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5
@@ -126,16 +122,5 @@ php -m|grep -i libvirt
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2024 清风的个人笔记</p>
 </div>
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?6383511877c1f3152c86dffde46dd57a";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 </body>
 </html>
