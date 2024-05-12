@@ -48,12 +48,12 @@ echo "密码" | passwd --stdin postgres</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v16.2/postgresql-16.2.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v16.3/postgresql-16.3.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-16.2.tar.bz2</pre>
+<pre>tar xvf postgresql-16.3.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-16.2
-./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --enable-spinlocks --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+<pre>cd postgresql-16.3
+./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
 <p>编译dblink插件</p>
@@ -308,11 +308,11 @@ systemctl start php-fpm</pre>
 </pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.3.6.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.3.7.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.3.6.tar.xz</pre>
+<pre>tar xvf php-8.3.7.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.3.6
+<pre>cd php-8.3.7
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
