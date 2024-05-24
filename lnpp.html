@@ -44,16 +44,23 @@ dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/p
 useradd -U -r -M -s /bin/nologin -d /data/pgsql postgres
 echo "密码" | passwd --stdin postgres</pre>
 <p>安装依赖</p>
-<pre>dnf install pam-devel readline-devel libxslt-devel openssl-devel systemd-devel -y</pre>
+<pre>dnf install pam-devel readline-devel libxslt-devel openssl-devel systemd-devel -y
+#postgresql-17
+dnf install bison flex perl-lib -y</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v16.3/postgresql-16.3.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v16.3/postgresql-16.3.tar.bz2
+#wget https://ftp.postgresql.org/pub/source/v17beta1/postgresql-17beta1.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-16.3.tar.bz2</pre>
+<pre>tar xvf postgresql-16.3.tar.bz2
+#tar xvf postgresql-17beta1.tar.bz2
+</pre>
 <p>编译</p>
 <pre>cd postgresql-16.3
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --disable-thread-safety --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+#cd postgresql-17beta1
+#./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
 <p>编译dblink插件</p>
