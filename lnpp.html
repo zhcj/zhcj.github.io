@@ -24,15 +24,13 @@
 <p><b><a name="postgresql">2.1、dnf安装PostgreSQL数据库</a></b></p>
 <p>加源</p>
 <pre>
-#EL-8
-dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 #EL-9
 #dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 </pre>
 <p>安装</p>
-<pre>dnf install postgresql16-server postgresql16-devel</pre>
+<pre>dnf install postgresql17-server postgresql17-devel</pre>
 <p>初始化数据库</p>
-<pre>/usr/pgsql-16/bin/postgresql-16-setup initdb</pre>
+<pre>/usr/pgsql-17/bin/postgresql-17-setup initdb</pre>
 <p>设置密码</p>
 <pre>echo "密码" | passwd --stdin postgres</pre>
 <p>数据库管理工具（PHP）：</p>
@@ -50,11 +48,11 @@ dnf install bison flex perl-lib -y</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-16.4.tar.bz2</pre>
+<pre>tar xvf postgresql-17.0.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-16.4
+<pre>cd postgresql-17.0
 ./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
@@ -310,11 +308,11 @@ systemctl start php-fpm</pre>
 </pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.3.10.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.3.12.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.3.10.tar.xz</pre>
+<pre>tar xvf php-8.3.12.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.3.10
+<pre>cd php-8.3.12
 ./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -355,9 +353,9 @@ echo "extension=imagick" >> /data/php/lib/php/extensions/ext.ini
 </pre>
 #编译安装ImageMagick
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.13-14.tar.xz
-tar xvf ImageMagick-6.9.13-14.tar.xz
-cd ImageMagick-6.9.13-14
+wget https://imagemagick.org/download/ImageMagick-6.9.13-16.tar.xz
+tar xvf ImageMagick-6.9.13-16.tar.xz
+cd ImageMagick-6.9.13-16
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -370,9 +368,9 @@ systemctl enable memcached
 </pre>
 #编译安装memcached
 <pre>
-wget https://www.memcached.org/files/memcached-1.6.29.tar.gz
-tar xvf memcached-1.6.29.tar.gz
-cd memcached-1.6.29
+wget https://www.memcached.org/files/memcached-1.6.31.tar.gz
+tar xvf memcached-1.6.31.tar.gz
+cd memcached-1.6.31
 ./configure --prefix=/data/memcached
 make -j5
 make install
