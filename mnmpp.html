@@ -67,10 +67,10 @@ sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /opt/homebrew/d
 createuser -U macuser -s -P admin
 createdb -U admin test
 </pre>
-<p>#启动脚本</p>
+<p>#启动脚本（重启/停止用restart/stop替换start即可）</p>
 <pre>
 cat > /opt/homebrew/sbin/pgsqlstart << "EOF"
-/opt/homebrew/data/pgsql/pg_ctl -D /opt/homebrew/data/pgsql/data -l /opt/homebrew/data/pgsql/log/postgresql.log start
+/opt/homebrew/data/pgsql/bin/pg_ctl -D /opt/homebrew/data/pgsql/data -l /opt/homebrew/data/pgsql/log/postgresql.log start
 EOF
 chmod +x /opt/homebrew/sbin/pgsqlstart
 </pre>
