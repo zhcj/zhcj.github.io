@@ -64,7 +64,7 @@ sed -i "s/#log_filename =/log_filename =/g" /opt/homebrew/data/pgsql/data/postgr
 sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /opt/homebrew/data/pgsql/data/postgresql.conf
 sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /opt/homebrew/data/pgsql/data/postgresql.conf
 sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-createuser -U zhangchunjing -s -P admin
+createuser -U macuser -s -P admin
 createdb -U admin test
 </pre>
 <p>#启动脚本</p>
@@ -80,7 +80,7 @@ brew install openssl freetype gettext webp libpng libiconv oniguruma libzip auto
 wget http://www.php.net/distributions/php-8.4.1.tar.xz
 tar xvf php-8.4.1.tar.xz
 cd php-8.4.1
-./configure --prefix=/opt/homebrew/data/php --enable-fpm --with-pear --with-fpm-user=zhangchunjing --with-fpm-group=admin --with-config-file-path=/opt/homebrew/data/php --with-config-file-scan-dir=/opt/homebrew/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql=/opt/homebrew/data/pgsql --with-pdo-pgsql=/opt/homebrew/data/pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium
+./configure --prefix=/opt/homebrew/data/php --enable-fpm --with-pear --with-fpm-user=macuser --with-fpm-group=admin --with-config-file-path=/opt/homebrew/data/php --with-config-file-scan-dir=/opt/homebrew/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql=/opt/homebrew/data/pgsql --with-pdo-pgsql=/opt/homebrew/data/pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium
 ln -sf /opt/homebrew/data/php/bin/* /opt/homebrew/bin/
 cp sapi/fpm/www.conf /opt/homebrew/data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /opt/homebrew/data/php/etc/
@@ -116,7 +116,7 @@ git clone https://github.com/openresty/openresty
 cd openresty
 make
 cd openresty-1.27.1.1
-./configure --prefix=/opt/homebrew/data/nginx --user=zhangchunjing --group=admin --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/opt/homebrew/data/pgsql/bin/pg_config --sbin-path=/opt/homebrew/data/nginx/sbin/nginx --conf-path=/opt/homebrew/data/nginx/conf/nginx.conf
+./configure --prefix=/opt/homebrew/data/nginx --user=macuser --group=admin --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/opt/homebrew/data/pgsql/bin/pg_config --sbin-path=/opt/homebrew/data/nginx/sbin/nginx --conf-path=/opt/homebrew/data/nginx/conf/nginx.conf
 make -j10
 make install
 wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
