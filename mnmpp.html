@@ -46,9 +46,9 @@ chmod +x /opt/homebrew/sbin/redisstart
 </pre>
 <p><b>四、编译安装postgresql</b></p>
 <pre>
-wget https://ftp.postgresql.org/pub/source/v17.1/postgresql-17.1.tar.bz2
-tar xvf postgresql-17.1.tar.bz2
-cd postgresql-17.1
+wget https://ftp.postgresql.org/pub/source/v17.2/postgresql-17.2.tar.bz2
+tar xvf postgresql-17.2.tar.bz2
+cd postgresql-17.2
 ./configure --prefix=/opt/homebrew/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --without-tcl --with-libxml --with-libxslt --with-zlib
 make -j10
 make install
