@@ -25,24 +25,25 @@ wget http://download.redis.io/releases/redis-7.4.1.tar.gz
 tar xvf redis-7.4.1.tar.gz
 cd redis-7.4.1
 make -j10
-make PREFIX=/opt/Homebrew/data/redis install
-cp redis.conf /data/redis/
-ln -sf /opt/homebrew/data/redis/bin/redis-cli /opt/homebrew/bin/
-ln -sf /opt/homebrew/data/redis/bin/redis-server /opt/homebrew/bin/
-mkdir /opt/homebrew/data/redis/db
-mkdir /opt/homebrew/data/redis/log
-touch /opt/homebrew/data/redis/log/redis.log
-sed -i "s/# unixsocket \/run\/redis.sock/unixsocket \/tmp\/redis.sock/g" /opt/homebrew/data/redis/redis.conf
-sed -i "s/# unixsocketperm 700/unixsocketperm 666/g" /opt/homebrew/data/redis/redis.conf
-sed -i "s/dir .\//dir \/opt\/homebrew\/data\/redis\/db\//g" /opt/homebrew/data/redis/redis.conf
-sed -i "s/logfile \"\"/logfile \"\/opt\/homebrew\/data\/redis\/log\/redis.log\"/g" /opt/homebrew/data/redis/redis.conf
+sudo make install
+sudo mkdir -p /usr/local/etc
+sudo mkdir -p /usr/local/log
+sudo mkdir -p /usr/local/db/redis
+sudo cp redis.conf /usr/local/etc/
+sudo touch /usr/local/log/redis.log
+sudo chown $(id -un):admin /usr/local/db/redis -R
+sudo chown $(id -un):admin /usr/local/log/redis.log
+sudo sed -i "s/# unixsocket \/run\/redis.sock/unixsocket \/tmp\/redis.sock/g" /usr/local/etc/redis.conf
+sudo sed -i "s/# unixsocketperm 700/unixsocketperm 666/g" /usr/local/etc/redis.conf
+sudo sed -i "s/dir .\//dir \/usr\/local\/db\/redis\//g" /usr/local/etc/redis.conf
+sudo sed -i "s/logfile \"\"/logfile \"\/usr\/local\/log\/redis.log\"/g" /var/log/redis.conf
 </pre>
-<p>#启动脚本</p>
+<p>启动/停止脚本</p>
 <pre>
-cat > /opt/homebrew/sbin/redisstart << "EOF"
-/opt/homebrew/data/redis/bin/redis-server /opt/homebrew/data/redis/redis.conf
-EOF
-chmod +x /opt/homebrew/sbin/redisstart
+sudo echo "/usr/local/bin/redis-server /usr/local/etc/redis.conf" > /usr/local/bin/redisstart
+sudo echo "/usr/local/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown" > /usr/local/bin/redisstop
+sudo chmod +x /usr/local/bin/redisstart
+sudo chmod +x /usr/local/bin/redisstop
 </pre>
 <p><b>四、编译安装postgresql</b></p>
 <pre>
@@ -64,7 +65,7 @@ sed -i "s/#log_filename =/log_filename =/g" /opt/homebrew/data/pgsql/data/postgr
 sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /opt/homebrew/data/pgsql/data/postgresql.conf
 sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /opt/homebrew/data/pgsql/data/postgresql.conf
 sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-createuser -U macuser -s -P admin
+createuser -U $(id -un) -s -P admin
 createdb -U admin test
 </pre>
 <p>#启动脚本（重启/停止用restart/stop替换start即可）</p>
@@ -80,7 +81,7 @@ brew install openssl freetype gettext webp libpng libiconv oniguruma libzip auto
 wget http://www.php.net/distributions/php-8.4.1.tar.xz
 tar xvf php-8.4.1.tar.xz
 cd php-8.4.1
-./configure --prefix=/opt/homebrew/data/php --enable-fpm --with-pear --with-fpm-user=macuser --with-fpm-group=admin --with-config-file-path=/opt/homebrew/data/php --with-config-file-scan-dir=/opt/homebrew/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql=/opt/homebrew/data/pgsql --with-pdo-pgsql=/opt/homebrew/data/pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium
+./configure --prefix=/opt/homebrew/data/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/opt/homebrew/data/php --with-config-file-scan-dir=/opt/homebrew/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql=/opt/homebrew/data/pgsql --with-pdo-pgsql=/opt/homebrew/data/pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium
 ln -sf /opt/homebrew/data/php/bin/* /opt/homebrew/bin/
 cp sapi/fpm/www.conf /opt/homebrew/data/php/etc/php-fpm.d/
 cp sapi/fpm/php-fpm.conf /opt/homebrew/data/php/etc/
@@ -116,7 +117,7 @@ git clone https://github.com/openresty/openresty
 cd openresty
 make
 cd openresty-1.27.1.1
-./configure --prefix=/opt/homebrew/data/nginx --user=macuser --group=admin --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/opt/homebrew/data/pgsql/bin/pg_config --sbin-path=/opt/homebrew/data/nginx/sbin/nginx --conf-path=/opt/homebrew/data/nginx/conf/nginx.conf
+./configure --prefix=/opt/homebrew/data/nginx --user=$(id -un) --group=admin --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/opt/homebrew/data/pgsql/bin/pg_config --sbin-path=/opt/homebrew/data/nginx/sbin/nginx --conf-path=/opt/homebrew/data/nginx/conf/nginx.conf
 make -j10
 make install
 wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
