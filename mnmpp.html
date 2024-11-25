@@ -50,30 +50,31 @@ sudo chmod +x /usr/local/bin/redisstop
 wget https://ftp.postgresql.org/pub/source/v17.2/postgresql-17.2.tar.bz2
 tar xvf postgresql-17.2.tar.bz2
 cd postgresql-17.2
-./configure --prefix=/opt/homebrew/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --without-tcl --with-libxml --with-libxslt --with-zlib
+./configure --prefix=/usr/local --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --without-tcl --with-libxml --with-libxslt --with-zlib
 make -j10
-make install
-ln -sf /opt/homebrew/data/pgsql/bin/* /opt/homebrew/bin/
-cd /opt/homebrew/data/pgsql
-bin/initdb -D data -E 'UTF8' --locale='zh_CN.UTF-8'
-mkdir log
-bin/pg_ctl -D data -l log/postgresql.log start
-sed -i "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-sed -i "s/#logging_collector = off/logging_collector = on/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-sed -i "s/#log_directory =/log_directory =/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-sed -i "s/#log_filename =/log_filename =/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /opt/homebrew/data/pgsql/data/postgresql.conf
-sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /opt/homebrew/data/pgsql/data/postgresql.conf
+sudo make install
+cd /usr/local
+sudo mkdir -p log
+sudo mkdir -p db/pgsql
+sudo touch log/postgresql.log
+sudo chown $(id -un):admin db/pgsql
+sudo chown $(id -un):admin log/postgresql.log
+bin/initdb -D db/pgsql -E 'UTF8' --locale='zh_CN.UTF-8'
+bin/pg_ctl -D db/pgsql -l log/postgresql.log start
+sed -i "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "s/#logging_collector = off/logging_collector = on/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "s/#log_directory =/log_directory =/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "s/#log_filename =/log_filename =/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /usr/local/db/pgsql/postgresql.conf
 createuser -U $(id -un) -s -P admin
 createdb -U admin test
 </pre>
 <p>#启动脚本（重启/停止用restart/stop替换start即可）</p>
 <pre>
-cat > /opt/homebrew/sbin/pgsqlstart << "EOF"
-/opt/homebrew/data/pgsql/bin/pg_ctl -D /opt/homebrew/data/pgsql/data -l /opt/homebrew/data/pgsql/log/postgresql.log start
-EOF
-chmod +x /opt/homebrew/sbin/pgsqlstart
+echo "/usr/local/bin/pg_ctl -D /usr/local/db/pgsql -l /usr/local/log/postgresql.log start" > /usr/local/bin/pgsqlstart
+chmod +x /usr/local/bin/pgsqlstart
 </pre>
 <p><b>五、编译安装php</b></p>
 <pre>
@@ -81,34 +82,34 @@ brew install openssl freetype gettext webp libpng libiconv oniguruma libzip auto
 wget http://www.php.net/distributions/php-8.4.1.tar.xz
 tar xvf php-8.4.1.tar.xz
 cd php-8.4.1
-./configure --prefix=/opt/homebrew/data/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/opt/homebrew/data/php --with-config-file-scan-dir=/opt/homebrew/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql=/opt/homebrew/data/pgsql --with-pdo-pgsql=/opt/homebrew/data/pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium
-ln -sf /opt/homebrew/data/php/bin/* /opt/homebrew/bin/
-cp sapi/fpm/www.conf /opt/homebrew/data/php/etc/php-fpm.d/
-cp sapi/fpm/php-fpm.conf /opt/homebrew/data/php/etc/
-sed -i "" "s/;zend_extension=opcache/zend_extension=opcache/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/;opcache.enable=0/opcache.enable=1/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/;opcache.enable=1/opcache.enable=1/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/max_execution_time = 30/max_execution_time = 60/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/post_max_size = 8M/post_max_size = 20M/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/display_errors = Off/display_errors = On/" /opt/homebrew/data/php/php.ini
-sed -i "" "s/expose_php = On/expose_php = Off/" /opt/homebrew/data/php/php.ini
-pear update-channels pear.php.net
-pear upgrade-all
-echo "opcache.jit=1235" >> /opt/homebrew/data/php/php.ini
-echo "opcache.jit_buffer_size=64M" >> /opt/homebrew/data/php/php.ini
-pecl install redis
-echo "extension=redis" >> /opt/homebrew/data/php/lib/php/extensions/ext.ini
+./configure --prefix=/usr/local --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/etc --with-config-file-scan-dir=/usr/local/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv --with-gettext --with-sodium
+make -j10
+sudo make install
+sudo cp sapi/fpm/www.conf /usr/local/etc/php-fpm.d/
+sudo cp sapi/fpm/php-fpm.conf /usr/local/etc/
+sudo cp php.ini-production /usr/local/etc/php.ini
+sudo sed -i "" "s/;zend_extension=opcache/zend_extension=opcache/" /usr/local/etc/php.ini
+sudo sed -i "" "s/;opcache.enable=0/opcache.enable=1/" /usr/local/etc/php.ini
+sudo sed -i "" "s/;opcache.enable=1/opcache.enable=1/" /usr/local/etc/php.ini
+sudo sed -i "" "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /usr/local/etc/php.ini
+sudo sed -i "" "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /usr/local/etc/php.ini
+sudo sed -i "" "s/max_execution_time = 30/max_execution_time = 60/" /usr/local/etc/php.ini
+sudo sed -i "" "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /usr/local/etc/php.ini
+sudo sed -i "" "s/post_max_size = 8M/post_max_size = 20M/" /usr/local/etc/php.ini
+sudo sed -i "" "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /usr/local/etc/php.ini
+sudo sed -i "" "s/display_errors = Off/display_errors = On/" /usr/local/etc/php.ini
+sudo sed -i "" "s/expose_php = On/expose_php = Off/" /usr/local/etc/php.ini
+sudo echo "opcache.jit=1235" >> /usr/local/etc/php.ini
+sudo echo "opcache.jit_buffer_size=64M" >> /usr/local/etc/php.ini
+sudo pear update-channels pear.php.net
+sudo pear upgrade-all
+sudo pecl install redis
+sudo echo "extension=redis" >> /usr/local/lib/php/extensions/ext.ini
 </pre>
 <p>#启动脚本</p>
 <pre>
-cat > /opt/homebrew/sbin/phpstart << "EOF"
-/opt/homebrew/data/php/sbin/php-fpm --fpm-config /opt/homebrew/data/php/etc/php-fpm.conf
-EOF
-chmod +x /opt/homebrew/sbin/phpstart
+sudo echo "/usr/local/sbin/php-fpm --fpm-config /usr/local/etc/php-fpm.conf" > /usr/local/bin/phpstart
+sudo chmod +x /usr/local/bin/phpstart
 </pre>
 <p><b>六、编译安装openresty</b></p>
 <pre>
@@ -117,26 +118,20 @@ git clone https://github.com/openresty/openresty
 cd openresty
 make
 cd openresty-1.27.1.1
-./configure --prefix=/opt/homebrew/data/nginx --user=$(id -un) --group=admin --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/opt/homebrew/data/pgsql/bin/pg_config --sbin-path=/opt/homebrew/data/nginx/sbin/nginx --conf-path=/opt/homebrew/data/nginx/conf/nginx.conf
+./configure --prefix=/usr/local --user=$(id -un) --group=admin --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/usr/local/bin/pg_config --sbin-path=/usr/local/sbin/nginx --conf-path=/usr/local/etc/nginx.conf
 make -j10
-make install
+sudo make install
 wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
 tar xvf luarocks-3.11.1.tar.gz
 cd luarocks-3.11.1
-./configure --prefix=/opt/homebrew/data/nginx/luajit --with-lua=/opt/homebrew/data/nginx/luajit --lua-suffix=jit --with-lua-include=/opt/homebrew/data/nginx/luajit/include/luajit-2.1 --with-lua-lib=/opt/homebrew/data/nginx/lualib
+./configure --prefix=/usr/local --with-lua=/usr/local --lua-suffix=jit --with-lua-include=/usr/local/include/luajit-2.1 --with-lua-lib=/usr/local/lib
 make -j10
-make install
-ln -sf /opt/homebrew/data/nginx/sbin/nginx /opt/homebrew/bin/
-ln -sf /opt/homebrew/data/nginx/luajit/bin/luajit /opt/homebrew/bin/
-ln -sf /opt/homebrew/data/nginx/luajit/bin/luarocks /opt/homebrew/bin/
-ln -sf /opt/homebrew/data/nginx/luajit/bin/luarocks-admin /opt/homebrew/bin/
+sudo make install
 </pre>
 <p>#启动脚本</p>
 <pre>
-cat > /opt/homebrew/sbin/phpstart << "EOF"
-/opt/homebrew/data/php/sbin/php-fpm --fpm-config /opt/homebrew/data/php/etc/php-fpm.conf
-EOF
-chmod +x /opt/homebrew/sbin/phpstart
+sudo echo "/usr/local/sbin/nginx -c /usr/local/etc/nginx.conf" > /usr/local/bin/nginxstart
+sudo chmod +x /usr/local/bin/nginxstart
 </pre>
 <p><b>七、编译安装mysql</b></p>
 <pre>
@@ -144,8 +139,10 @@ brew install cmake
 wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz
 tar xvf mysql-boost-5.7.44.tar.gz
 cd mysql-5.7.44
-cmake . -DCMAKE_INSTALL_PREFIX=/opt/homebrew/data/mysql -DMYSQL_DATADIR=/opt/homebrew/data/mysql/data -DINSTALL_MYSQLDATADIR=/opt/homebrew/data/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
-cat > /opt/homebrew/data/mysql/my.cnf << "EOF"
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local -DMYSQL_DATADIR=/usr/local/db/mysql -DINSTALL_MYSQLDATADIR=/usr/local/db/mysql -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
+make -j10
+sudo make install
+cat > /usr/local/etc/my.cnf << "EOF"
 [client]
 port=3306
 socket=/tmp/mysql.sock
@@ -156,9 +153,9 @@ socket=/tmp/mysql.sock
 key_buffer_size=16M
 max_allowed_packet=8M
 
-log-error=/opt/homebrew/data/mysql/log/mysqld.log
+log-error=/usr/local/log/mysqld.log
 slow_query_log=1
-slow_query_log_file=/opt/homebrew/data/mysql/log/mysql-slow.log
+slow_query_log_file=/usr/local/log/mysql-slow.log
 long_query_time=3
 log_output=FILE
 
@@ -169,16 +166,16 @@ quick
 port=3306
 socket=/tmp/mysql.sock
 EOF
-/opt/homebrew/data/mysql/bin/mysqld --defaults-file=/opt/homebrew/data/mysql/my.cnf  --initialize-insecure
-/opt/homebrew/data/mysql/bin/mysqld --defaults-file=/opt/homebrew/data/mysql/my.cnf --daemonize --pid-file=/tmp/mysqld.pid
+sudo mkdir -p /usr/local/db/mysql
+sudo chown $(id -un):admin /usr/local/db/mysql
+/usr/local/bin/mysqld --defaults-file=/usr/local/etc/my.cnf  --initialize-insecure
+/usr/local/bin/mysqld --defaults-file=/usr/local/etc/my.cnf --daemonize --pid-file=/tmp/mysqld.pid
 mysqladmin -uroot password "新密码"
 </pre>
 <p>#启动脚本</p>
 <pre>
-cat > /opt/homebrew/sbin/mysqlstart << "EOF"
-/opt/homebrew/data/mysql/bin/mysqld --defaults-file=/opt/homebrew/data/mysql/my.cnf --daemonize --pid-file=/tmp/mysqld.pid
-EOF
-chmod +x /opt/homebrew/sbin/mysqlstart
+sudo echo "/usr/local/bin/mysqld --defaults-file=/usr/local/etc/my.cnf --daemonize --pid-file=/tmp/mysqld.pid" > /usr/local/bin/mysqlstart
+sudo chmod +x /usr/local/bin/mysqlstart
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2024 清风的个人笔记</p>
