@@ -16,9 +16,8 @@
 <p><b>一、安装homebrew</b></p>
 <p>详见<a href="https://brew.sh" target="_blank">homebrew官网</a></p>
 <p><b>二、brew安装基础软件</b></p>
-<pre>brew install wget</pre>
+<pre>brew install wget zstd</pre>
 <p>#自动安装依赖openssl@3/gettext等</p>
-<pre>brew install zstd</pre>
 <p><b>三、编译安装redis</b></p>
 <pre>
 wget http://download.redis.io/releases/redis-7.4.1.tar.gz
@@ -33,15 +32,15 @@ sudo cp redis.conf /usr/local/etc/
 sudo touch /usr/local/log/redis.log
 sudo chown $(id -un):admin /usr/local/db/redis -R
 sudo chown $(id -un):admin /usr/local/log/redis.log
-sudo sed -i "s/# unixsocket \/run\/redis.sock/unixsocket \/tmp\/redis.sock/g" /usr/local/etc/redis.conf
-sudo sed -i "s/# unixsocketperm 700/unixsocketperm 666/g" /usr/local/etc/redis.conf
-sudo sed -i "s/dir .\//dir \/usr\/local\/db\/redis\//g" /usr/local/etc/redis.conf
-sudo sed -i "s/logfile \"\"/logfile \"\/usr\/local\/log\/redis.log\"/g" /var/log/redis.conf
+sudo sed -i "" "s/# unixsocket \/run\/redis.sock/unixsocket \/tmp\/redis.sock/g" /usr/local/etc/redis.conf
+sudo sed -i "" "s/# unixsocketperm 700/unixsocketperm 666/g" /usr/local/etc/redis.conf
+sudo sed -i "" "s/dir .\//dir \/usr\/local\/db\/redis\//g" /usr/local/etc/redis.conf
+sudo sed -i "" "s/logfile \"\"/logfile \"\/usr\/local\/log\/redis.log\"/g" /var/log/redis.conf
 </pre>
 <p>启动/停止脚本</p>
 <pre>
-sudo echo "/usr/local/bin/redis-server /usr/local/etc/redis.conf" > /usr/local/bin/redisstart
-sudo echo "/usr/local/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown" > /usr/local/bin/redisstop
+echo "/usr/local/bin/redis-server /usr/local/etc/redis.conf" | sudo tee /usr/local/bin/redisstart
+echo "/usr/local/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown" | sudo tee /usr/local/bin/redisstop
 sudo chmod +x /usr/local/bin/redisstart
 sudo chmod +x /usr/local/bin/redisstop
 </pre>
@@ -61,20 +60,20 @@ sudo chown $(id -un):admin db/pgsql
 sudo chown $(id -un):admin log/postgresql.log
 bin/initdb -D db/pgsql -E 'UTF8' --locale='zh_CN.UTF-8'
 bin/pg_ctl -D db/pgsql -l log/postgresql.log start
-sed -i "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /usr/local/db/pgsql/postgresql.conf
-sed -i "s/#logging_collector = off/logging_collector = on/g" /usr/local/db/pgsql/postgresql.conf
-sed -i "s/#log_directory =/log_directory =/g" /usr/local/db/pgsql/postgresql.conf
-sed -i "s/#log_filename =/log_filename =/g" /usr/local/db/pgsql/postgresql.conf
-sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /usr/local/db/pgsql/postgresql.conf
-sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /usr/local/db/pgsql/postgresql.conf
-sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "" "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "" "s/#logging_collector = off/logging_collector = on/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "" "s/#log_directory =/log_directory =/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "" "s/#log_filename =/log_filename =/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "" "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "" "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /usr/local/db/pgsql/postgresql.conf
+sed -i "" "s/#log_min_messages = warning/log_min_messages = info/g" /usr/local/db/pgsql/postgresql.conf
 createuser -U $(id -un) -s -P admin
 createdb -U admin test
 </pre>
 <p>#启动脚本（重启/停止用restart/stop替换start即可）</p>
 <pre>
-echo "/usr/local/bin/pg_ctl -D /usr/local/db/pgsql -l /usr/local/log/postgresql.log start" > /usr/local/bin/pgsqlstart
-chmod +x /usr/local/bin/pgsqlstart
+echo "/usr/local/bin/pg_ctl -D /usr/local/db/pgsql -l /usr/local/log/postgresql.log start" | sudo tee /usr/local/bin/pgsqlstart
+sudo chmod +x /usr/local/bin/pgsqlstart
 </pre>
 <p><b>五、编译安装php</b></p>
 <pre>
@@ -82,12 +81,12 @@ brew install openssl freetype gettext webp libpng libiconv oniguruma libzip auto
 wget http://www.php.net/distributions/php-8.4.1.tar.xz
 tar xvf php-8.4.1.tar.xz
 cd php-8.4.1
-./configure --prefix=/usr/local --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/etc --with-config-file-scan-dir=/usr/local/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv --with-gettext --with-sodium
+./configure --prefix=/usr/local --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/etc --with-config-file-scan-dir=/usr/local/lib/php/extensions --enable-opcache --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install
 sudo cp sapi/fpm/www.conf /usr/local/etc/php-fpm.d/
 sudo cp sapi/fpm/php-fpm.conf /usr/local/etc/
-sudo cp php.ini-production /usr/local/etc/php.ini
+sudo cp php.ini-development /usr/local/etc/php.ini
 sudo sed -i "" "s/;zend_extension=opcache/zend_extension=opcache/" /usr/local/etc/php.ini
 sudo sed -i "" "s/;opcache.enable=0/opcache.enable=1/" /usr/local/etc/php.ini
 sudo sed -i "" "s/;opcache.enable=1/opcache.enable=1/" /usr/local/etc/php.ini
@@ -99,16 +98,23 @@ sudo sed -i "" "s/post_max_size = 8M/post_max_size = 20M/" /usr/local/etc/php.in
 sudo sed -i "" "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /usr/local/etc/php.ini
 sudo sed -i "" "s/display_errors = Off/display_errors = On/" /usr/local/etc/php.ini
 sudo sed -i "" "s/expose_php = On/expose_php = Off/" /usr/local/etc/php.ini
-sudo echo "opcache.jit=1235" >> /usr/local/etc/php.ini
-sudo echo "opcache.jit_buffer_size=64M" >> /usr/local/etc/php.ini
+echo "opcache.jit=1235" | sudo tee -a /usr/local/etc/php.ini
+echo "opcache.jit_buffer_size=64M" | sudo tee -a /usr/local/etc/php.ini
 sudo pear update-channels pear.php.net
 sudo pear upgrade-all
 sudo pecl install redis
-sudo echo "extension=redis" >> /usr/local/lib/php/extensions/ext.ini
+echo "extension=redis" | sudo tee -a /usr/local/lib/php/extensions/ext.ini
+sudo chown $(id -un):admin /usr/local/var/log
+sudo sed -i "" "s/^user =/;user =/" /usr/local/etc/php-fpm.d/www.conf
+sudo sed -i "" "s/^group =/;group =/" /usr/local/etc/php-fpm.d/www.conf
+sudo sed -i "" "s/;listen = 127.0.0.1:9000/listen = \/tmp\/php-fpm.sock/" /usr/local/etc/php-fpm.d/www.conf
+sudo sed -i "" "s/;listen.owner/listen.owner/" /usr/local/etc/php-fpm.d/www.conf
+sudo sed -i "" "s/;listen.group/listen.group/" /usr/local/etc/php-fpm.d/www.conf
+sudo sed -i "" "s/;listen.mode = 0660/listen.mode = 0666/" /usr/local/etc/php-fpm.d/www.conf
 </pre>
 <p>#启动脚本</p>
 <pre>
-sudo echo "/usr/local/sbin/php-fpm --fpm-config /usr/local/etc/php-fpm.conf" > /usr/local/bin/phpstart
+echo "/usr/local/sbin/php-fpm --fpm-config /usr/local/etc/php-fpm.conf" | sudo tee /usr/local/bin/phpstart
 sudo chmod +x /usr/local/bin/phpstart
 </pre>
 <p><b>六、编译安装openresty</b></p>
@@ -118,19 +124,22 @@ git clone https://github.com/openresty/openresty
 cd openresty
 make
 cd openresty-1.27.1.1
-./configure --prefix=/usr/local --user=$(id -un) --group=admin --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/usr/local/bin/pg_config --sbin-path=/usr/local/sbin/nginx --conf-path=/usr/local/etc/nginx.conf
+./configure --prefix=/usr/local --user=$(id -un) --group=admin --error-log-path=/usr/local/log/nginx/error.log --http-log-path=/usr/local/log/nginx/access.log --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --conf-path=/usr/local/etc/nginx.conf --sbin-path=/usr/local/bin/nginx
 make -j10
 sudo make install
+sudo mkdir /usr/local/log/nginx
+sudo chown $(id -un):admin /usr/local/log/nginx
+sudo ln -sf /usr/local/luajit/bin/luajit /usr/local/bin/
 wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
 tar xvf luarocks-3.11.1.tar.gz
 cd luarocks-3.11.1
-./configure --prefix=/usr/local --with-lua=/usr/local --lua-suffix=jit --with-lua-include=/usr/local/include/luajit-2.1 --with-lua-lib=/usr/local/lib
+./configure --prefix=/usr/local --with-lua=/usr/local/luajit --with-lua-include=/usr/local/luajit/include/luajit-2.1 --with-lua-lib=/usr/local/lualib
 make -j10
 sudo make install
 </pre>
 <p>#启动脚本</p>
 <pre>
-sudo echo "/usr/local/sbin/nginx -c /usr/local/etc/nginx.conf" > /usr/local/bin/nginxstart
+echo "/usr/local/sbin/nginx -c /usr/local/etc/nginx.conf" | sudo tee /usr/local/bin/nginxstart
 sudo chmod +x /usr/local/bin/nginxstart
 </pre>
 <p><b>七、编译安装mysql</b></p>
@@ -142,7 +151,7 @@ cd mysql-5.7.44
 cmake . -DCMAKE_INSTALL_PREFIX=/usr/local -DMYSQL_DATADIR=/usr/local/db/mysql -DINSTALL_MYSQLDATADIR=/usr/local/db/mysql -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
 make -j10
 sudo make install
-cat > /usr/local/etc/my.cnf << "EOF"
+cat > /tmp/my.cnf << "EOF"
 [client]
 port=3306
 socket=/tmp/mysql.sock
@@ -166,15 +175,21 @@ quick
 port=3306
 socket=/tmp/mysql.sock
 EOF
+sudo mv /tmp/my.cnf /usr/local/etc/
 sudo mkdir -p /usr/local/db/mysql
+sudo mkdir -p /usr/local/log
+sudo touch /usr/local/log/mysql-slow.log
+sudo touch /usr/local/log/mysqld.log
 sudo chown $(id -un):admin /usr/local/db/mysql
+sudo chown $(id -un):admin /usr/local/log/mysqld.log
+sudo chown $(id -un):admin /usr/local/log/mysql-slow.log
 /usr/local/bin/mysqld --defaults-file=/usr/local/etc/my.cnf  --initialize-insecure
 /usr/local/bin/mysqld --defaults-file=/usr/local/etc/my.cnf --daemonize --pid-file=/tmp/mysqld.pid
 mysqladmin -uroot password "新密码"
 </pre>
 <p>#启动脚本</p>
 <pre>
-sudo echo "/usr/local/bin/mysqld --defaults-file=/usr/local/etc/my.cnf --daemonize --pid-file=/tmp/mysqld.pid" > /usr/local/bin/mysqlstart
+echo "/usr/local/bin/mysqld --defaults-file=/usr/local/etc/my.cnf --daemonize --pid-file=/tmp/mysqld.pid" | sudo tee /usr/local/bin/mysqlstart
 sudo chmod +x /usr/local/bin/mysqlstart
 </pre>
 <p><a href="index.html">返回首页</a></p>
