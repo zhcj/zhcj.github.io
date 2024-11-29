@@ -22,9 +22,9 @@ dnf install spice-server spice-protocol -y
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-9.1.1.tar.xz
-tar xvf qemu-9.1.1.tar.xz
-cd qemu-9.1.1
+wget https://download.qemu.org/qemu-9.1.2.tar.xz
+tar xvf qemu-9.1.2.tar.xz
+cd qemu-9.1.2
 ./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu,i386-softmmu
 #接上，如需要虚拟xp/win2003，需添加--enable-spice
 make -j5

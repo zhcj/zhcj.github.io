@@ -26,11 +26,12 @@ cd redis-7.4.1
 make -j10
 sudo make PREFIX=/usr/local/redis install
 sudo ln -sf /usr/local/redis/bin/* /usr/local/bin/
-sudo mkdir -p /usr/local/redis/log
-sudo mkdir -p /usr/local/redis/db
 sudo cp redis.conf /usr/local/redis/
-sudo touch /usr/local/redis/log/redis.log
+sudo mkdir -p /usr/local/redis/db
 sudo chown $(id -un):admin /usr/local/redis/db
+sudo mkdir -p /usr/local/redis/log
+sudo chown $(id -un):admin /usr/local/redis/log
+sudo touch /usr/local/redis/log/redis.log
 sudo chown $(id -un):admin /usr/local/redis/log/redis.log
 sudo sed -i "" "s/# unixsocket \/run\/redis.sock/unixsocket \/tmp\/redis.sock/g" /usr/local/redis/redis.conf
 sudo sed -i "" "s/# unixsocketperm 700/unixsocketperm 666/g" /usr/local/redis/redis.conf
@@ -53,6 +54,7 @@ cd postgresql-17.2
 make -j10
 sudo make install
 sudo ln -sf /usr/local/pgsql/bin/* /usr/local/bin/
+sudo ln -sf /usr/local/pgsql/include/* /usr/local/include/
 cd /usr/local/pgsql
 sudo mkdir -p log
 sudo mkdir -p data
@@ -129,9 +131,10 @@ cd openresty-1.27.1.1
 ./configure --prefix=/usr/local/nginx --user=$(id -un) --group=admin --error-log-path=/usr/local/nginx/log/error.log --http-log-path=/usr/local/nginx/log/access.log --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --conf-path=/usr/local/nginx/conf/nginx.conf --sbin-path=/usr/local/nginx/sbin/nginx
 make -j10
 sudo make install
+sudo ln -sf /usr/local/nginx/sbin/nginx /usr/local/bin/
+sudo ln -sf /usr/local/nginx/luajit/bin/luajit /usr/local/bin/
 sudo mkdir /usr/local/nginx/log
 sudo chown $(id -un):admin /usr/local/nginx/log
-sudo ln -sf /usr/local/nginx/luajit/bin/luajit /usr/local/bin/
 wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
 tar xvf luarocks-3.11.1.tar.gz
 cd luarocks-3.11.1

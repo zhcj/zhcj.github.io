@@ -307,16 +307,18 @@ cmake . \
 -DWITH_UNIT_TESTS=OFF \
 -DINSTALL_MYSQLTESTDIR= \
 -DWITH_SSL=system \
--DFORCE_INSOURCE_BUILD=ON
+-DFORCE_INSOURCE_BUILD=ON \
+-DWITH_ROUTER=off
 #mysql-5.7.44去掉：
--DFORCE_INSOURCE_BUILD=ON
+-DFORCE_INSOURCE_BUILD=ON \
+-DWITH_ROUTER=off
 增加：
-#-DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
+-DWITH_BOOST=boost \
+-DWITH_EMBEDDED_SERVER=OFF
 make -j5
 make install
 ln -sf /usr/local/mysql/bin/* /usr/local/bin/
 cp scripts/mysqld.service /lib/systemd/system/
-sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/usr\/local\/mysql\/my.cnf /g" /lib/systemd/system/mysqld.service
 
 cat > /usr/local/mysql/my.cnf << "EOF"
 [client]

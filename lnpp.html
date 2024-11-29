@@ -116,8 +116,8 @@ echo "host    all             all             192.168.1.0/24          trust" >> 
 sed -i "s/max_connections = 100/max_connections = 200/" /usr/local/pgsql/data/postgresql.conf
 </pre>
 <p>启动数据库</p>
-<pre>systemctl start postgresql
-systemctl enable postgresql</pre>
+<pre>systemctl start pgsql
+systemctl enable pgsql</pre>
 <p><b><a name="nginx">3.1、安装Nginx</a></b></p>
 <p>安装依赖</p>
 <pre>dnf install pcre-devel zlib-devel -y
