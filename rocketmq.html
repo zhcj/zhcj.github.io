@@ -19,8 +19,8 @@
 <pre>https://www.oracle.com/java/technologies/javase-downloads.html</pre>
 <p>配置（以jdk-8u251-linux-x64.tar.gz为例）：</p>
 <pre>
-tar xvf jdk-8u251-linux-x64.tar.gz -C /data/mq/
-echo "export JAVA_HOME=/data/mq/jdk1.8.0_251" >> /etc/profile
+tar xvf jdk-8u251-linux-x64.tar.gz -C /usr/local/mq/
+echo "export JAVA_HOME=/usr/local/mq/jdk1.8.0_251" >> /etc/profile
 echo "export CLASSPATH=.:\${JAVA_HOME}/jre/lib/rt.jar:\${JAVA_HOME}/lib/dt.jar:\${JAVA_HOME}/lib/tools.jar" >> /etc/profile
 echo "export PATH=\$PATH:\${JAVA_HOME}/bin" >> /etc/profile
 source /etc/profile
@@ -28,16 +28,16 @@ source /etc/profile
 <p>2、安装配置Maven：</p>
 <pre>
 wget https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
-tar xvf apache-maven-3.2.5-bin.tar.gz -C /data/mq/
-echo "export PATH=/data/mq/apache-maven-3.2.5/bin:\$PATH" >> /etc/profile
+tar xvf apache-maven-3.2.5-bin.tar.gz -C /usr/local/mq/
+echo "export PATH=/usr/local/mq/apache-maven-3.2.5/bin:\$PATH" >> /etc/profile
 source /etc/profile
 </pre>
 <p>mvn -v确认一下，出现以下类似信息，说明环境配置成功正确：</p>
 <pre>
 Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-15T01:29:23+08:00)
-Maven home: /data/mq/apache-maven-3.2.5
+Maven home: /usr/local/mq/apache-maven-3.2.5
 Java version: 1.8.0_251, vendor: Oracle Corporation
-Java home: /data/mq/jdk1.8.0_251/jre
+Java home: /usr/local/mq/jdk1.8.0_251/jre
 Default locale: zh_CN, platform encoding: UTF-8
 OS name: "linux", version: "3.10.0-1062.12.1.el7.x86_64", arch: "amd64", family: "unix"
 </pre>
@@ -53,7 +53,7 @@ OS name: "linux", version: "3.10.0-1062.12.1.el7.x86_64", arch: "amd64", family:
 <p><b>二、下载并安装RocketMQ：</b></p>
 <pre>
 wget https://archive.apache.org/dist/rocketmq/4.7.0/rocketmq-all-4.7.0-source-release.zip
-unzip rocketmq-all-4.7.0-source-release.zip -d /data/mq/
+unzip rocketmq-all-4.7.0-source-release.zip -d /usr/local/mq/
 cd rocketmq-all-4.7.0-source-release
 mvn -Prelease-all -DskipTests clean install -U
 #上条命令会下载大量的包到~/.m2/repository目录，建议备份此目录

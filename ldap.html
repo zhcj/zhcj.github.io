@@ -202,7 +202,7 @@ EOF</pre>
 <p>3.1、phpldapadmin（php>5.0，支持php7.3）</p>
 <pre>git clone https://github.com/leenooks/phpLDAPadmin.git
 mv phpLDAPadmin/config/config.php.example phpLDAPadmin/config/config.php
-mv phpLDAPadmin /data/ldap</pre>
+mv phpLDAPadmin /usr/local/ldap</pre>
 <p>登录（http://ldap.server.com）</p>
 <p>用户名：cn=admin,dc=sjz19,dc=cn</p>
 <p>密码：前面所设置的密码</p>
@@ -210,11 +210,11 @@ mv phpLDAPadmin /data/ldap</pre>
 <pre>wget http://prdownloads.sourceforge.net/lam/ldap-account-manager-6.8.tar.bz2
 tar xvf ldap-account-manager-6.8.tar.bz2
 cd ldap-account-manager-6.8
-./configure --prefix=/data/ldap --with-httpd-user=www --with-httpd-group=www --with-web-root=/data/ldap/htdocs
+./configure --prefix=/usr/local/ldap --with-httpd-user=www --with-httpd-group=www --with-web-root=/usr/local/ldap/htdocs
 make
 make install</pre>
 <p>登录（http://ldap.server.com）</p>
-<p>注：设置较复杂，参考/data/ldap/docs/manual/index.html</p>
+<p>注：设置较复杂，参考/usr/local/ldap/docs/manual/index.html</p>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">版权所有 &copy; 2016-2024 清风的个人笔记 </p>
 </body>

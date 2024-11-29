@@ -25,8 +25,8 @@ wget https://github.com/valkey-io/valkey/archive/refs/tags/8.0.1.tar.gz -O valke
 tar xvf valkey-8.0.1.tar.gz
 cd valkey-8.0.1
 make
-make PREFIX=/data/valkey install
-cp valkey.conf /data/valkey/
+make PREFIX=/usr/local/valkey install
+cp valkey.conf /usr/local/valkey/
 useradd -U -r -M -s /bin/false valkey
 cat > /lib/systemd/system/valkey.service << "EOF"
 [Unit]
@@ -34,8 +34,8 @@ Description=Valkey persistent key-value database
 After=network.target
 
 [Service]
-ExecStart=/data/valkey/bin/valkey-server /data/valkey/valkey.conf --daemonize no
-ExecStop=/data/valkey/bin/valkey-cli -h 127.0.0.1 -p 6379 shutdown
+ExecStart=/usr/local/valkey/bin/valkey-server /usr/local/valkey/valkey.conf --daemonize no
+ExecStop=/usr/local/valkey/bin/valkey-cli -h 127.0.0.1 -p 6379 shutdown
 User=valkey
 Group=valkey
 LimitNOFILE=65536
@@ -43,19 +43,19 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 EOF
-ln -sf /data/valkey/bin/* /usr/local/bin/
+ln -sf /usr/local/valkey/bin/* /usr/local/bin/
 #linux中以unix socket运行valkey，提升连接速度
-sed -i "s/# unixsocket \/run\/valkey.sock/unixsocket \/tmp\/valkey.sock/g" /data/valkey/valkey.conf
-sed -i "s/# unixsocketperm 700/unixsocketperm 666/g" /data/valkey/valkey.conf
+sed -i "s/# unixsocket \/run\/valkey.sock/unixsocket \/tmp\/valkey.sock/g" /usr/local/valkey/valkey.conf
+sed -i "s/# unixsocketperm 700/unixsocketperm 666/g" /usr/local/valkey/valkey.conf
 #Failed opening the RDB file dump.rdb问题
-mkdir /data/valkey/db
-chown valkey:valkey /data/valkey/db -R
-sed -i "s/dir .\//dir \/data\/valkey\/db\//g" /data/valkey/valkey.conf
+mkdir /usr/local/valkey/db
+chown valkey:valkey /usr/local/valkey/db -R
+sed -i "s/dir .\//dir \/usr\/local\/valkey\/db\//g" /usr/local/valkey/valkey.conf
 #日志文件
-mkdir /data/valkey/log
-sed -i "s/logfile \"\"/logfile \"\/data\/valkey\/log\/valkey.log\"/g" /data/valkey/valkey.conf
-touch /data/valkey/log/valkey.log
-chown valkey:valkey /data/valkey/log/valkey.log
+mkdir /usr/local/valkey/log
+sed -i "s/logfile \"\"/logfile \"\/usr\/local\/valkey\/log\/valkey.log\"/g" /usr/local/valkey/valkey.conf
+touch /usr/local/valkey/log/valkey.log
+chown valkey:valkey /usr/local/valkey/log/valkey.log
 #The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.问题
 echo 511 > /proc/sys/net/core/somaxconn
 echo "echo 511 > /proc/sys/net/core/somaxconn" >> /etc/rc.local
@@ -71,7 +71,7 @@ chmod +x /etc/rc.local
 systemctl start valkey
 systemctl enable valkey
 #设置密码（如：valkey123）
-sed -i "s/# requirepass foobared/requirepass valkey123/g" /data/valkey/valkey.conf
+sed -i "s/# requirepass foobared/requirepass valkey123/g" /usr/local/valkey/valkey.conf
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2024 清风的个人笔记</p>

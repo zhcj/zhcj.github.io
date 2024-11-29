@@ -34,7 +34,7 @@ wget http://nginx.org/download/nginx-1.27.2.tar.gz</pre>
 <pre>tar xvf nginx-1.27.2.tar.gz</pre>
 <p>编译</p>
 <pre>cd nginx-1.27.2
-./configure --prefix=/data/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/nginx/log/access.log --error-log-path=/data/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
+./configure --prefix=/usr/local/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/usr/local/nginx/log/access.log --error-log-path=/usr/local/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
 make -j5
 make install</pre>
 <p>配置启动</p>
@@ -46,8 +46,8 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 PIDFile=/run/nginx.pid
-ExecStartPre=/data/nginx/sbin/nginx -t -c /data/nginx/conf/nginx.conf
-ExecStart=/data/nginx/sbin/nginx -c /data/nginx/conf/nginx.conf
+ExecStartPre=/usr/local/nginx/sbin/nginx -t -c /usr/local/nginx/conf/nginx.conf
+ExecStart=/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
 ExecStartPost=/bin/sleep 0.1
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill -QUIT $MAINPID
@@ -56,12 +56,12 @@ ExecStop=/bin/kill -QUIT $MAINPID
 WantedBy=multi-user.target
 EOF
 
-sed -i "s/\/\$nginx_version//" /data/nginx/conf/fastcgi*
-sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/nginx/conf/mime.types
-mv /data/nginx/conf/nginx.conf /data/nginx/conf/nginx.conf.bak
-mkdir /data/nginx/conf/conf.d
+sed -i "s/\/\$nginx_version//" /usr/local/nginx/conf/fastcgi*
+sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /usr/local/nginx/conf/mime.types
+mv /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.bak
+mkdir /usr/local/nginx/conf/conf.d
 
-cat > /data/nginx/conf/nginx.conf << "EOF"
+cat > /usr/local/nginx/conf/nginx.conf << "EOF"
 user  www;
 worker_processes  4;
 events {
@@ -80,7 +80,7 @@ http {
     include  conf.d/*.conf;
 }
 EOF
-cat > /data/nginx/conf/conf.d/www.conf << "EOF"
+cat > /usr/local/nginx/conf/conf.d/www.conf << "EOF"
 server {
     listen       80;
     server_name  localhost;
@@ -102,7 +102,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -sf /data/nginx/sbin/nginx /usr/local/bin/
+ln -sf /usr/local/nginx/sbin/nginx /usr/local/bin/
 </pre>
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -124,35 +124,35 @@ wget http://www.php.net/distributions/php-8.4.1.tar.xz</pre>
 <pre>tar xvf php-8.4.1.tar.xz</pre>
 <p>编译</p>
 <pre>cd php-8.4.1
-./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
+./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
 #ln -sf /usr/lib64/liblber* /usr/lib/
 make -j5
 make install
-ln -sf /data/php/bin/* /usr/local/bin/
-ln -sf /data/php/sbin/* /usr/local/bin/
+ln -sf /usr/local/php/bin/* /usr/local/bin/
+ln -sf /usr/local/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
-cp php.ini-production /data/php/php.ini
-cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
-cp sapi/fpm/php-fpm.conf /data/php/etc/
-sed -i "s/;zend_extension=opcache/zend_extension=opcache/" /data/php/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
-sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
-sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
-sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
+cp php.ini-production /usr/local/php/php.ini
+cp sapi/fpm/www.conf /usr/local/php/etc/php-fpm.d/
+cp sapi/fpm/php-fpm.conf /usr/local/php/etc/
+sed -i "s/;zend_extension=opcache/zend_extension=opcache/" /usr/local/php/php.ini
+sed -i "s/;opcache.enable=0/opcache.enable=1/" /usr/local/php/php.ini
+sed -i "s/;opcache.enable=1/opcache.enable=1/" /usr/local/php/php.ini
+sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /usr/local/php/php.ini
+sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /usr/local/php/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 60/" /usr/local/php/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /usr/local/php/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 20M/" /usr/local/php/php.ini
+sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /usr/local/php/php.ini
+sed -i "s/;pcre.jit=1/pcre.jit=0/" /usr/local/php/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /usr/local/php/php.ini
+sed -i "s/expose_php = On/expose_php = Off/" /usr/local/php/php.ini
 pear update-channels pear.php.net
 pear upgrade-all
 #php8增加jit参数
-echo "opcache.jit=1235" >> /data/php/php.ini
-echo "opcache.jit_buffer_size=64M" >> /data/php/php.ini
+echo "opcache.jit=1235" >> /usr/local/php/php.ini
+echo "opcache.jit_buffer_size=64M" >> /usr/local/php/php.ini
 #查看是否生效
 php -i|grep -i jit
 </pre>
@@ -212,8 +212,8 @@ mysql -uroot -p
 <p>编译</p>
 <pre>cd mariadb-11.5.2
 cmake . \
--DCMAKE_INSTALL_PREFIX=/data/mariadb \
--DMYSQL_DATADIR=/data/mariadb/data \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mariadb \
+-DMYSQL_DATADIR=/usr/local/mariadb/data \
 -DDEFAULT_CHARSET=utf8 \
 -DDEFAULT_COLLATION=utf8_general_ci \
 -DWITH_SYSTEMD=yes \
@@ -245,10 +245,10 @@ cmake . \
 
 make -j5
 make install
-ln -sf /data/mariadb/bin/* /usr/local/bin/
-mkdir /data/mariadb/data
-chown mysql:mysql /data/mariadb/data -R
-sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
+ln -sf /usr/local/mariadb/bin/* /usr/local/bin/
+mkdir /usr/local/mariadb/data
+chown mysql:mysql /usr/local/mariadb/data -R
+sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/usr/local\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
 cat > my.cnf << "EOF"
 [client]
 port=3306
@@ -263,22 +263,22 @@ max_allowed_packet=8M
 [mysqldump]
 quick
 EOF
-cd /data/mariadb
-scripts/mysql_install_db --user=mysql --defaults-file=/data/mariadb/my.cnf --datadir=/data/mariadb/data/
+cd /usr/local/mariadb
+scripts/mysql_install_db --user=mysql --defaults-file=/usr/local/mariadb/my.cnf --datadir=/usr/local/mariadb/data/
 systemctl start mariadb
-/data/mariadb/bin/mysqladmin -u root password 'password'
+/usr/local/mariadb/bin/mysqladmin -u root password 'password'
 #更新或重新编译后：
-#sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/data\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
-rm -rf /data/mariadb/data/test
+#sed -i "s/\$MYSQLD_OPTS \$_WSREP_NEW_CLUSTER \$_WSREP_START_POSITION/--defaults-file=\/usr\/local\/mariadb\/my.cnf/" /lib/systemd/system/mariadb.service
+rm -rf /usr/local/mariadb/data/test
 systemctl daemon-reload
 systemctl restart mariadb
 #慢日志
-mkdir /data/mariadb/log
-chown mysql:mysql /data/mariadb/log -R
+mkdir /usr/local/mariadb/log
+chown mysql:mysql /usr/local/mariadb/log -R
 #修改my.cnf
 [mysqld]
 slow_query_log = on
-slow_query_log_file = /data/mariadb/log/mysql-slow
+slow_query_log_file = /usr/local/mariadb/log/mysql-slow
 long_query_time = 2
 #bin日志
 log-bin=mysql-bin
@@ -297,9 +297,9 @@ max_connections = 1000
 <pre>cd mysql-9.1.0
 #cd mysql-5.7.44
 cmake . \
--DCMAKE_INSTALL_PREFIX=/data/mysql \
--DMYSQL_DATADIR=/data/mysql/data \
--DINSTALL_MYSQLDATADIR=/data/mysql/data \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
+-DMYSQL_DATADIR=/usr/local/mysql/data \
+-DINSTALL_MYSQLDATADIR=/usr/local/mysql/data \
 -DDEFAULT_CHARSET=utf8mb4 \
 -DDEFAULT_COLLATION=utf8mb4_general_ci \
 -DWITH_SYSTEMD=1 \
@@ -314,11 +314,11 @@ cmake . \
 #-DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
 make -j5
 make install
-ln -sf /data/mysql/bin/* /usr/local/bin/
+ln -sf /usr/local/mysql/bin/* /usr/local/bin/
 cp scripts/mysqld.service /lib/systemd/system/
-sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/data\/mysql\/my.cnf /g" /lib/systemd/system/mysqld.service
+sed -i "s/bin\/mysqld /bin\/mysqld --defaults-file=\/usr\/local\/mysql\/my.cnf /g" /lib/systemd/system/mysqld.service
 
-cat > /data/mysql/my.cnf << "EOF"
+cat > /usr/local/mysql/my.cnf << "EOF"
 [client]
 port=3306
 socket=/tmp/mysql.sock
@@ -329,9 +329,9 @@ socket=/tmp/mysql.sock
 key_buffer_size=16M
 max_allowed_packet=8M
 
-log-error=/data/mysql/log/mysqld.log
+log-error=/usr/local/mysql/log/mysqld.log
 slow_query_log=1
-slow_query_log_file=/data/mysql/log/mysql-slow.log
+slow_query_log_file=/usr/local/mysql/log/mysql-slow.log
 long_query_time=3
 log_output=FILE
 
@@ -344,11 +344,11 @@ socket=/tmp/mysql.sock
 EOF
 
 #创建日志目录
-mkdir /data/mysql/log
-chown mysql:mysql /data/mysql/log -R
+mkdir /usr/local/mysql/log
+chown mysql:mysql /usr/local/mysql/log -R
 
 #初始化
-mysqld --defaults-file=/data/mysql/my.cnf --initialize-insecure --user=mysql
+mysqld --defaults-file=/usr/local/mysql/my.cnf --initialize-insecure --user=mysql
 systemctl start mysqld
 mysqladmin -uroot password "新密码"
 </pre>

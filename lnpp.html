@@ -39,7 +39,7 @@
 <p><b>2.2、编译安装PostgreSQL数据库</b></p>
 <p>建立组和用户并设置密码</p>
 <pre>
-useradd -U -r -M -s /bin/nologin -d /data/pgsql postgres
+useradd -U -r -M -s /bin/nologin -d /usr/local/pgsql postgres
 echo "密码" | passwd --stdin postgres</pre>
 <p>安装依赖</p>
 <pre>dnf install pam-devel readline-devel libxslt-devel openssl-devel systemd-devel -y
@@ -53,7 +53,7 @@ dnf install bison flex perl-lib -y</pre>
 <pre>tar xvf postgresql-17.2.tar.bz2</pre>
 <p>编译</p>
 <pre>cd postgresql-17.2
-./configure --prefix=/data/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
+./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
 <p>编译dblink插件</p>
@@ -65,9 +65,9 @@ postgres=# create extension dblink;</pre>
 <p>查看</p>
 <pre>postgres=# select * from pg_extension;</pre>
 <p>初始化数据库</p>
-<pre>mkdir /data/pgsql/data
-chown postgres:postgres /data/pgsql/data -R
-sudo -u postgres /data/pgsql/bin/initdb -D /data/pgsql/data -E 'UTF8' --locale='zh_CN.UTF-8'</pre>
+<pre>mkdir /usr/local/pgsql/data
+chown postgres:postgres /usr/local/pgsql/data -R
+sudo -u postgres /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data -E 'UTF8' --locale='zh_CN.UTF-8'</pre>
 <p>配置文件</p>
 <pre>cat > /lib/systemd/system/pgsql.service << "EOF"
 [Unit]
@@ -81,9 +81,9 @@ User=postgres
 Group=postgres
 
 Environment=PGPORT=5432
-Environment=DATA_DIR=/data/pgsql/data
+Environment=DATA_DIR=/usr/local/pgsql/data
 
-ExecStart=/data/pgsql/bin/postgres -p ${PGPORT} -D ${DATA_DIR}
+ExecStart=/usr/local/pgsql/bin/postgres -p ${PGPORT} -D ${DATA_DIR}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=mixed
 KillSignal=SIGINT
@@ -97,23 +97,23 @@ WantedBy=multi-user.target
 EOF</pre>
 <p>开启日志</p>
 <pre>
-sed -i "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /data/pgsql/data/postgresql.conf
-sed -i "s/#logging_collector = off/logging_collector = on/g" /data/pgsql/data/postgresql.conf
-sed -i "s/#log_directory =/log_directory =/g" /data/pgsql/data/postgresql.conf
-sed -i "s/#log_filename =/log_filename =/g" /data/pgsql/data/postgresql.conf
-sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /data/pgsql/data/postgresql.conf
-sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /data/pgsql/data/postgresql.conf
-sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /data/pgsql/data/postgresql.conf
+sed -i "s/#log_destination = 'stderr'/log_destination = 'csvlog'/g" /usr/local/pgsql/data/postgresql.conf
+sed -i "s/#logging_collector = off/logging_collector = on/g" /usr/local/pgsql/data/postgresql.conf
+sed -i "s/#log_directory =/log_directory =/g" /usr/local/pgsql/data/postgresql.conf
+sed -i "s/#log_filename =/log_filename =/g" /usr/local/pgsql/data/postgresql.conf
+sed -i "s/#log_rotation_age = 1d/log_rotation_age = 1d/g" /usr/local/pgsql/data/postgresql.conf
+sed -i "s/#log_rotation_size = 10MB/log_rotation_size = 100MB/g" /usr/local/pgsql/data/postgresql.conf
+sed -i "s/#log_min_messages = warning/log_min_messages = info/g" /usr/local/pgsql/data/postgresql.conf
 </pre>
 <p>如需开放对外访问，修改监听IP地址和允许访问IP设置</p>
 <pre>
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /data/pgsql/data/postgresql.conf
-echo "host    all             all             192.168.1.0/24          trust" >> /data/pgsql/data/pg_hba.conf
+sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /usr/local/pgsql/data/postgresql.conf
+echo "host    all             all             192.168.1.0/24          trust" >> /usr/local/pgsql/data/pg_hba.conf
 </pre>
 <p>注：允许192.168.1.1-255网段访问</p>
 <p>默认连接数为100，如出现“已保留的连接位置为执行非复制请求的超级用户预留”，需要修改连接数</p>
 <pre>
-sed -i "s/max_connections = 100/max_connections = 200/" /data/pgsql/data/postgresql.conf
+sed -i "s/max_connections = 100/max_connections = 200/" /usr/local/pgsql/data/postgresql.conf
 </pre>
 <p>启动数据库</p>
 <pre>systemctl start postgresql
@@ -133,7 +133,7 @@ wget http://nginx.org/download/nginx-1.27.2.tar.gz
 </pre>
 <p>编译</p>
 <pre>cd nginx-1.27.2
-./configure --prefix=/data/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/data/nginx/log/access.log --error-log-path=/data/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
+./configure --prefix=/usr/local/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/usr/local/nginx/log/access.log --error-log-path=/usr/local/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
 make -j5
 make install</pre>
 <p>配置启动</p>
@@ -145,8 +145,8 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 PIDFile=/run/nginx.pid
-ExecStartPre=/data/nginx/sbin/nginx -t -c /data/nginx/conf/nginx.conf
-ExecStart=/data/nginx/sbin/nginx -c /data/nginx/conf/nginx.conf
+ExecStartPre=/usr/local/nginx/sbin/nginx -t -c /usr/local/nginx/conf/nginx.conf
+ExecStart=/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
 ExecStartPost=/bin/sleep 0.1
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill -QUIT $MAINPID
@@ -155,12 +155,12 @@ ExecStop=/bin/kill -QUIT $MAINPID
 WantedBy=multi-user.target
 EOF
 
-sed -i "s/\/\$nginx_version//" /data/nginx/conf/fastcgi*
-sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /data/nginx/conf/mime.types
-mv /data/nginx/conf/nginx.conf /data/nginx/conf/nginx.conf.bak
-mkdir /data/nginx/conf/conf.d
+sed -i "s/\/\$nginx_version//" /usr/local/nginx/conf/fastcgi*
+sed -i "s/}/    application\/vnd.android.package-archive apk;\n}/g" /usr/local/nginx/conf/mime.types
+mv /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.bak
+mkdir /usr/local/nginx/conf/conf.d
 
-cat > /data/nginx/conf/nginx.conf << "EOF"
+cat > /usr/local/nginx/conf/nginx.conf << "EOF"
 user  www;
 worker_processes  4;
 events {
@@ -179,7 +179,7 @@ http {
     include  conf.d/*.conf;
 }
 EOF
-cat > /data/nginx/conf/conf.d/www.conf << "EOF"
+cat > /usr/local/nginx/conf/conf.d/www.conf << "EOF"
 server {
     listen       80;
     server_name  localhost;
@@ -201,7 +201,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -sf /data/nginx/sbin/nginx /usr/local/bin/
+ln -sf /usr/local/nginx/sbin/nginx /usr/local/bin/
 </pre>
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -221,7 +221,7 @@ wget https://openresty.org/download/openresty-1.27.1.1.tar.gz
 </pre>
 <p>编译</p>
 <pre>cd openresty-1.27.1.1
-./configure --prefix=/data/openresty --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/data/pgsql/bin/pg_config --sbin-path=/data/openresty/sbin/nginx --conf-path=/data/openresty/conf/nginx.conf 
+./configure --prefix=/usr/local/openresty --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --with-pg_config=/usr/local/pgsql/bin/pg_config --sbin-path=/usr/local/openresty/sbin/nginx --conf-path=/usr/local/openresty/conf/nginx.conf 
 make -j5
 make install</pre>
 <p>配置启动</p>
@@ -233,8 +233,8 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 PIDFile=/run/nginx.pid
-ExecStartPre=/data/openresty/sbin/nginx -t -c /data/openresty/conf/nginx.conf
-ExecStart=/data/openresty/sbin/nginx -c /data/openresty/conf/nginx.conf
+ExecStartPre=/usr/local/openresty/sbin/nginx -t -c /usr/local/openresty/conf/nginx.conf
+ExecStart=/usr/local/openresty/sbin/nginx -c /usr/local/openresty/conf/nginx.conf
 ExecStartPost=/bin/sleep 0.1
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill -QUIT $MAINPID
@@ -243,11 +243,11 @@ ExecStop=/bin/kill -QUIT $MAINPID
 WantedBy=multi-user.target
 EOF
 
-sed -i "s/\/\$nginx_version//" /data/openresty/conf/fastcgi*
-mv /data/openresty/conf/nginx.conf /data/openresty/conf/nginx.conf.bak
-mkdir /data/openresty/conf/conf.d
+sed -i "s/\/\$nginx_version//" /usr/local/openresty/conf/fastcgi*
+mv /usr/local/openresty/conf/nginx.conf /usr/local/openresty/conf/nginx.conf.bak
+mkdir /usr/local/openresty/conf/conf.d
 
-cat > /data/openresty/conf/nginx.conf << "EOF"
+cat > /usr/local/openresty/conf/nginx.conf << "EOF"
 user  www;
 worker_processes  4;
 events {
@@ -266,7 +266,7 @@ http {
     include  conf.d/*.conf;
 }
 EOF
-cat > /data/openresty/conf/conf.d/www.conf << "EOF"
+cat > /usr/local/openresty/conf/conf.d/www.conf << "EOF"
 server {
     listen       80;
     server_name  localhost;
@@ -288,7 +288,7 @@ server {
 }
 EOF
 mkdir /data/www
-ln -sf /data/openresty/sbin/nginx /usr/local/bin/
+ln -sf /usr/local/openresty/sbin/nginx /usr/local/bin/
 </pre>
 <p>打开防火墙</p>
 <pre>firewall-cmd --permanent --zone=public --add-service=http
@@ -313,43 +313,43 @@ wget http://www.php.net/distributions/php-8.4.1.tar.xz</pre>
 <pre>tar xvf php-8.4.1.tar.xz</pre>
 <p>编译</p>
 <pre>cd php-8.4.1
-./configure --prefix=/data/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/data/php --with-config-file-scan-dir=/data/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
+./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
 #ln -sf /usr/lib64/liblber* /usr/lib/
 make -j5
 make install
-ln -sf /data/php/bin/* /usr/local/bin/
-ln -sf /data/php/sbin/* /usr/local/bin/
+ln -sf /usr/local/php/bin/* /usr/local/bin/
+ln -sf /usr/local/php/sbin/* /usr/local/bin/
 cp sapi/fpm/php-fpm.service /lib/systemd/system/
-cp php.ini-production /data/php/php.ini
-cp sapi/fpm/www.conf /data/php/etc/php-fpm.d/
-cp sapi/fpm/php-fpm.conf /data/php/etc/
-sed -i "s/;zend_extension=opcache/zend_extension=opcache/" /data/php/php.ini
-sed -i "s/;opcache.enable=0/opcache.enable=1/" /data/php/php.ini
-sed -i "s/;opcache.enable=1/opcache.enable=1/" /data/php/php.ini
-sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /data/php/php.ini
-sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /data/php/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 60/" /data/php/php.ini
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /data/php/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 20M/" /data/php/php.ini
-sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /data/php/php.ini
-sed -i "s/;pcre.jit=1/pcre.jit=0/" /data/php/php.ini
-sed -i "s/display_errors = Off/display_errors = On/" /data/php/php.ini
-sed -i "s/expose_php = On/expose_php = Off/" /data/php/php.ini
+cp php.ini-production /usr/local/php/php.ini
+cp sapi/fpm/www.conf /usr/local/php/etc/php-fpm.d/
+cp sapi/fpm/php-fpm.conf /usr/local/php/etc/
+sed -i "s/;zend_extension=opcache/zend_extension=opcache/" /usr/local/php/php.ini
+sed -i "s/;opcache.enable=0/opcache.enable=1/" /usr/local/php/php.ini
+sed -i "s/;opcache.enable=1/opcache.enable=1/" /usr/local/php/php.ini
+sed -i "s/;opcache.enable_cli=0/opcache.enable_cli=1/" /usr/local/php/php.ini
+sed -i "s/;opcache.file_cache=/opcache.file_cache=\/tmp/" /usr/local/php/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 60/" /usr/local/php/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /usr/local/php/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 20M/" /usr/local/php/php.ini
+sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /usr/local/php/php.ini
+sed -i "s/;pcre.jit=1/pcre.jit=0/" /usr/local/php/php.ini
+sed -i "s/display_errors = Off/display_errors = On/" /usr/local/php/php.ini
+sed -i "s/expose_php = On/expose_php = Off/" /usr/local/php/php.ini
 pear update-channels pear.php.net
 pear upgrade-all
 #php8增加jit参数
-echo "opcache.jit=1235" >> /data/php/php.ini
-echo "opcache.jit_buffer_size=64M" >> /data/php/php.ini
+echo "opcache.jit=1235" >> /usr/local/php/php.ini
+echo "opcache.jit_buffer_size=64M" >> /usr/local/php/php.ini
 #查看是否生效
 php -i|grep -i jit
 #pecl安装php模块（最简单的方法）
 pecl install memcached redis lzf imagick
-echo "extension=memcached" >> /data/php/lib/php/extensions/ext.ini
-echo "extension=lzf" >> /data/php/lib/php/extensions/ext.ini
-echo "extension=redis" >> /data/php/lib/php/extensions/ext.ini
-echo "extension=imagick" >> /data/php/lib/php/extensions/ext.ini
+echo "extension=memcached" >> /usr/local/php/lib/php/extensions/ext.ini
+echo "extension=lzf" >> /usr/local/php/lib/php/extensions/ext.ini
+echo "extension=redis" >> /usr/local/php/lib/php/extensions/ext.ini
+echo "extension=imagick" >> /usr/local/php/lib/php/extensions/ext.ini
 </pre>
 #编译安装ImageMagick
 <pre>
@@ -371,7 +371,7 @@ systemctl enable memcached
 wget https://www.memcached.org/files/memcached-1.6.32.tar.gz
 tar xvf memcached-1.6.32.tar.gz
 cd memcached-1.6.32
-./configure --prefix=/data/memcached
+./configure --prefix=/usr/local/memcached
 make -j5
 make install
 cat > /lib/systemd/system/memcached.service << "EOF"
@@ -382,7 +382,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/data/memcached/bin/memcached -u root -p 11211 -m 64 -c 1024
+ExecStart=/usr/local/memcached/bin/memcached -u root -p 11211 -m 64 -c 1024
 
 [Install]
 WantedBy=multi-user.target
