@@ -29,11 +29,11 @@
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.27.2.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.27.3.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.27.2.tar.gz</pre>
+<pre>tar xvf nginx-1.27.3.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.27.2
+<pre>cd nginx-1.27.3
 ./configure --prefix=/usr/local/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/usr/local/nginx/log/access.log --error-log-path=/usr/local/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
 make -j5
 make install</pre>
@@ -205,12 +205,12 @@ mysql -uroot -p
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-11.5.2/source/mariadb-11.5.2.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-11.6.2/source/mariadb-11.6.2.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf mariadb-11.5.2.tar.gz</pre>
+<pre>tar xvf mariadb-11.6.2.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-11.5.2
+<pre>cd mariadb-11.6.2
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb \
 -DMYSQL_DATADIR=/usr/local/mariadb/data \
@@ -288,7 +288,7 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-9.1/mysql-9.2.0.tar.gz
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-9.2/mysql-9.2.0.tar.gz
 #wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz</pre>
 <p>解压</p>
 <pre>tar xvf mysql-9.2.0.tar.gz
