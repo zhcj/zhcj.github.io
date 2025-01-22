@@ -20,9 +20,9 @@
 <p>#自动安装依赖openssl@3/gettext等</p>
 <p><b>三、编译安装redis</b></p>
 <pre>
-wget http://download.redis.io/releases/redis-7.4.1.tar.gz
-tar xvf redis-7.4.1.tar.gz
-cd redis-7.4.1
+wget http://download.redis.io/releases/redis-7.4.2.tar.gz
+tar xvf redis-7.4.2.tar.gz
+cd redis-7.4.2
 make -j10
 sudo make PREFIX=/usr/local/redis install
 sudo ln -sf /usr/local/redis/bin/* /usr/local/bin/
@@ -127,7 +127,7 @@ brew install unix2dos pcre
 git clone https://github.com/openresty/openresty
 cd openresty
 make
-cd openresty-1.27.1.1
+cd openresty-1.27.1.2
 ./configure --prefix=/usr/local/nginx --user=$(id -un) --group=admin --error-log-path=/usr/local/nginx/log/error.log --http-log-path=/usr/local/nginx/log/access.log --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --conf-path=/usr/local/nginx/conf/nginx.conf --sbin-path=/usr/local/nginx/sbin/nginx
 make -j10
 sudo make install
@@ -154,7 +154,7 @@ wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz
 tar xvf mysql-boost-5.7.44.tar.gz
 cd mysql-5.7.44
 cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DINSTALL_MYSQLDATADIR=/usr/local/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
-#mysql-8.4.3
+#mysql-8.4.4
 #wget https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.xz
 #tar xvf bison-3.8.2.tar.xz
 #cd bison-3.8.2
@@ -162,9 +162,9 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql
 #camke --build .
 #camke --install .
 #cd ..
-#wget https://cdn.mysql.com//Downloads/MySQL-8.4/mysql-8.4.3.tar.gz
-#tar xvf mysql-8.4.3.tar.gz
-#cd mysql-8.4.3
+#wget https://cdn.mysql.com//Downloads/MySQL-8.4/mysql-8.4.4.tar.gz
+#tar xvf mysql-8.4.4.tar.gz
+#cd mysql-8.4.4
 #cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DINSTALL_MYSQLDATADIR=/usr/local/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DFORCE_INSOURCE_BUILD=1 -DBISON_EXECUTABLE=../bison/bin/bison 
 make -j10
 sudo make install
