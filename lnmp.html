@@ -119,11 +119,11 @@ systemctl start php-fpm</pre>
 <pre>dnf install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://www.php.net/distributions/php-8.4.1.tar.xz</pre>
+wget http://www.php.net/distributions/php-8.4.3.tar.xz</pre>
 <p>解压</p>
-<pre>tar xvf php-8.4.1.tar.xz</pre>
+<pre>tar xvf php-8.4.3.tar.xz</pre>
 <p>编译</p>
-<pre>cd php-8.4.1
+<pre>cd php-8.4.3
 ./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -288,13 +288,13 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-9.1/mysql-9.1.0.tar.gz
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-9.1/mysql-9.2.0.tar.gz
 #wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-9.1.0.tar.gz
+<pre>tar xvf mysql-9.2.0.tar.gz
 #tar xvf mysql-boost-5.7.44.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-9.1.0
+<pre>cd mysql-9.2.0
 #cd mysql-5.7.44
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
@@ -355,7 +355,7 @@ systemctl start mysqld
 mysqladmin -uroot password "新密码"
 </pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">&copy; 2016-2024 清风的个人笔记</p>
+<p align="center">&copy; 2016-2025 清风的个人笔记</p>
 </div>
 </body>
 </html>

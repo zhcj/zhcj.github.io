@@ -81,9 +81,9 @@ sudo chmod +x /usr/local/bin/pgsqlstart
 <p><b>五、编译安装php</b></p>
 <pre>
 brew install openssl freetype gettext webp libpng libiconv oniguruma libzip autoconf libsodium
-wget http://www.php.net/distributions/php-8.4.1.tar.xz
-tar xvf php-8.4.1.tar.xz
-cd php-8.4.1
+wget http://www.php.net/distributions/php-8.4.3.tar.xz
+tar xvf php-8.4.3.tar.xz
+cd php-8.4.3
 ./configure --prefix=/usr/local/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install
@@ -212,7 +212,7 @@ echo "/usr/local/mysql/bin/mysqld --defaults-file=/usr/local/mysql/my.cnf --daem
 sudo chmod +x /usr/local/bin/mysqlstart
 </pre>
 <p><a href="index.html">返回首页</a></p>
-<p align="center">&copy; 2016-2024 清风的个人笔记</p>
+<p align="center">&copy; 2016-2025 清风的个人笔记</p>
 </div>
 </body>
 </html>
