@@ -15,7 +15,7 @@
 <p>注：Mac mini/Windows11/AlmaLinux9测试通过。</p>
 <p><b>一、安装Ollama，详见<a href="https://ollama.com" target="_blank">Ollama官网</a></b></p>
 <p>1、各平台安装Ollama，下载安装包安装或使用官方脚本</p>
-<p>2、Linux命令行手动操作</p>
+<p>2、Linux命令行手动下载二进制包</p>
 <p>2.1、下载ollama（根据你的系统架构下载相应版本），解压</p>
 <pre>wget https://ollama.com/download/ollama-linux-amd64.tgz
 tar xvf ollama-inux-amd64.tgz -C /usr</pre>
@@ -46,6 +46,14 @@ EOF
 <p>2.4、启动并添加开机启动</p>
 <pre>systemctl start ollama
 systemctl enable ollama
+</pre>
+<p>3、Linux平台源码编译安装</p>
+<pre>
+git clone https://github.com/ollama/ollama
+cd ollama
+cmake -B build
+cmake --build build
+go run . serve
 </pre>
 <p><b>二、Ollama安装deepseek</b></p>
 <p>所有平台均可以运行以下命令安装</p>
