@@ -60,6 +60,11 @@ cd ollama
 cmake -B build
 cmake --build build
 go run . serve
+#以上为调试模式运行，也可以编译成可执行文件运行
+go build -o build/ollama main.go
+sudo cp build/ollama /usr/local/bin/
+sudo cp -r build/lib/ollama /usr/local/lib/
+ollama serve
 </pre>
 <p>注：MacOS打开Ollama的11434端口命令</p>
 <pre>
