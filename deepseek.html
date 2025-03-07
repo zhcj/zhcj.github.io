@@ -29,7 +29,7 @@ Description=Ollama Service
 After=network-online.target
 
 [Service]
-#以下两行将11434端口打开，为了安全，需要用防火墙限制IP等方式进行控制，如安装open-webui客户端，将下面两行注释即可
+#以下两行将11434端口打开，为了安全，需要用防火墙或nginx转发模式（详见附1）限制IP等进行控制，如安装open-webui客户端，将下面两行注释即可
 Environment="OLLAMA_HOST=0.0.0.0"
 Environment="OLLAMA_ORIGINS=*"
 ExecStart=/usr/bin/ollama serve
@@ -68,7 +68,7 @@ go run . serve
 <p>说明：</p>
 <p>#以下软件均在快速开发迭代中（甚至一天多个版本发布），请随时关注其官方网站；</p>
 <p>#所有客户端均需要调用ollama的11434端口，特别要注意服务端的安全；</p>
-<p>#提供web端的，如open-webui，服务端可以关闭11434端口和open-webui的8080端口，将8080端口用nginx转发至其他端口，更安全。</p>
+<p>#提供web端的，如open-webui，服务端可以关闭11434端口和open-webui的8080端口，将8080端口用nginx转发至其他端口（详见附2），更安全。</p>
 <p>1、open-webui，服务端安装，适合多用户，浏览器打开网页即可使用</p>
 <p>各平台安装python-3.11（必须是此版本），安装好运行行以下命令</p>
 <pre>
@@ -103,6 +103,50 @@ git clone https://github.com/CherryHQ/cherry-studio
 cd cherry-studio
 yarn
 yarn run dev
+</pre>
+<p><b>附1：nginx转发ollama默认11434端口到其他端口（如11435），方便控制权限</b><p>
+<pre>
+server {
+    listen      11435;
+    server_name 127.0.0.1;
+
+    allow   127.0.0.1;
+    allow   10.14.0.0/16;
+    allow   192.168.1.0/24;
+    deny    all;
+
+    access_log	../log/ollama_access.log main;
+    error_log	../log/ollama_error.log error;
+
+    location / {
+        proxy_pass  http://127.0.0.1:11434;
+        proxy_set_header Host $proxy_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+</pre>
+<p><b>附2：nginx转发open-webui默认8080端口到其他端口（如80），方便控制权限</b><p>
+<pre>
+server {
+    listen      80;
+    server_name 127.0.0.1;
+
+    allow   127.0.0.1;
+    allow   10.14.0.0/16;
+    allow   192.168.1.0/24;
+    deny    all;
+
+    access_log	../log/open-webui_access.log main;
+    error_log	../log/open-webui_error.log error;
+
+    location / {
+        proxy_pass  http://127.0.0.1:8080;
+        proxy_set_header Host $proxy_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
 </pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2025 清风的个人笔记</p>
