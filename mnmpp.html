@@ -169,7 +169,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql
 make -j10
 sudo make install
 sudo ln -sf /usr/local/mysql/bin/* /usr/local/bin/
-sudo cat > /tmp/my.cnf << "EOF"
+sudo bash -c "cat > /usr/local/mysql/my.cnf" << EOF
 [client]
 port=3306
 socket=/tmp/mysql.sock
@@ -193,7 +193,6 @@ quick
 port=3306
 socket=/tmp/mysql.sock
 EOF
-sudo mv /tmp/my.cnf /usr/local/mysql/
 sudo mkdir -p /usr/local/mysql/data
 sudo mkdir -p /usr/local/mysql/log
 sudo touch /usr/local/mysql/log/mysql-slow.log
