@@ -13,23 +13,23 @@
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>Ollama+DeepSeek+Open-WebUI/Chatbox/Cherry-Studio安装</h2>
 <p>注：Mac mini/Windows11/AlmaLinux9测试通过。</p>
-<p><b>一、安装Ollama，详见<a href="https://ollama.com" target="_blank">Ollama官网</a></b></p>
-<p>1、各平台安装Ollama，下载安装包安装或使用官方脚本</p>
+<p><b>一、安装Ollama，官网：<a href="https://ollama.com" target="_blank">https://ollama.com</a></b></p>
+<p>1、各平台安装Ollama，官网下载安装包或脚本安装</p>
 <p>2、Linux命令行手动下载二进制包</p>
 <p>2.1、下载Ollama（根据你的系统架构下载相应版本），解压</p>
 <pre>wget https://ollama.com/download/ollama-linux-amd64.tgz
-tar xvf ollama-inux-amd64.tgz -C /usr</pre>
+sudo tar xvf ollama-inux-amd64.tgz -C /usr</pre>
 <p>2.2、添加ollama用户及组，将当前用户加入ollama组</p>
-<pre>useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama
-usermod -a -G ollama $(whoami)</pre>
+<pre>sudo useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama
+sudo usermod -a -G ollama $(whoami)</pre>
 <p>2.3、创建启动脚本</p>
-<pre>cat > /lib/systemd/system/ollama.service << "EOF"
+<pre>sudo cat > /lib/systemd/system/ollama.service << "EOF"
 [Unit]
 Description=Ollama Service
 After=network-online.target
 
 [Service]
-#以下两行将11434端口打开，为了安全，需要用防火墙或nginx转发模式（详见附1）限制IP等进行控制，如安装open-webui客户端，将下面两行注释即可
+#以下两行将11434端口打开，为了安全，需要用防火墙限制IP等方式控制权限；如用nginx转发模式（详见附1）或安装open-webui客户端，不用打开11434端口，将下面两行注释即可
 Environment="OLLAMA_HOST=0.0.0.0"
 Environment="OLLAMA_ORIGINS=*"
 ExecStart=/usr/bin/ollama serve
@@ -44,8 +44,8 @@ WantedBy=default.target
 EOF
 </pre>
 <p>2.4、启动并添加开机启动</p>
-<pre>systemctl start ollama
-systemctl enable ollama
+<pre>sudo systemctl start ollama
+sudo systemctl enable ollama
 </pre>
 <p>3、Linux平台源码编译安装</p>
 <pre>
@@ -59,10 +59,10 @@ cmake --build build
 go run . serve
 </pre>
 <p><b>二、Ollama安装DeepSeek</b></p>
-<p>所有平台均可以运行以下命令安装</p>
+<p>所有平台均可以打开终端，运行以下命令安装</p>
 <pre>ollama run deepseek-r1:8b</pre>
 <p>注：<p>
-<p>#<a href="https://ollama.com/models" target="_blank">https://ollama.com/models</a>可以下载各种大模型；<p>
+<p>#<a href="https://ollama.com/models" target="_blank">https://ollama.com/models</a>可以查看可以安装的各种大模型；<p>
 <p>#8b中的b是billion（10亿），也就是80亿个参数。<p>
 <p><b>三、安装客户端</b></p>
 <p>说明：</p>
@@ -77,7 +77,7 @@ open-webui serve
 </pre>
 <p>注：<p>
 <p>#服务器端安装好，第一次网页打开很慢，打开后需要设置用户名、邮箱、密码来中注册管理员账号；<p>
-<p>#管理员登录后，建议进行以下设置：设置外部链接来连接Ollama上的大模型、将大模型由privacy设置为public、开放账号注册；<p>
+<p>#管理员登录后，建议进行以下设置：设置外部连接中的Ollama API，并设置为默认模型；关闭OpenAI API加快启动速度；将Ollama大模型由Private设置为Public；开放账号注册；<p>
 <p>#用户打开http://服务端IP:8080，用邮箱和密码注册，登录使用。<p>
 <p>2、Chatbox，支持所有平台，有移动端<p>
 <p>2.1、Chatbox安装包，下载地址：<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
@@ -91,7 +91,7 @@ sed -i "" "s/\"tailwindcss\": \"\^4\.0\.0\"/\"tailwindcss\": \"\^3\.4\"/g" packa
 npm install
 npm run dev
 </pre>
-<p>3、Cherry Studio，支持所有平台，但无移动端<p>
+<p>3、Cherry Studio，除移动端外，支持其他所有平台<p>
 <p>3.1、Cherry Studio安装包，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
 <p>3.2、Cherry Studio源码编译，支持所有平台</p>
 <p>安装yarn最新版本，运行行以下命令</p>
