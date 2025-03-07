@@ -47,8 +47,11 @@ EOF
 <pre>sudo systemctl start ollama
 sudo systemctl enable ollama
 </pre>
-<p>3、Linux平台源码编译安装</p>
+<p>3、Linux/MacOS平台源码编译安装</p>
+<p>需要安装gcc、cmake、go等编译工具</p>
 <pre>
+#MacOS安装编译工具
+brew install go cmake
 #go设置代理加速下载
 go env -w GO111MODULE=on
 go env -w  GOPROXY=https://goproxy.cn,direct
@@ -77,6 +80,7 @@ launchctl setenv OLLAMA_ORIGINS "*"
 <p>1、Open-WebUI，服务端安装，适合多用户，浏览器打开网页即可使用</p>
 <p>各平台安装Python-3.11（必须是此版本），安装好运行行以下命令（AlmaLinux9由于sqlite版本为3.34，低于3.35，能pip安装，但无法运行，暂未解决）</p>
 <pre>
+#需要ffmpeg支持，建议编译安装
 pip install open-webui
 open-webui serve
 </pre>
