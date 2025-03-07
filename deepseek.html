@@ -75,7 +75,7 @@ launchctl setenv OLLAMA_ORIGINS "*"
 <p>#所有客户端均需要调用Ollama的11434端口，特别要注意服务端的安全；</p>
 <p>#提供web端的，如Open-WebUI，服务端可以关闭11434端口和Open-WebUI的8080端口，将8080端口用Nginx转发至其他端口（详见附2），更安全。</p>
 <p>1、Open-WebUI，服务端安装，适合多用户，浏览器打开网页即可使用</p>
-<p>各平台安装Python-3.11（必须是此版本），安装好运行行以下命令</p>
+<p>各平台安装Python-3.11（必须是此版本），安装好运行行以下命令（AlmaLinux9由于sqlite版本为3.34，低于3.35，能pip安装，但无法运行，暂未解决）</p>
 <pre>
 pip install open-webui
 open-webui serve
