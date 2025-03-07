@@ -67,9 +67,11 @@ open-webui serve
 <p>注：<p>
 <p>#服务器端安装好，第一次网页打开很慢，打开后需要设置用户名、邮箱、密码来中注册管理员账号；<p>
 <p>#管理员登录后，建议进行以下设置：设置外部链接来连接ollama上的大模型、将大模型由privacy设置为public、开放账号注册；<p>
-<p>2.1、chatbox安装包，所有平台均可在官网（<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a>）下载</p>
-<p>2.2、chatbox源码安装，支持所有平台</p>
-<p>各平台安装nodejs-20（必须是此版本），安装好运行行以下命令</p>
+<p>#用户打开http://服务端IP:8080，用邮箱和密码注册，登录使用。<p>
+<p>2、chatbox，支持所有平台，有移动端<p>
+<p>2.1、chatbox安装包，下载地址：<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
+<p>2.2、chatbox源码编译，支持所有平台</p>
+<p>安装nodejs-20（必须是此版本），运行行以下命令</p>
 <pre>
 git clone https://github.com/Bin-Huang/chatbox
 cd chatbox
@@ -78,9 +80,10 @@ sed -i "" "s/\"tailwindcss\": \"\^4\.0\.0\"/\"tailwindcss\": \"\^3\.4\"/g" packa
 npm install
 npm run dev
 </pre>
+<p>3、cherry studio，支持所有平台，但无移动端<p>
 <p>3.1、cherry studio，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
-<p>3.2、cherry studio源码安装，支持所有平台</p>
-<p>各平台安装yarn最新版本，目前是yarn-4.7，安装好运行行以下命令</p>
+<p>3.2、cherry studio源码编译，支持所有平台</p>
+<p>安装yarn最新版本，目前是yarn-4.7，运行行以下命令</p>
 <pre>
 #yarn安装
 corepack enable
