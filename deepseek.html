@@ -68,16 +68,28 @@ open-webui serve
 <p>#服务器端安装好，第一次网页打开很慢，打开后需要设置用户名、邮箱、密码来中注册管理员账号；<p>
 <p>#管理员登录后，建议进行以下设置：设置外部链接来连接ollama上的大模型、将大模型由privacy设置为public、开放账号注册；<p>
 <p>2.1、chatbox安装包，所有平台均可在官网（<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a>）下载</p>
-<p>2.2、chatbox源码安装，支持所有平台，理论上可以打开1212端口提供web界面，经测试，由于源码问题始终未编译出此功能</p>
+<p>2.2、chatbox源码安装，支持所有平台</p>
 <p>各平台安装nodejs-20（必须是此版本），安装好运行行以下命令</p>
 <pre>
 git clone https://github.com/Bin-Huang/chatbox
+cd chatbox
 #将package.json中的tailwindcss版本由4.0.0改为3.4，手动修改可使用以下命令
 sed -i "" "s/\"tailwindcss\": \"\^4\.0\.0\"/\"tailwindcss\": \"\^3\.4\"/g" package.json
 npm install
 npm run dev
 </pre>
-<p>3、cherry studio，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
+<p>3.1、cherry studio，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
+<p>3.2、cherry studio源码安装，支持所有平台</p>
+<p>各平台安装yarn-4.6以上版本，安装好运行行以下命令</p>
+<pre>
+#yarn安装
+corepack enable
+yarn set version stable
+git clone https://github.com/CherryHQ/cherry-studio
+cd cherry-studio
+yarn
+yarn run dev
+</pre>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2025 清风的个人笔记</p>
 </div>
