@@ -6,17 +6,17 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="bookmark" href="favicon.ico">
-<title>Ollama+DeepSeek+open-webui安装配置</title>
+<title>Ollama+DeepSeek+Open-WebUI/Chatbox/Cherry-Studio安装</title>
 </head>
 <body>
 <div class="container">
 <p><a href="index.html">返回首页</a></p>
-<h2 align=center>Ollama+DeepSeek+open-webui/chatbox安装配置</h2>
+<h2 align=center>Ollama+DeepSeek+Open-WebUI/Chatbox/Cherry-Studio安装</h2>
 <p>注：Mac mini/Windows11/AlmaLinux9测试通过。</p>
 <p><b>一、安装Ollama，详见<a href="https://ollama.com" target="_blank">Ollama官网</a></b></p>
 <p>1、各平台安装Ollama，下载安装包安装或使用官方脚本</p>
 <p>2、Linux命令行手动下载二进制包</p>
-<p>2.1、下载ollama（根据你的系统架构下载相应版本），解压</p>
+<p>2.1、下载Ollama（根据你的系统架构下载相应版本），解压</p>
 <pre>wget https://ollama.com/download/ollama-linux-amd64.tgz
 tar xvf ollama-inux-amd64.tgz -C /usr</pre>
 <p>2.2、添加ollama用户及组，将当前用户加入ollama组</p>
@@ -58,7 +58,7 @@ cmake -B build
 cmake --build build
 go run . serve
 </pre>
-<p><b>二、Ollama安装deepseek</b></p>
+<p><b>二、Ollama安装DeepSeek</b></p>
 <p>所有平台均可以运行以下命令安装</p>
 <pre>ollama run deepseek-r1:8b</pre>
 <p>注：<p>
@@ -67,21 +67,21 @@ go run . serve
 <p><b>三、安装客户端</b></p>
 <p>说明：</p>
 <p>#以下软件均在快速开发迭代中（甚至一天多个版本发布），请随时关注其官方网站；</p>
-<p>#所有客户端均需要调用ollama的11434端口，特别要注意服务端的安全；</p>
-<p>#提供web端的，如open-webui，服务端可以关闭11434端口和open-webui的8080端口，将8080端口用nginx转发至其他端口（详见附2），更安全。</p>
-<p>1、open-webui，服务端安装，适合多用户，浏览器打开网页即可使用</p>
-<p>各平台安装python-3.11（必须是此版本），安装好运行行以下命令</p>
+<p>#所有客户端均需要调用Ollama的11434端口，特别要注意服务端的安全；</p>
+<p>#提供web端的，如Open-WebUI，服务端可以关闭11434端口和Open-WebUI的8080端口，将8080端口用Nginx转发至其他端口（详见附2），更安全。</p>
+<p>1、Open-WebUI，服务端安装，适合多用户，浏览器打开网页即可使用</p>
+<p>各平台安装Python-3.11（必须是此版本），安装好运行行以下命令</p>
 <pre>
 pip install open-webui
 open-webui serve
 </pre>
 <p>注：<p>
 <p>#服务器端安装好，第一次网页打开很慢，打开后需要设置用户名、邮箱、密码来中注册管理员账号；<p>
-<p>#管理员登录后，建议进行以下设置：设置外部链接来连接ollama上的大模型、将大模型由privacy设置为public、开放账号注册；<p>
+<p>#管理员登录后，建议进行以下设置：设置外部链接来连接Ollama上的大模型、将大模型由privacy设置为public、开放账号注册；<p>
 <p>#用户打开http://服务端IP:8080，用邮箱和密码注册，登录使用。<p>
-<p>2、chatbox，支持所有平台，有移动端<p>
-<p>2.1、chatbox安装包，下载地址：<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
-<p>2.2、chatbox源码编译，支持所有平台</p>
+<p>2、Chatbox，支持所有平台，有移动端<p>
+<p>2.1、Chatbox安装包，下载地址：<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
+<p>2.2、Chatbox源码编译，支持所有平台</p>
 <p>安装nodejs-20（必须是此版本），运行行以下命令</p>
 <pre>
 git clone https://github.com/Bin-Huang/chatbox
@@ -91,9 +91,9 @@ sed -i "" "s/\"tailwindcss\": \"\^4\.0\.0\"/\"tailwindcss\": \"\^3\.4\"/g" packa
 npm install
 npm run dev
 </pre>
-<p>3、cherry studio，支持所有平台，但无移动端<p>
-<p>3.1、cherry studio，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
-<p>3.2、cherry studio源码编译，支持所有平台</p>
+<p>3、Cherry Studio，支持所有平台，但无移动端<p>
+<p>3.1、Cherry Studio安装包，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
+<p>3.2、Cherry Studio源码编译，支持所有平台</p>
 <p>安装yarn最新版本，运行行以下命令</p>
 <pre>
 #yarn安装
@@ -104,7 +104,7 @@ cd cherry-studio
 yarn
 yarn run dev
 </pre>
-<p><b>附1：nginx转发ollama默认11434端口到其他端口（如11435），方便控制权限</b><p>
+<p><b>附1：Nginx转发Ollama默认11434端口到其他端口（如11435），方便控制权限</b><p>
 <pre>
 server {
     listen      11435;
@@ -127,7 +127,7 @@ server {
     }
 }
 </pre>
-<p><b>附2：nginx转发open-webui默认8080端口到其他端口（如80），方便控制权限</b><p>
+<p><b>附2：Nginx转发Open-WebUI默认8080端口到其他端口（如80），方便控制权限</b><p>
 <pre>
 server {
     listen      80;
