@@ -58,6 +58,11 @@ cmake -B build
 cmake --build build
 go run . serve
 </pre>
+<p>注：MacOS打开Ollama的11434端口方式n</p>
+<pre>
+launchctl setenv OLLAMA_HOST "0.0.0.0"
+launchctl setenv OLLAMA_ORIGINS "*"
+</pre>
 <p><b>二、Ollama安装DeepSeek</b></p>
 <p>所有平台均可以打开终端，运行以下命令安装</p>
 <pre>ollama run deepseek-r1:8b</pre>
