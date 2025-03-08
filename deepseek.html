@@ -75,22 +75,22 @@ launchctl setenv OLLAMA_ORIGINS "*"
 <p>所有平台均可以打开终端，运行以下命令安装</p>
 <pre>ollama run deepseek-r1:8b</pre>
 <p>注：<p>
-<p>#<a href="https://ollama.com/models" target="_blank">https://ollama.com/models</a>可以查看可以安装的各种大模型；<p>
+<p>#<a href="https://ollama.com/models" target="_blank">https://ollama.com/models</a>可以查看可以安装的各种模型；<p>
 <p>#8b中的b是billion（10亿），也就是80亿个参数。<p>
 <p><b>三、安装客户端</b></p>
 <p>说明：</p>
 <p>#以下软件均在快速开发迭代中（甚至一天多个版本发布），请随时关注其官方网站；</p>
 <p>#所有客户端均需要调用Ollama的11434端口，特别要注意服务端的安全；</p>
 <p>1、Open-WebUI，服务端安装，适合多用户，浏览器打开网页即可使用</p>
-<p>安装Python-3.11（必须是此版本），然后运行以下命令（AlmaLinux9由于sqlite版本为3.34，低于3.35，能pip安装，但无法运行，暂未解决）</p>
+<p>官方要求安装Python-3.11（经测试，Python-3.12也可以），然后运行以下命令（AlmaLinux9由于sqlite版本为3.34，低于3.35，能pip安装，但无法运行，暂未解决）</p>
 <pre>
-#需要ffmpeg支持，建议编译安装
 pip install open-webui
 open-webui serve
 </pre>
 <p>注：<p>
-<p>#服务器端安装好，第一次网页打开很慢，打开后需要设置用户名、邮箱、密码来中注册管理员账号；<p>
-<p>#管理员登录后，建议进行以下设置：设置外部连接中的Ollama API，并设置为默认模型；关闭OpenAI API加快启动速度；将Ollama大模型由Private设置为Public；开放账号注册；<p>
+<p>#如没有安装ffmpeg，终端会提示，建议安装</p>
+<p>#第一次网页打开很慢（默认去连接OpenAI的API），打开后需要设置用户名、邮箱、密码来中注册管理员账号；<p>
+<p>#管理员登录后，建议进行以下设置：设置外部连接中的Ollama API，并设置为默认模型；关闭OpenAI API，加快启动速度；将Ollama模型由Private设置为Public；开放账号注册；<p>
 <p>#用户打开http://服务端IP:8080，用邮箱和密码注册，登录使用；<p>
 <p>#服务端可以关闭11434端口和8080端口，再将8080端口用Nginx转发至其他端口（详见附2），方便控制权限。</p>
 <p>2、Chatbox，支持所有平台，有移动端<p>
