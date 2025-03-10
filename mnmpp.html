@@ -47,9 +47,9 @@ sudo chmod +x /usr/local/bin/redisstop
 </pre>
 <p><b>四、编译安装postgresql</b></p>
 <pre>
-wget https://ftp.postgresql.org/pub/source/v17.2/postgresql-17.2.tar.bz2
-tar xvf postgresql-17.2.tar.bz2
-cd postgresql-17.2
+wget https://ftp.postgresql.org/pub/source/v17.4/postgresql-17.4.tar.bz2
+tar xvf postgresql-17.4.tar.bz2
+cd postgresql-17.4
 ./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --without-tcl --with-libxml --with-libxslt --with-zlib
 make -j10
 sudo make install
@@ -81,9 +81,9 @@ sudo chmod +x /usr/local/bin/pgsqlstart
 <p><b>五、编译安装php</b></p>
 <pre>
 brew install openssl freetype gettext webp libpng libiconv oniguruma libzip autoconf libsodium
-wget http://www.php.net/distributions/php-8.4.3.tar.xz
-tar xvf php-8.4.3.tar.xz
-cd php-8.4.3
+wget http://www.php.net/distributions/php-8.4.4.tar.xz
+tar xvf php-8.4.4.tar.xz
+cd php-8.4.4
 ./configure --prefix=/usr/local/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install
