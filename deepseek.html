@@ -86,6 +86,8 @@ launchctl setenv OLLAMA_ORIGINS "*"
 <pre>
 pip install open-webui
 open-webui serve
+#升级
+pip install --upgrade open-webui
 </pre>
 <p>注：<p>
 <p>#如没有安装ffmpeg，终端会提示，建议安装</p>
@@ -93,9 +95,20 @@ open-webui serve
 <p>#管理员登录后，建议进行以下设置：设置外部连接中的Ollama API，并设置为默认模型；关闭OpenAI API，加快启动速度；将Ollama模型由Private设置为Public；开放账号注册；<p>
 <p>#用户打开http://服务端IP:8080，用邮箱和密码注册，登录使用；<p>
 <p>#服务端可以关闭11434端口和8080端口，再将8080端口用Nginx转发至其他端口（详见附2），方便控制权限。</p>
-<p>2、Chatbox，支持所有平台，有移动端<p>
-<p>2.1、Chatbox安装包，下载地址：<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
-<p>2.2、Chatbox源码编译，支持所有平台</p>
+<p>2、LobeChat，和Ollama同一服务器或单独服务器安装，适合多用户，浏览器打开网页即可使用</p>
+<p>安装pnpm，然后运行以下命令</p>
+<pre>
+git clone https://github.com/lobehub/lobe-chat
+cd lobe-chat
+pnpm install
+pnpm run dev
+</pre>
+<p>#和Open-WebUI相比，功能更强，因此运行需要消耗更多系统资源；</p>
+<p>#Ollama服务端需要打开11434端口，和Open-WebUI不同的是，只是数据转发，不是代理；</p>
+<p>#用户打开http://LobeChat服务端IP:3010，自行设置地址（如果是和Ollama同一服务器，默认留空，否则为http://Ollama服务端IP:11434，默认留空）及模型（如：deepseek-r1:8b，新增，多个逗号隔开）后使用。<p>
+<p>3、Chatbox，支持所有平台，有移动端<p>
+<p>3.1、Chatbox安装包，下载地址：<a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
+<p>3.2、Chatbox源码编译，支持所有平台</p>
 <p>安装nodejs-20（必须是此版本），运行行以下命令</p>
 <pre>
 git clone https://github.com/Bin-Huang/chatbox
@@ -105,9 +118,9 @@ sed -i "" "s/\"tailwindcss\": \"\^4\.0\.0\"/\"tailwindcss\": \"\^3\.4\"/g" packa
 npm install
 npm run dev
 </pre>
-<p>3、Cherry Studio，除移动端外，支持其他所有平台<p>
-<p>3.1、Cherry Studio安装包，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
-<p>3.2、Cherry Studio源码编译，支持所有平台</p>
+<p>4、Cherry Studio，除移动端外，支持其他所有平台<p>
+<p>4.1、Cherry Studio安装包，下载地址：<a href="https://cherry-ai.com/download" target="_blank">https://cherry-ai.com/download</a></p>
+<p>4.2、Cherry Studio源码编译，支持所有平台</p>
 <p>安装yarn最新版本，运行以下命令</p>
 <pre>
 #yarn安装
@@ -116,7 +129,7 @@ yarn set version stable
 git clone https://github.com/CherryHQ/cherry-studio
 cd cherry-studio
 yarn
-yarn run dev
+yarn dev
 </pre>
 <p><b>附1：Nginx转发Ollama默认11434端口到其他端口（如11435），方便控制权限</b><p>
 <pre>
