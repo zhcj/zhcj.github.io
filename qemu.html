@@ -12,21 +12,22 @@
 <div class="container">
 <p><a href="index.html">返回首页</a></p>
 <h2 align=center>QEMU安装使用手册</h2>
-<h3>注：网站系统为CentOS/Rocky/Alma 8/9，使用systemd。</h3>
+<h3>注：CentOS/Rocky/Alma 8/9，使用systemd；Mac mini测试通过。</h3>
 <p><b>一、安装qemu</b></p>
 <p>1、安装依赖</p>
 <pre>
 dnf install flex libslirp-devel libcap-ng-devel libattr-devel glib2-devel pixman-devel zlib-devel libcap-devel libattr-devel gcc gcc-c++ make git flex bison bzip2 pam-devel gnutls-devel perl -y
-#如果需要虚拟xp/win2003系统，显卡需要使用qxl，则安装以下包
-dnf install spice-server spice-protocol -y
+#Mac mini
+brew install glib pixman libffi gettext pkgconf
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-9.2.0.tar.xz
-tar xvf qemu-9.2.0.tar.xz
-cd qemu-9.2.0
-./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu,i386-softmmu
-#接上，如需要虚拟xp/win2003，需添加--enable-spice
+wget https://download.qemu.org/qemu-9.2.2.tar.xz
+tar xvf qemu-9.2.2.tar.xz
+cd qemu-9.2.2
+./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
+#Mac mini
+./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
 make -j5
 make install
 ln -sf /usr/local/kvm/bin/* /usr/local/bin/
@@ -48,21 +49,8 @@ qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :
 </pre>
 <p>注：qemu旧版中有qemu-kvm模块存在，新版中需要使用kvm特性时候，在qemu-system-x86_64命令中使用--enable-kvm即可。</p>
 <p><b>*使用virtio</b></p>
-<p>linux系统和高版本windows安装时自带驱动或挂载光驱即可加载驱动，以下仅对winxp和win2003等作一说明：</p>
-<p>方法一：安装时挂载一个光盘</p>
-<pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.229-1/virtio-win.iso
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/usr/local/kvm/img/xp.qcow2,format=qcow2,if=virtio,index=0 -drive file=/data/os/zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso,media=cdrom,index=1 -drive file=/usr/local/kvm/img/virtio-win.iso,medis=cdrom,index=2 -device virtio-net-pci,netdev=net0 -netdev user,id=net0 -boot d --nodefaults
-</pre>
-<p>方法二：在已安装的系统上，需要先加载一个virtio模式的非系统硬盘和网卡等，进入系统后安装驱动，关机后再让系统硬盘和网卡以virtio模式挂载。</p>
 <pre>
 wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.262-2/virtio-win.iso
-#创建一个虚拟硬盘
-qemu-img create -f qcow2 /usr/local/kvm/img/virtio.qcow2 1G
-#挂载虚拟硬盘、网卡和驱动
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/usr/local/kvm/img/xp.qcow2,format=qcow2 -drive file=/usr/local/kvm/img/virtio.qcow2,format=qcow2,if=virtio -cdrom /data/os/virtio-win.iso -device virtio-net-pci,netdev=net0 -netdev user,id=net0 --nodefaults
-#安装好驱动后，用以下参数重启即可
-qemu-system-i386 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vga qxl -drive file=/usr/local/kvm/img/xp.qcow2,format=qcow2,if=virtio --nodefaults
 </pre>
 <p><b>*压缩qcow2</b></p>
 <p>1、客户机空间清零</p>
