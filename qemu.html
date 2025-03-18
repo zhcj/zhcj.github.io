@@ -25,21 +25,24 @@ brew install glib pixman libffi gettext pkgconf libslirp
 wget https://download.qemu.org/qemu-9.2.2.tar.xz
 tar xvf qemu-9.2.2.tar.xz
 cd qemu-9.2.2
-./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
+./configure --prefix=/usr/local/qemu --interp-prefix=/usr/local/qemu/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
 #Mac mini
-./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --enable-hvf --target-list=x86_64-softmmu,aarch64-softmmu
+./configure --prefix=/usr/local/qemu --interp-prefix=/usr/local/qemu/gnemul --enable-hvf --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu,aarch64-softmmu
 make -j5
 make install
-ln -sf /usr/local/kvm/bin/* /usr/local/bin/
+ln -sf /usr/local/qmeu/bin/* /usr/local/bin/
 </pre>
 <p><b>二、创建、启动虚拟机</b></p>
 <pre>
-mkdir /usr/local/kvm/img
-qemu-img create -f qcow2 /usr/local/kvm/img/win7.qcow2 20G
-qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :1 /usr/local/kvm/img/win7.qcow2 -cdrom /usr/local/os/win7.iso -boot d -device intel-hda -vga virtio -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22,smb=/usr/local/share -nodefaults -smp 2,sockets=1
-#-machine usb=on -device usb-tablet #解决vnc连接时鼠标不同步问题
+mkdir /usr/local/qemu/img
+qemu-img create -f qcow2 /usr/local/qemu/img/win10.qcow2 40G
+qemu-system-x86_64 -m 4096 -enable-kvm -machine type=q35 -usb -device usb-tablet -vnc :1 /usr/local/qemu/img/win10.qcow2 -cdrom /usr/local/os/win10.iso -boot d -device intel-hda -vga virtio -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22,smb=/data/share -nodefaults -smp 4,sockets=1
+#mac mini将-enable-kvm换成-accel hvf
+#-machine type=q35或者-M q35 #cpu架构
+#-usb -device usb-tablet #解决vnc连接时鼠标不同步问题
 #-vnc :1 #以主机的5901端口vnc连接虚拟机
 #-device intel-hda或-device ich9-intel-hda #默认声卡，有的设备需要再加一个参数：-device hda-duplex
+#mac mini设置为-device usb-audio
 #-device virtio-net-pci,netdev=net0 #设置网卡为virtio，也可以设置为rtl8139
 #-netdev user,id=net0,hostfwd=tcp::2222-:22 #将虚拟机的22端口映射到主机2222端口上
 #smb=/data/share #qemu内建的samba服务，将主机的/data/share目录设置为共享之后，虚拟机可以通过\\10.0.2.4\qemu来访问（完全共享）
@@ -50,7 +53,7 @@ qemu-system-x86_64 -m 2048 -enable-kvm -machine usb=on -device usb-tablet -vnc :
 <p>注：qemu旧版中有qemu-kvm模块存在，新版中需要使用kvm特性时候，在qemu-system-x86_64命令中使用--enable-kvm即可。</p>
 <p><b>*使用virtio</b></p>
 <pre>
-wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.262-2/virtio-win.iso
+wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.266/virtio-win.iso
 </pre>
 <p><b>*压缩qcow2</b></p>
 <p>1、客户机空间清零</p>
@@ -68,21 +71,21 @@ dnf install gnutls-devel libnl-devel libpciaccess-devel yajl-devel device-mapper
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.libvirt.org/libvirt-10.8.0.tar.xz
-tar xvf libvirt-10.8.0.tar.xz
-cd libvirt-10.8.0
+wget https://download.libvirt.org/libvirt-11.1.0.tar.xz
+tar xvf libvirt-11.1.0.tar.xz
+cd libvirt-11.1.0
 mkdir build
 cd build
-../configure --prefix=/usr/local/kvm --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
+../configure --prefix=/usr/local/qemu --without-vmware --without-vbox --without-openvz --without-esx --without-lxc --with-yajl --with-qemu
 #去掉vmware/vbox/openvz/esx/lxc支持，只支持qemu
 make -j5
 make install
-ln -sf /usr/local/kvm/lib/pkgconfig/* /usr/lib64/pkgconfig/
+ln -sf /usr/local/qemu/lib/pkgconfig/* /usr/lib64/pkgconfig/
 </pre>
 <p>3、配置</p>
 <pre>
-ln -sf /usr/local/kvm/bin/* /usr/local/bin/
-ln -sf /usr/local/kvm/sbin/* /usr/local/bin/
+ln -sf /usr/local/qemu/bin/* /usr/local/bin/
+ln -sf /usr/local/qemu/sbin/* /usr/local/bin/
 cp src/libvirtd.service /lib/systemd/system/
 cp src/libvirtd.socket /lib/systemd/system/
 cp src/virtlogd.service /lib/systemd/system/
