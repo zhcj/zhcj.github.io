@@ -27,7 +27,7 @@ tar xvf qemu-9.2.2.tar.xz
 cd qemu-9.2.2
 ./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
 #Mac mini
-./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
+./configure --prefix=/usr/local/kvm --interp-prefix=/usr/local/kvm/gnemul --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --enable-hvf --target-list=x86_64-softmmu
 make -j5
 make install
 ln -sf /usr/local/kvm/bin/* /usr/local/bin/
