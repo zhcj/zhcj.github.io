@@ -60,7 +60,7 @@ cd ollama
 cmake -B build
 cmake --build build
 go run . serve
-#以上为调试模式运行，也可以编译成可执行文件运行
+#编译成可执行文件运行
 go build -o build/ollama main.go
 sudo cp build/ollama /usr/local/bin/
 sudo cp -r build/lib/ollama /usr/local/lib/
@@ -113,8 +113,6 @@ pnpm run dev
 <pre>
 git clone https://github.com/Bin-Huang/chatbox
 cd chatbox
-#将package.json中的tailwindcss版本由4.0.0改为3.4，手动修改可使用以下命令
-sed -i "" "s/\"tailwindcss\": \"\^4\.0\.0\"/\"tailwindcss\": \"\^3\.4\"/g" package.json
 npm install
 npm run dev
 </pre>
@@ -123,7 +121,7 @@ npm run dev
 <p>4.2、Cherry Studio源码编译，支持所有平台</p>
 <p>安装yarn最新版本，运行以下命令</p>
 <pre>
-#yarn安装
+#安装yarn
 corepack enable
 yarn set version stable
 git clone https://github.com/CherryHQ/cherry-studio
@@ -138,7 +136,6 @@ server {
     server_name 127.0.0.1;
 
     allow   127.0.0.1;
-    allow   10.14.0.0/16;
     allow   192.168.1.0/24;
     deny    all;
 
@@ -161,7 +158,6 @@ server {
     server_name 127.0.0.1;
 
     allow   127.0.0.1;
-    allow   10.14.0.0/16;
     allow   192.168.1.0/24;
     deny    all;
 
