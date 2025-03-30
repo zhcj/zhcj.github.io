@@ -22,9 +22,9 @@ brew install glib pixman libffi gettext pkgconf libslirp
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-9.2.2.tar.xz
-tar xvf qemu-9.2.2.tar.xz
-cd qemu-9.2.2
+wget https://download.qemu.org/qemu-9.2.3.tar.xz
+tar xvf qemu-9.2.3.tar.xz
+cd qemu-9.2.3
 ./configure --prefix=/usr/local/qemu --interp-prefix=/usr/local/qemu/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
 #Mac mini
 ./configure --prefix=/usr/local/qemu --interp-prefix=/usr/local/qemu/gnemul --enable-hvf --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu,aarch64-softmmu
@@ -63,7 +63,7 @@ wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-vi
 <pre>dd if=/dev/zero of=zero
 rm -f zero</pre>
 <p>2、压缩qcow2</p>
-<pre>qemu-img convert -c -f qcow2 -O qcow2 -c old.qcow2 new.qcow2</pre>
+<pre>qemu-img convert -c -O qcow2 old.qcow2 new.qcow2</pre>
 <p><b>三、安装libvirt</b></p>
 <p>1、安装依赖</p>
 <pre>
