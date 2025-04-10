@@ -54,11 +54,15 @@ sudo systemctl enable ollama
 brew install go cmake
 #go设置代理加速下载
 go env -w GO111MODULE=on
-go env -w  GOPROXY=https://goproxy.cn,direct
+go env -w GOPROXY=https://goproxy.cn,direct
 git clone https://github.com/ollama/ollama
 cd ollama
+rm -rf build
+git checkout version/version.go
+sed -i "" "s/0.0.0/`date +"%Y%m%d"`/g" version/version.go
 cmake -B build
 cmake --build build
+#直接运行
 go run . serve
 #编译成可执行文件运行
 go build -o build/ollama main.go
