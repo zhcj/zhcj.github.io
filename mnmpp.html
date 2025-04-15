@@ -81,9 +81,9 @@ sudo chmod +x /usr/local/bin/pgsqlstart
 <p><b>五、编译安装php</b></p>
 <pre>
 brew install openssl freetype gettext webp libpng libiconv oniguruma libzip autoconf libsodium
-wget http://www.php.net/distributions/php-8.4.5.tar.xz
-tar xvf php-8.4.5.tar.xz
-cd php-8.4.5
+wget http://www.php.net/distributions/php-8.4.6.tar.xz
+tar xvf php-8.4.6.tar.xz
+cd php-8.4.6
 ./configure --prefix=/usr/local/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install
@@ -149,23 +149,15 @@ sudo chmod +x /usr/local/bin/nginxstart
 </pre>
 <p><b>七、编译安装mysql</b></p>
 <pre>
-brew install cmake
-wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz
-tar xvf mysql-boost-5.7.44.tar.gz
-cd mysql-5.7.44
-cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DINSTALL_MYSQLDATADIR=/usr/local/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
-#mysql-8.4.4
-#wget https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.xz
-#tar xvf bison-3.8.2.tar.xz
-#cd bison-3.8.2
-#cmake . -DCMAKE_INSTALL_PREFIX=../bison
-#camke --build .
-#camke --install .
-#cd ..
-#wget https://cdn.mysql.com//Downloads/MySQL-8.4/mysql-8.4.4.tar.gz
-#tar xvf mysql-8.4.4.tar.gz
-#cd mysql-8.4.4
-#cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DINSTALL_MYSQLDATADIR=/usr/local/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DFORCE_INSOURCE_BUILD=1 -DBISON_EXECUTABLE=../bison/bin/bison 
+brew install cmake bison
+wget https://cdn.mysql.com//Downloads/MySQL-9.3/mysql-9.3.0.tar.gz
+tar xvf mysql-9.3.0.tar.gz
+cd mysql-9.3.0
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DINSTALL_MYSQLDATADIR=/usr/local/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DFORCE_INSOURCE_BUILD=1 
+#wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz
+#tar xvf mysql-boost-5.7.44.tar.gz
+#cd mysql-5.7.44
+#cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DINSTALL_MYSQLDATADIR=/usr/local/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DWITH_BOOST=boost -DWITH_EMBEDDED_SERVER=OFF
 make -j10
 sudo make install
 sudo ln -sf /usr/local/mysql/bin/* /usr/local/bin/
