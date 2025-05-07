@@ -20,9 +20,9 @@
 <p>#自动安装依赖openssl@3/gettext等</p>
 <p><b>三、编译安装redis</b></p>
 <pre>
-wget http://download.redis.io/releases/redis-7.4.2.tar.gz
-tar xvf redis-7.4.2.tar.gz
-cd redis-7.4.2
+wget http://download.redis.io/releases/redis-8.0.0.tar.gz
+tar xvf redis-8.0.0.tar.gz
+cd redis-8.0.0
 make -j10
 sudo make PREFIX=/usr/local/redis install
 sudo ln -sf /usr/local/redis/bin/* /usr/local/bin/
@@ -81,9 +81,9 @@ sudo chmod +x /usr/local/bin/pgsqlstart
 <p><b>五、编译安装php</b></p>
 <pre>
 brew install openssl freetype gettext webp libpng libiconv oniguruma libzip autoconf libsodium
-wget http://www.php.net/distributions/php-8.4.6.tar.xz
-tar xvf php-8.4.6.tar.xz
-cd php-8.4.6
+wget http://www.php.net/distributions/php-8.4.7.tar.xz
+tar xvf php-8.4.7.tar.xz
+cd php-8.4.7
 ./configure --prefix=/usr/local/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install

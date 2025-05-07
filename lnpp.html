@@ -305,9 +305,9 @@ systemctl start php-fpm</pre>
 #ubuntu
 #apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev libsqlite3-dev
 cd /data/source
-wget http://www.php.net/distributions/php-8.4.6.tar.xz
-tar xvf php-8.4.6.tar.xz
-cd php-8.4.6
+wget http://www.php.net/distributions/php-8.4.7.tar.xz
+tar xvf php-8.4.7.tar.xz
+cd php-8.4.7
 ./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
