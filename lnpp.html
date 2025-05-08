@@ -48,11 +48,11 @@ dnf install bison flex perl-lib -y</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v17.4/postgresql-17.4.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v17.5/postgresql-17.5.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-17.4.tar.bz2</pre>
+<pre>tar xvf postgresql-17.5.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-17.4
+<pre>cd postgresql-17.5
 ./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>

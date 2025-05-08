@@ -47,9 +47,9 @@ sudo chmod +x /usr/local/bin/redisstop
 </pre>
 <p><b>四、编译安装postgresql</b></p>
 <pre>
-wget https://ftp.postgresql.org/pub/source/v17.4/postgresql-17.4.tar.bz2
-tar xvf postgresql-17.4.tar.bz2
-cd postgresql-17.4
+wget https://ftp.postgresql.org/pub/source/v17.5/postgresql-17.5.tar.bz2
+tar xvf postgresql-17.5.tar.bz2
+cd postgresql-17.5
 ./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --enable-spinlocks --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --without-tcl --with-libxml --with-libxslt --with-zlib
 make -j10
 sudo make install
