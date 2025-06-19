@@ -21,9 +21,9 @@ systemctl enable redis
 </pre>
 <p><b>2、编译安装：</b></p>
 <pre>
-wget http://download.redis.io/releases/redis-8.0.0.tar.gz
-tar xvf redis-8.0.0.tar.gz
-cd redis-8.0.0
+wget http://download.redis.io/releases/redis-8.0.2.tar.gz
+tar xvf redis-8.0.2.tar.gz
+cd redis-8.0.2
 make
 make PREFIX=/usr/local/redis install
 cp redis.conf /usr/local/redis/
@@ -75,7 +75,7 @@ sed -i "s/# requirepass foobared/requirepass redis123/g" /usr/local/redis/redis.
 </pre>
 <h3>二、Windows下安装说明</h3>
 <p><b>1、下载地址：</b><a href="https://github.com/zkteco-home/redis-windows" target="_blank">https://github.com/zkteco-home/redis-windows</a></p>
-<p>最新版本为：redis-8.0.0</p>
+<p>最新版本为：redis-8.0.2</p>
 <p><b>2、解压，命令行进入当前目录，运行“redis-server.exe redis.conf”</b></p>
 <p><a href="index.html">返回首页</a></p>
 <p align="center">&copy; 2016-2025 清风的个人笔记</p>
