@@ -81,9 +81,9 @@ sudo chmod +x /usr/local/bin/pgsqlstart
 <p><b>五、编译安装php</b></p>
 <pre>
 brew install openssl freetype gettext webp libpng libiconv oniguruma libzip autoconf libsodium
-wget http://www.php.net/distributions/php-8.4.8.tar.xz
-tar xvf php-8.4.8.tar.xz
-cd php-8.4.8
+wget http://www.php.net/distributions/php-8.4.10.tar.xz
+tar xvf php-8.4.10.tar.xz
+cd php-8.4.10
 ./configure --prefix=/usr/local/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install
@@ -135,9 +135,9 @@ sudo ln -sf /usr/local/nginx/sbin/nginx /usr/local/bin/
 sudo ln -sf /usr/local/nginx/luajit/bin/luajit /usr/local/bin/
 sudo mkdir /usr/local/nginx/log
 sudo chown $(id -un):admin /usr/local/nginx/log
-wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
-tar xvf luarocks-3.11.1.tar.gz
-cd luarocks-3.11.1
+wget https://luarocks.github.io/luarocks/releases/luarocks-3.12.2.tar.gz
+tar xvf luarocks-3.12.2.tar.gz
+cd luarocks-3.12.2
 ./configure --prefix=/usr/local/nginx --with-lua=/usr/local/nginx/luajit --with-lua-include=/usr/local/nginx/luajit/include/luajit-2.1 --with-lua-lib=/usr/local/nginx/lualib
 make -j10
 sudo make install
