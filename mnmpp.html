@@ -47,6 +47,8 @@ sudo chmod +x /usr/local/bin/redisstop
 </pre>
 <p><b>四、编译安装postgresql</b></p>
 <pre>
+brew install icu4c@77
+export PKG_CONFIG_PATH="/opt/homebrew/opt/icu4c@77/lib/pkgconfig"
 wget https://ftp.postgresql.org/pub/source/v17.5/postgresql-17.5.tar.bz2
 tar xvf postgresql-17.5.tar.bz2
 cd postgresql-17.5
