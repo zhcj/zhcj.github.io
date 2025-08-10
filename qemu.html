@@ -22,9 +22,9 @@ brew install glib pixman libffi gettext pkgconf libslirp gnutls libusb flex
 </pre>
 <p>2、下载、编译</p>
 <pre>
-wget https://download.qemu.org/qemu-10.0.2.tar.xz
-tar xvf qemu-10.0.2.tar.xz
-cd qemu-10.0.2
+wget https://download.qemu.org/qemu-10.0.3.tar.xz
+tar xvf qemu-10.0.3.tar.xz
+cd qemu-10.0.3
 ./configure --prefix=/usr/local/qemu --interp-prefix=/usr/local/qemu/gnemul --enable-kvm --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu
 #Mac mini
 ./configure --prefix=/usr/local/qemu --interp-prefix=/usr/local/qemu/gnemul --enable-hvf --enable-modules --enable-vnc --enable-virtfs --enable-auth-pam --target-list=x86_64-softmmu,aarch64-softmmu
