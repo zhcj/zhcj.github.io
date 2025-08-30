@@ -48,11 +48,11 @@ dnf install bison flex perl-lib -y</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v17.5/postgresql-17.5.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v17.6/postgresql-17.6.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-17.5.tar.bz2</pre>
+<pre>tar xvf postgresql-17.6.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-17.5
+<pre>cd postgresql-17.6
 ./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
@@ -126,13 +126,13 @@ systemctl enable pgsql</pre>
 <pre>useradd -U -r -M -s /bin/false www</pre>
 <p>下载</p>
 <pre>cd /data/source
-wget http://nginx.org/download/nginx-1.29.0.tar.gz
+wget http://nginx.org/download/nginx-1.29.1.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.29.0.tar.gz
+<pre>tar xvf nginx-1.29.1.tar.gz
 </pre>
 <p>编译</p>
-<pre>cd nginx-1.29.0
+<pre>cd nginx-1.29.1
 ./configure --prefix=/usr/local/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/usr/local/nginx/log/access.log --error-log-path=/usr/local/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
 make -j5
 make install</pre>
@@ -305,9 +305,9 @@ systemctl start php-fpm</pre>
 #ubuntu
 #apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev libsqlite3-dev
 cd /data/source
-wget http://www.php.net/distributions/php-8.4.11.tar.xz
-tar xvf php-8.4.11.tar.xz
-cd php-8.4.11
+wget http://www.php.net/distributions/php-8.4.12.tar.xz
+tar xvf php-8.4.12.tar.xz
+cd php-8.4.12
 ./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
