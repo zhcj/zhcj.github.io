@@ -48,11 +48,11 @@ dnf install bison flex perl-lib -y</pre>
 <p>#ubuntu</p>
 <pre>apt install libreadline-dev zlib1g-dev libcrypto++-dev libssl-dev libpam0g-dev libxml2-dev libxslt1-dev libsystemd-dev gettext -y</pre>
 <p>下载</p>
-<pre>wget https://ftp.postgresql.org/pub/source/v17.6/postgresql-17.6.tar.bz2</pre>
+<pre>wget https://ftp.postgresql.org/pub/source/v18.0/postgresql-18.0.tar.bz2</pre>
 <p>解压</p>
-<pre>tar xvf postgresql-17.6.tar.bz2</pre>
+<pre>tar xvf postgresql-18.0.tar.bz2</pre>
 <p>编译</p>
-<pre>cd postgresql-17.6
+<pre>cd postgresql-18.0
 ./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --with-openssl --with-systemd --without-tcl --with-libxml --with-libxslt --with-zlib --enable-nls='zh_CN'
 make -j5
 make install</pre>
@@ -305,9 +305,9 @@ systemctl start php-fpm</pre>
 #ubuntu
 #apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev libsqlite3-dev
 cd /data/source
-wget http://www.php.net/distributions/php-8.4.12.tar.xz
-tar xvf php-8.4.12.tar.xz
-cd php-8.4.12
+wget http://www.php.net/distributions/php-8.4.13.tar.xz
+tar xvf php-8.4.13.tar.xz
+cd php-8.4.13
 ./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
