@@ -49,9 +49,9 @@ sudo chmod +x /usr/local/bin/redisstop
 <pre>
 brew install icu4c@77
 export PKG_CONFIG_PATH="/opt/homebrew/opt/icu4c@77/lib/pkgconfig"
-wget https://ftp.postgresql.org/pub/source/v17.5/postgresql-17.5.tar.bz2
-tar xvf postgresql-17.5.tar.bz2
-cd postgresql-17.5
+wget https://ftp.postgresql.org/pub/source/v18.0/postgresql-18.0.tar.bz2
+tar xvf postgresql-18.0.tar.bz2
+cd postgresql-18.0
 ./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --without-tcl --with-libxml --with-libxslt --with-zlib
 make -j10
 sudo make install
@@ -83,9 +83,9 @@ sudo chmod +x /usr/local/bin/pgsqlstart
 <p><b>五、编译安装php</b></p>
 <pre>
 brew install openssl freetype gettext webp libpng libiconv oniguruma libzip autoconf libsodium
-wget http://www.php.net/distributions/php-8.4.11.tar.xz
-tar xvf php-8.4.11.tar.xz
-cd php-8.4.11
+wget http://www.php.net/distributions/php-8.4.13.tar.xz
+tar xvf php-8.4.13.tar.xz
+cd php-8.4.13
 ./configure --prefix=/usr/local/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install
@@ -129,7 +129,7 @@ brew install unix2dos pcre
 git clone https://github.com/openresty/openresty
 cd openresty
 make
-cd openresty-1.27.1.2
+cd openresty-1.27.1.3
 ./configure --prefix=/usr/local/nginx --user=$(id -un) --group=admin --error-log-path=/usr/local/nginx/log/error.log --http-log-path=/usr/local/nginx/log/access.log --pid-path=/tmp/nginx.pid --lock-path=/tmp/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --with-http_v2_module --with-http_v3_module --with-http_realip_module --with-http_stub_status_module --with-stream_realip_module --with-http_postgres_module --conf-path=/usr/local/nginx/conf/nginx.conf --sbin-path=/usr/local/nginx/sbin/nginx
 make -j10
 sudo make install
