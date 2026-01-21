@@ -29,11 +29,11 @@
 <p>下载</p>
 <pre>mkdir -p /data/source
 cd /data/source
-wget http://nginx.org/download/nginx-1.29.1.tar.gz</pre>
+wget http://nginx.org/download/nginx-1.29.4.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf nginx-1.29.1.tar.gz</pre>
+<pre>tar xvf nginx-1.29.4.tar.gz</pre>
 <p>编译</p>
-<pre>cd nginx-1.29.1
+<pre>cd nginx-1.29.4
 ./configure --prefix=/usr/local/nginx --user=www --group=www --pid-path=/run/nginx.pid --lock-path=/run/nginx.lock --http-client-body-temp-path=/tmp/client --http-proxy-temp-path=/tmp/proxy --http-fastcgi-temp-path=/tmp/fastcgi --http-uwsgi-temp-path=/tmp/uwsgi --http-scgi-temp-path=/tmp/scgi --http-log-path=/usr/local/nginx/log/access.log --error-log-path=/usr/local/nginx/log/error.log --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-http_stub_status_module --with-http_realip_module --with-stream_ssl_module --with-stream_realip_module
 make -j5
 make install</pre>
@@ -117,9 +117,9 @@ systemctl start php-fpm</pre>
 <p><b>3.2、编译安装PHP</b></p>
 <pre>dnf install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y
 cd /data/source
-wget http://www.php.net/distributions/php-8.4.13.tar.xz
-tar xvf php-8.4.13.tar.xz
-cd php-8.4.13
+wget http://www.php.net/distributions/php-8.5.2.tar.xz
+tar xvf php-8.5.2.tar.xz
+cd php-8.5.2
 ./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-opcache --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -154,9 +154,9 @@ php -i|grep -i jit
 </pre>
 <p>#编译安装ImageMagick</p>
 <pre>
-wget https://imagemagick.org/download/ImageMagick-6.9.13-23.tar.xz
-tar xvf ImageMagick-6.9.13-23.tar.xz
-cd ImageMagick-6.9.13-23
+wget https://imagemagick.org/download/ImageMagick-6.9.13-38.tar.xz
+tar xvf ImageMagick-6.9.13-38.tar.xz
+cd ImageMagick-6.9.13-38
 ./configure --disable-openmp --disable-hdri --with-quantum-depth=8
 make -j5
 make install
@@ -165,11 +165,11 @@ make install
 <p><b>4.1、yum安装MariaDB数据库</b></p>
 <p>加源</p>
 <pre>cat > /etc/yum.repos.d/mariadb.repo << "EOF"
-# MariaDB 11.4 RedHatEnterpriseLinux repository list - created 2023-02-22 16:29 UTC
+# MariaDB 12.1 RedHatEnterpriseLinux repository list
 # https://mariadb.org/download/
 [mariadb]
 name = MariaDB
-baseurl = https://mirrors.ustc.edu.cn/mariadb/yum/11.4/rhel9-amd64
+baseurl = https://mirrors.ustc.edu.cn/mariadb/yum/12.1/rhel9-amd64
 gpgkey=https://mirrors.ustc.edu.cn/mariadb/yum/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF</pre>
@@ -188,7 +188,7 @@ chown mysql:mysql /var/lib/mysql -R
 systemctl start mysqld
 mysqladmin -uroot password "mypass"
 </pre>
-<p>旧版本php5支持</p>
+<p>旧版本php5支持</p>dd
 <pre>echo "character-set-server = utf8mb4" >> /etc/my.cnf.d/mysql-server.cnf
 echo "collation-server = utf8mb4_unicode_ci" >> /etc/my.cnf.d/mysql-server.cnf
 mysql -uroot -p
@@ -201,12 +201,12 @@ mysql -uroot -p
 <p>安装依赖</p>
 <pre>yum install libaio-devel ncurses-devel bison -y</pre>
 <p>下载</p>
-<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-11.7.2/source/mariadb-11.7.2.tar.gz
+<pre>wget http://mirrors.ustc.edu.cn/mariadb//mariadb-12.1.2/source/mariadb-12.1.2.tar.gz
 </pre>
 <p>解压</p>
-<pre>tar xvf mariadb-11.7.2.tar.gz</pre>
+<pre>tar xvf mariadb-12.1.2.tar.gz</pre>
 <p>编译</p>
-<pre>cd mariadb-11.7.2
+<pre>cd mariadb-12.1.2
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/usr/local/mariadb \
 -DMYSQL_DATADIR=/usr/local/mariadb/data \
@@ -284,13 +284,13 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-9.4/mysql-9.4.0.tar.gz
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-9.4/mysql-9.6.0.tar.gz
 #wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-9.4.0.tar.gz
+<pre>tar xvf mysql-9.6.0.tar.gz
 #tar xvf mysql-boost-5.7.44.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-9.4.0
+<pre>cd mysql-9.6.0
 #cd mysql-5.7.44
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
