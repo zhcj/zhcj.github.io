@@ -117,9 +117,9 @@ systemctl start php-fpm</pre>
 <p><b>3.2、编译安装PHP</b></p>
 <pre>dnf install libxml2-devel systemd-devel gd-devel libcurl-devel openldap-devel libzip-devel -y
 cd /data/source
-wget http://www.php.net/distributions/php-8.5.3.tar.xz
-tar xvf php-8.5.3.tar.xz
-cd php-8.5.3
+wget http://www.php.net/distributions/php-8.5.10.tar.xz
+tar xvf php-8.5.10.tar.xz
+cd php-8.5.10
 ./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -146,7 +146,6 @@ sed -i "s/display_errors = Off/display_errors = On/" /usr/local/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /usr/local/php/php.ini
 pear update-channels pear.php.net
 pear upgrade-all
-#php8增加jit参数
 echo "opcache.jit=1235" >> /usr/local/php/php.ini
 echo "opcache.jit_buffer_size=64M" >> /usr/local/php/php.ini
 #查看是否生效
@@ -187,13 +186,7 @@ rpm -ivh https://repo.mysql.com//mysql84-community-release-el9-1.noarch.rpm
 chown mysql:mysql /var/lib/mysql -R
 systemctl start mysqld
 mysqladmin -uroot password "mypass"
-</pre>
-<p>旧版本php5支持</p>dd
-<pre>echo "character-set-server = utf8mb4" >> /etc/my.cnf.d/mysql-server.cnf
-echo "collation-server = utf8mb4_unicode_ci" >> /etc/my.cnf.d/mysql-server.cnf
 mysql -uroot -p
-#mysql> alter user 'root'@'localhost' identified with mysql_native_password by 'mypass';
-#echo "default_authentication_plugin=mysql_native_password" >> /etc/my.cnf.d/mysql-server.cnf
 </pre>
 <p><b>4.3、编译安装MariaDB数据库</b></p>
 <p>创建mysql用户</p>
@@ -284,13 +277,13 @@ max_connections = 1000
 </pre>
 <p><b>4.4、编译安装Mysql数据库</b></p>
 <p>下载</p>
-<pre>wget https://cdn.mysql.com//Downloads/MySQL-9.4/mysql-9.6.0.tar.gz
+<pre>wget https://cdn.mysql.com//Downloads/MySQL-26.7/mysql-26.7.0.tar.gz
 #wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz</pre>
 <p>解压</p>
-<pre>tar xvf mysql-9.6.0.tar.gz
+<pre>tar xvf mysql-26.7.0.tar.gz
 #tar xvf mysql-boost-5.7.44.tar.gz</pre>
 <p>编译</p>
-<pre>cd mysql-9.6.0
+<pre>cd mysql-26.7.0
 #cd mysql-5.7.44
 cmake . \
 -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
