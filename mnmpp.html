@@ -20,9 +20,9 @@
 <p>#自动安装依赖openssl@3/gettext等</p>
 <p><b>三、编译安装redis</b></p>
 <pre>
-wget http://download.redis.io/releases/redis-8.6.0.tar.gz
-tar xvf redis-8.6.0.tar.gz
-cd redis-8.6.0
+wget http://download.redis.io/releases/redis-8.10.2.tar.gz
+tar xvf redis-8.10.2.tar.gz
+cd redis-8.10.2
 make -j10
 sudo make PREFIX=/usr/local/redis install
 sudo ln -sf /usr/local/redis/bin/* /usr/local/bin/
@@ -49,9 +49,9 @@ sudo chmod +x /usr/local/bin/redisstop
 <pre>
 brew install icu4c@78
 export PKG_CONFIG_PATH="/opt/homebrew/opt/icu4c@78/lib/pkgconfig"
-wget https://ftp.postgresql.org/pub/source/v18.2/postgresql-18.2.tar.bz2
-tar xvf postgresql-18.2.tar.bz2
-cd postgresql-18.2
+wget https://ftp.postgresql.org/pub/source/v18.6/postgresql-18.6.tar.bz2
+tar xvf postgresql-18.6.tar.bz2
+cd postgresql-18.6
 ./configure --prefix=/usr/local/pgsql --with-system-tzdata=/usr/share/zoneinfo --disable-debug --with-icu --without-gssapi --with-pam --without-perl --without-python --with-readline --without-tcl --with-libxml --with-libxslt --with-zlib
 make -j10
 sudo make install
@@ -83,9 +83,9 @@ sudo chmod +x /usr/local/bin/pgsqlstart
 <p><b>五、编译安装php</b></p>
 <pre>
 brew install openssl freetype gettext webp libpng libiconv oniguruma libzip autoconf libsodium
-wget http://www.php.net/distributions/php-8.5.3.tar.xz
-tar xvf php-8.5.3.tar.xz
-cd php-8.5.3
+wget http://www.php.net/distributions/php-8.5.11.tar.xz
+tar xvf php-8.5.11.tar.xz
+cd php-8.5.11
 ./configure --prefix=/usr/local/php --enable-fpm --with-pear --with-fpm-user=$(id -un) --with-fpm-group=admin --with-config-file-path=/usr/local/php/etc --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-mbstring --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-freetype --with-openssl --enable-pcntl --with-iconv=/opt/homebrew/opt/libiconv --with-gettext=/opt/homebrew/opt/gettext --with-sodium 
 make -j10
 sudo make install
@@ -106,10 +106,7 @@ sudo sed -i "" "s/display_errors = Off/display_errors = On/" /usr/local/php/php.
 sudo sed -i "" "s/expose_php = On/expose_php = Off/" /usr/local/php/php.ini
 echo "opcache.jit=1235" | sudo tee -a /usr/local/php/php.ini
 echo "opcache.jit_buffer_size=64M" | sudo tee -a /usr/local/php/php.ini
-sudo pear update-channels pear.php.net
-sudo pear upgrade-all
-sudo pecl install redis
-echo "extension=redis" | sudo tee -a /usr/local/php/lib/php/extensions/ext.ini
+sudo pie install phpredis/phpredis
 sudo chown $(id -un):admin /usr/local/php/var/log
 sudo sed -i "" "s/^user =/;user =/" /usr/local/php/etc/php-fpm.d/www.conf
 sudo sed -i "" "s/^group =/;group =/" /usr/local/php/etc/php-fpm.d/www.conf
@@ -152,9 +149,9 @@ sudo chmod +x /usr/local/bin/nginxstart
 <p><b>七、编译安装mysql</b></p>
 <pre>
 brew install cmake bison
-wget https://cdn.mysql.com//Downloads/MySQL-9.6/mysql-9.6.0.tar.gz
-tar xvf mysql-9.6.0.tar.gz
-cd mysql-9.6.0
+wget https://cdn.mysql.com//Downloads/MySQL-26.7/mysql-26.7.0.tar.gz
+tar xvf mysql-26.7.0.tar.gz
+cd mysql-26.7.0
 cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DINSTALL_MYSQLDATADIR=/usr/local/mysql/data -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_UNIT_TESTS=OFF -DINSTALL_MYSQLTESTDIR= -DWITH_SSL=system -DFORCE_INSOURCE_BUILD=1 
 #wget https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-boost-5.7.44.tar.gz
 #tar xvf mysql-boost-5.7.44.tar.gz

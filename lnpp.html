@@ -305,9 +305,9 @@ systemctl start php-fpm</pre>
 #ubuntu
 #apt install pkg-config libcurl4-gnutls-dev libpng-dev libwebp-dev libjpeg-dev libxpm-dev libfreetype6-dev libonig-dev libzip-dev libsqlite3-dev
 cd /data/source
-wget http://www.php.net/distributions/php-8.5.10.tar.xz
-tar xvf php-8.5.10.tar.xz
-cd php-8.5.10
+wget http://www.php.net/distributions/php-8.5.11.tar.xz
+tar xvf php-8.5.11.tar.xz
+cd php-8.5.11
 ./configure --prefix=/usr/local/php --enable-fpm --with-fpm-systemd --with-pear --with-fpm-user=www --with-fpm-group=www --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/lib/php/extensions --enable-mbstring --with-gettext --with-curl --enable-mysqlnd --with-mysqli --with-pdo-mysql --disable-phpdbg --with-zlib --enable-calendar --enable-exif --enable-ftp --enable-soap --enable-bcmath --enable-sockets --with-openssl --enable-pcntl --with-pgsql --with-pdo-pgsql --with-zip --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 #有ldap参数时：--with-ldap --with-ldap-sasl
 #ln -sf /usr/lib64/libldap* /usr/lib/
@@ -332,19 +332,13 @@ sed -i "s/;date.timezone =/date.timezone = Asia\/Shanghai/" /usr/local/php/php.i
 sed -i "s/;pcre.jit=1/pcre.jit=0/" /usr/local/php/php.ini
 sed -i "s/display_errors = Off/display_errors = On/" /usr/local/php/php.ini
 sed -i "s/expose_php = On/expose_php = Off/" /usr/local/php/php.ini
-pear update-channels pear.php.net
-pear upgrade-all
 #php8增加jit参数
 echo "opcache.jit=1235" >> /usr/local/php/php.ini
 echo "opcache.jit_buffer_size=64M" >> /usr/local/php/php.ini
 #查看是否生效
 php -i|grep -i jit
-#pecl安装php模块（最简单的方法）
-pecl install memcached redis lzf imagick
-echo "extension=memcached" >> /usr/local/php/lib/php/extensions/ext.ini
-echo "extension=lzf" >> /usr/local/php/lib/php/extensions/ext.ini
-echo "extension=redis" >> /usr/local/php/lib/php/extensions/ext.ini
-echo "extension=imagick" >> /usr/local/php/lib/php/extensions/ext.ini
+#pie安装php模块（最简单的方法）
+pie install phpredis/phpredis
 </pre>
 #编译安装ImageMagick
 <pre>
